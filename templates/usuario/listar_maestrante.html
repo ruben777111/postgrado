@@ -1,0 +1,152 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i>LISTA DE MAESTRANTES</h5>
+</div>
+<hr />
+<input type="search" width="100px" id="filtro-nombre" placeholder="Filtrar por nombre">
+<input type="search" id="filtro-apellido" placeholder="Filtrar por apellido paterno">
+<input type="search" id="filtro-materno" placeholder="Filtrar por apellido materno">
+<input type="search" id="filtro-ru" placeholder="Filtrar por R.U.">
+
+
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+        <table id="data" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        <div>OPCIONES&nbsp;DE&nbsp;USUARIO</div>
+                    </th>
+                    <th class="header" scope="col">R.U.</th>
+                    
+                    <th class="header" scope="col">NOMBRE</th>
+                    <th class="header" scope="col">APELLIDO&nbsp;PATERNO</th>
+                    <th class="header" scope="col">APELLIDO&nbsp;MATERNO</th>
+                    <th class="header" scope="col">C.I.</th>
+                    <th class="header" scope="col">DEPARTAMENTO</th>
+                    
+                    <th class="header" scope="col">PROGRAMA</th>
+                    <th class="header" scope="col">VERSIÓN&nbsp;DEL&nbsp;PROGRAMA</th>
+                    <th class="header" scope="col">GESTIÓN</th>
+                    <th class="header" scope="col">Nº&nbsp;DE&nbsp;CELULAR</th>
+                    <th class="header" scope="col">Nº&nbsp;DE&nbsp;REFERENCIA</th>
+                    
+                    <th class="header" scope="col">CORREO&nbsp;INSTITUCIONAL</th>
+                    <th class="header" scope="col">CORREO&nbsp;PERSONAL</th>
+                    <th class="header" scope="col">NOMBRE&nbsp;DE&nbsp;USUARIO</th>
+                    <th class="header" scope="col">FECHA&nbsp;DE&nbsp;DERIVACIÓN</th>
+                    <th class="header" scope="col">FECHA&nbsp;DE&nbsp;REGISTRO</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in actividades %}
+                <tr>
+                    <td>
+                        
+                        {% if user.tipo_usuario == 3 or user.tipo_usuario == 4 %}
+                          <a href="#" onclick="eliminarusuario({{ usuario.id_maestrante }})" class="btn btn-danger"><i
+                                class="fas fa-user-minus" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Esta acción deshabilitara al maestrante"></i></a>
+                          {% else %}
+                                         <a href="#" onclick="habilitarusuario({{ usuario.id_maestrante }})" class="btn btn-primary"><i
+                                    class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Esta acción habilitará al usuario para el desarrollo de Tesis"></i></a>
+
+                        {% endif %}
+                            
+
+                 
+                                <button onclick="abrir_modal_edicion('{% url 'usuario:editar_maestrante' usuario.id_maestrante %}')"
+                            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Editar datos"><i class="fas fa-user-edit"></i></button>
+                    </td>
+
+                    <td>{{ usuario.ru }}</td>
+                    <td>{{ usuario.nombre_usuario }}</td>
+                    <td>{{ usuario.paterno }}</td>
+                    <td>{{ usuario.materno }}</td>
+                    <td>{{ usuario.ci_usuario }}</td>
+                    <td>{{ usuario.departamento }}</td>
+                    
+                    <td>{{ usuario.programa }}</td>
+                    <td>{{ usuario.version }}
+                        
+                        {{ usuario.nueva_version }}
+
+                    </td>
+                    <td>{{ usuario.gestion }}</td>
+                    <td>{{ usuario.cel_usuario }}</td>
+                    <td>{{ usuario.cel_usuario2 }}</td>
+                    <td>{{ usuario.correo_inst }}</td>
+                    <td>{{ usuario.correo }}</td>
+                    <td>{{ usuario.username }}</td>
+                    <td>
+                    {% if usuario.fecha_derivacion %}
+                        {{ usuario.fecha_derivacion }}
+                    {% else %}
+                    Maestrante no derivado
+                    {% endif %}
+                        
+                        </td>
+                    <td>{{ usuario.fecha_registro }}</td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block extrajs %}
+
+<script>
+    var $ = jQuery.noConflict();
+    $(document).ready(function () {
+
+        var table = $('#data').DataTable({
+            "language": {
+                "lengthMenu": "Mostrar" + `
+                <select class="custom-select custom-select-sm form-control form-control-sm">
+                    <option value ='10'>10</option>
+                    <option value ='25'>25</option>
+                    <option value ='50'>50</option>
+                    <option value ='100'>100</option>
+                    <option value ='-1'>Todos</option>
+                    ` + " registros por página",
+                "zeroRecords": "No hay registros disponibles",
+                "info": "Mostrar _PAGE_ de _PAGES_ paginas",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                "search": "Buscar",
+                "paginate": {
+                    'next': "Siguiente",
+                    'previous': "Anterior"
+                }
+            }
+        });
+
+        // Agregar filtros para las columnas específicas (nombre, apellido, R.U.)
+        $('#filtro-nombre').on('keyup', function () {
+            table.column(2).search(this.value).draw();
+        });
+
+        $('#filtro-apellido').on('keyup', function () {
+            table.column(3).search(this.value).draw();
+        });
+        $('#filtro-materno').on('keyup', function () {
+            table.column(4).search(this.value).draw();
+        });
+        $('#filtro-ru').on('keyup', function () {
+            table.column(1).search(this.value).draw();
+        });
+    });
+</script>
+{% endblock extrajs %}
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,67 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form id="informe" method="POST" action="{% url 'usuario:formulario_actividad_23' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card">  
+            <div class="card-body">
+              <h5>Maestrante: {{ object.maestrante }}</h5>
+              R.U.: {{ object.ru }} <br>
+              C.I.: {{ object.ci_usuario }}<br>
+           
+                
+            
+              <hr>
+              {{ form.avance_tesis}}
+              <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
+
+              
+              <div><input type="checkbox" name="empastado" required> Recepción de empastado y CD para archivo </div> <br>
+              Año de empastado :
+              <input type="number"  class="form-control" name="empastado" required><br>   
+
+              <div class="text-primary"> Presentación de artículos: </div><hr><br>
+              
+              <div><input type="checkbox" name="revision"> Artículos revisión </div> <br>
+              <div><input type="checkbox" name="original"> Artículos original </div> <br>
+              <div><input type="checkbox" name="ambos"> Artículos revisión y original </div> <br>
+            </div>
+            <div class="modal-footer">
+              <input type="checkbox" required>
+              <div class="text-primary"> - Marque la casilla para confirmar el registro de la actividad.</div>
+              <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="colores-botonaceptar">Confirmar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% block extrajs %}
+<script>
+  $('input[type="file"]').on('change', function(){
+    var ext = $( this ).val().split('.').pop();
+    if ($( this ).val() != '') {
+      if(ext == "pdf"){
+  
+        if($(this)[0].files[0].size > 1048576){
+          console.log("El documento excede el tamaño máximo");
+          $('#modal-title').text('¡Precaución!');
+          $('#modal-msg').html("Se solicita un archivo no mayor a 1MB. Por favor verifica.");
+          $("#modal-gral").modal();           
+          $(this).val('');
+        }else{
+          $("#modal-gral").hide();
+        }
+      }
+      else
+      {
+        $( this ).val('');
+        alert("Por favor, subir un archivo en formato PDF");
+      }
+    }
+  });</script>
+{% endblock extrajs %}

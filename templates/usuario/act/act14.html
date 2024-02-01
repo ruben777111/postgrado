@@ -1,0 +1,69 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:seguimiento_tesis'  %}">Seguimiento</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:listar_historial'  %}">Historial </a>
+  </li>
+</ul>
+<br>
+{% if mensaje %}
+{{ mensaje }}
+{% else %}
+<div class="sb-nav-link-icon">
+
+  <h5><i class="far fa-id-card"></i>
+    {% for actividades in actividad %}
+    {{ actividades.actividad }} <br><br>
+    {{ actividades.requisito }}
+
+    {% endfor %}
+  </h5>
+</div>
+
+<hr />
+
+
+<div class="table-responsive">
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th class="header" scope="col">R.U.</th>
+        <th class="header" scope="col">MAESTRANTE</th>
+        <th class="header" scope="col">DOCENTE GUÍA</th>
+        <th class="header" scope="col">FECHA LIMITE DE PRESENTACIÓN DE FORMULARIO</th>
+
+
+
+      </tr>
+    </thead>
+    <tbody id="tableBody_users">
+      {% for evi in maestrantesevi %}
+      <tr>
+        <td> {{ evi.ru }} </td>
+        <td>{{ evi.maestrante }}</td>
+        <td>{{ evi.guia }}</td>
+        <td>{{ evi.cronograma2.fecha_formulario_guia }}</td>
+
+
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endif %}
+
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+{% endblock extrajs %}
+{% endblock %}

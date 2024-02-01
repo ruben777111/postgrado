@@ -1,0 +1,26 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+
+    <div class="sb-nav-link-icon">
+        <h5><i class=" fas fa-bell"></i>NOTIFICACIÓN</h5>
+    </div>
+    <hr />
+
+        {% for usuario in maestrantes %}          
+  
+<div class="card">
+    <div class="card-header">
+        Dirigido a: {{ usuario.destiny }}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ usuario.verbo }}</h5>
+      <p class="card-text">{{ usuario.text }}</p>
+     
+    </div>
+    <div class="card-footer text-muted">
+        Fecha publicada: {{ usuario.timestamp }}
+    </div>
+  </div>
+  {% endfor %}   
+{% endblock %}

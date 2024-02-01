@@ -1,0 +1,24 @@
+<div class="modal-dialog " role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Desea eliminar los datos de: {{ object }} ?</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form  action="{% url 'video:eliminar_video' object.id_video %}" method="POST">
+            {% csrf_token %}
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger  btn-circle btn-sm" data-bs-dismiss="modal">Cancelar</button>
+             
+                <button type="submit" class="btn btn-success  btn-circle btn-sm btnEliminacion" >Confirmar</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+     
+
+         
+
+

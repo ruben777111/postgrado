@@ -1,0 +1,51 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="sb-nav-link-icon">
+        <h5><i class="far fa-id-card"></i> AJUSTES DE NOTIFICACIONES</h5>
+    </div>
+    <hr />
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table id="data" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="header" scope="col">#</th>
+                        <th class="header" scope="col">Nº requisito.</th>
+                        <th class="header" scope="col">Titulo&nbsp;de&nbsp;notificación</th>
+                        <th class="header" scope="col">Contenido&nbsp;de&nbsp;notificación</th>
+                        <th class="header" scope="col">Descripción</th>
+                        
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    <tr>
+                        <td><button onclick="abrir_modal_edicion('{% url 'usuario:editar_banco_notificacion' usuario.id_notificacion %}')"
+                            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Editar datos"><i class="fas fa-user-edit"></i></button></td>
+                        <td>{{ usuario.numero_notificacion }}</td>
+
+                        <td>{{ usuario.titulo }}</td>
+                        <td>{{ usuario.contenido }}</td>
+                        <td>{{ usuario.descripcion }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+
+{% endblock %}

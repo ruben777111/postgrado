@@ -1,0 +1,81 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:seguimiento_tesis'  %}">Seguimiento</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:listar_historial'  %}">Historial </a>
+  </li>
+</ul>
+<div class="sb-nav-link-icon">
+
+  <h5><i class="far fa-id-card"></i>
+    {% for actividades in actividad %}
+    {{ actividades.actividad }} <br><br>
+    {{ actividades.requisito }}
+
+    {% endfor %}
+  </h5>
+</div>
+
+<hr />
+
+<div class="container">
+  <div class="table-responsive">
+    <table id="data" class="table table-striped">
+      <thead>
+        <tr>
+          <th class="header" scope="col">R.U.</th>
+          <th class="header" scope="col">MAESTRANTE</th>
+          <th class="header" scope="col">FECHA LIMITE DE PRESENTACIÓN DEL SEGUNDO AVANCE</th>
+          <th class="header" scope="col">#</th>
+          <th class="header" scope="col">#</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody_users">
+        {% for evi in maestrantesevi %}
+        <tr>
+          <td> {{ evi.ru }} </td>
+          <td>{{ evi.maestrante }}</td>
+          <td>{{ evi.cronograma2.fecha_avance2 }}</td>
+          <td>
+
+
+            {% if evi.avance.aceptar_avance %}
+            <button onclick="abrir_modal_ver('{% url 'usuario:actividad_7'  evi.id_maestrante %}')"
+              class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
+              title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+
+  
+            {% else %}
+            Avance no emitida
+            {% endif %}
+
+
+          </td>
+          <td>
+            {% if evi.avance.aceptar_avance %}
+            <a href="#" onclick="registraravance({{ evi.id_maestrante }})" class="btn btn-primary"><i
+              class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
+              title="Esta acción habilitará al usuario para el desarrollo de Tesis"></i></a>
+              {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+{% endblock extrajs %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="card border-primary" style="width: 100%;">
+                <div class="card-body ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col col-lg-3">
+                                <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                            </div>
+                            <div class="col">
+                                <h5 class="card-title text-center">
+                                    REPORTE GENERAL TRIBUNAL INTERNO <br> R-0877 V.0
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6 class="card-title text-center">
+                        OBSERVACIONES Y SUGERENCIAS CON PROYECCIÓN A DEFENSA FINAL DE TESIS
+                    </h6>
+
+                    <div class="row row-cols-1">
+                        <div class="col">ELABORADO POR TRIBUNAL INTERNO: {{object.user.tribunaltesis.tribunal_tesis_1}}</div>
+                        <div class="col">TÍTULO:{{object.user.tema_tesis}}</div>
+                        <div class="col">MAESTRANTE: {{object.user}}</div>
+                        
+                        
+                        
+                        <div class="col">FECHA DE REGISTRO DEL REPORTE: {{ object.user.reportegeneraltribunalinterno.fecha_registro }}</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="modal-body">
+                    {{ object.reporte }} <br>
+
+                    
+                    {% if object.reporte2 %}
+                    {{ object.reporte2 }} <br>
+                    {% endif %}
+                        
+                    {% if object.reporte3 %}
+                    {{ object.reporte3 }} <br>
+                    {% endif %}
+
+                    <p class="text-primary">
+                    {% if object.aprobacion == 'si' %}
+                        Procedente para Defensa de tesis
+                    {% else %}
+                        Improcedente para Defensa de tesis
+                    {% endif %}
+                        </p>
+                    
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-circle btn-sm" data-bs-dismiss="modal"
+                        style="background-color: #1D2939;color:#eaf0f0;">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

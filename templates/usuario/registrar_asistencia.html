@@ -1,0 +1,76 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="card border-light mb-3" style="max-width: 100%;">
+    <div class="card-body">
+        <ul class="nav nav-pills justify-content-end">
+            <li class="nav-item">
+                <a class=" colores-segundario" href="{% url 'usuario:registrar_asistencia'  %}">Registrar asistencia</a>
+            </li>
+            <li class="nav-item">
+                <a class=" colores-primario ext" href="{% url 'usuario:listar_asesoramiento'  %}">Asesoramiento
+                    programado</a>
+            </li>
+            <li class="nav-item">
+                <a class=" colores-primario ext" href="{% url 'usuario:listar_asistencia'  %}">Historial de
+                    asistencia</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="sb-nav-link-icon">
+        <h4><i class="far fa-id-card"></i> PROGRAMAR ASESORAMIENTO PARA ELABORAR PERFIL DE TESIS</h4>
+    </div>
+    <hr />
+    <form class="row g-3" action="{% url 'usuario:busquedaasistencia' %}" method="GET">
+        {% csrf_token %}
+        <div class="col-4" style="text-align: right;"> <input class="form-control" name="busmaes" type="number"
+                placeholder="Ingresar R.U. del maestrante" aria-label="Busqueda" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Aceptar</button>
+        </div>
+    </form>
+
+    {% if maestrantes %}
+
+
+
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table id="data" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="header" scope="col">R.U.</th>
+                        <th class="header" scope="col">Maestrante</th>
+                        <th>
+                            #
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in maestrantes %}
+                    <tr>
+                        <td>{{ usuario.ru }}</td>
+                        <td>{{ usuario.maestrante }}</td>
+                        <td>
+                            <button
+                                onclick="abrir_modal_edicion('{% url 'usuario:formulario_asistencia' usuario.id_maestrante %}')"
+                                class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Editar datos"><i class="fas fa-user-edit"></i></button>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% block extrajs %}
+<script src="{% static 'lib/js/main.js' %}"></script>
+{% endblock extrajs %}
+{% endblock %}

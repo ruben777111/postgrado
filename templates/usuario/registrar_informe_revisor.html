@@ -1,0 +1,117 @@
+{% load static %}
+<div id="myModal">
+  <div class="modal-dialog modal-xl " role="document" >
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form action="{% url 'usuario:guardar_informe_revisor' %}" method="POST">
+          <div class="card-body">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-2">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-center">
+                    FORMULARIO PARA INFORME DE DOCENTE REVISOR DE TESIS DE MAESTRIA <br> R-0996 V.0
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="container">
+              <div class="row row-cols-2">
+                <input type="hidden" name="id_maestrante" value="{{object.user.id_maestrante}}">
+                <div class="col">Maestrante: {{object.user}}</div>
+                <div class="col">Docente Guía: {{object.user.guia}}</div>
+                <div class="col">Docente Revisor: {{object.user.revisor}}</div>
+                <div class="col">Tema: {{object.user.tema_tesis}}</div>
+              </div>
+            </div>
+
+          </div>
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table" id="tablaprueba">
+                <thead>
+                  <tr>
+                    <th scope="col" style="width:100px">CAPÍTULO</th>
+                    
+                    <th scope="col" style="width:100px">DESCRIPCIÓN DE LA OBSERVACIÓN</th>
+                    
+                    <th scope="col" style="width:100px">SUGERENCIAS</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="text" style="width:140px" class="form-control" name="cap" required placeholder="Capítulo"></td>
+                    
+                    <td><textarea class="form-control " style="width:440px" rows="3"  name="desc" placeholder="Descripción de la observación"></textarea></td>
+                    
+                    <td><textarea class="form-control " style="width:440px" rows="3"  name="sug" placeholder="Sugerencia(s) para subsanar la observación"></textarea></td>
+                    
+                  </tr>
+            
+                </tbody>
+              </table>
+
+            </div>
+            <div class="form-group">
+                  
+              <button type="button" class="btn btn-danger" onclick="eliminarFila()">Eliminar observación</button>
+              <button type="button" class="btn btn-primary mr-2" onclick="agregarFila()">Agregar observación</button>
+            </div>
+            <hr>
+            OTRAS OBSERVACIONES:
+            <textarea class="form-control " name="otras_obs" style="width:100%" rows="3"  name="sug" placeholder="Otras observaciones: formato, estilo, ortografía, redacción, referencia, otros"></textarea>
+            
+
+           
+
+
+            <div class="modal-footer">
+              
+                <input type="checkbox" required>
+                <div class="text-primary"> - Marque la casilla para confirmar el registro del informe.</div>
+<button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="colores-botonaceptar">Confirmar</button>
+
+              </div>
+              
+              
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/informe.js' %}"></script>
+<script type="text/javascript">
+  const agregarFila = () => {
+    document.getElementById('tablaprueba').insertRow(-1).innerHTML = '<td><input type="text" style="width:140px" class="form-control" name="cap" required placeholder="Capítulo"></td><td><textarea class="form-control " style="width:440px" rows="3"  name="desc" placeholder="Descripción de la observación"></textarea></td><td><textarea class="form-control " style="width:440px" rows="3"  name="sug" placeholder="Sugerencia(s) para subsanar la observación"></textarea></td>'
+  }
+  
+  const eliminarFila = () => {
+    const table = document.getElementById('tablaprueba')
+    const rowCount = table.rows.length
+    
+    if (rowCount <= 2)
+      alert('No se puede eliminar las filas')
+    else
+      table.deleteRow(rowCount -1)
+  }
+
+  
+
+var modal = document.getElementById('myModal');
+modal.backdrop = "static";
+modal.keyboard = false;
+  </script>
+ 
+{% endblock extrajs %}

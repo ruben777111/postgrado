@@ -1,0 +1,159 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+    <li class="nav-item">
+        <a class="colores-primario ext" href="{% url 'usuario:listar_sustentacion_perfil'  %}">Sustentación perfil</a>
+    </li>
+    <li class="nav-item">
+        <a class="colores-segundario" href="{% url 'usuario:listar_sustentacion_perfil_historial'  %}">Registro de
+            sustentación perfil </a>
+    </li>
+
+</ul>
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i>LISTA DE MAESTRANTES</h5>
+</div>
+<hr />
+<form class="row g-3" action="{% url 'usuario:busquedaperfilhistorial' %}" method="GET">
+    {% csrf_token %}
+    <div class="col-4" style="text-align: right;"> <input class="form-control" name="busmaestrante" type="number"
+        placeholder="Ingresar R.U. del maestrante" aria-label="Busqueda" required>
+    </div>
+
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary mb-3">Buscar</button>
+    </div>
+  </form>
+
+    <div class="table-responsive">
+        <table id="data" class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="header" scope="col">#</th>
+                    <th class="header" scope="col">R.U.</th>
+                    <th class="header" scope="col">MAESTRANTE</th>
+                    <th class="header" scope="col">FECHA&nbsp;SUSTENTACIÓN</th>                  
+                    <th class="header" scope="col">DOCENTE&nbsp;PROVISIONAL</th>
+                    <th class="header" scope="col">TRIBUNAL&nbsp;1</th>
+                    <th class="header" scope="col">TRIBUNAL&nbsp;2</th>
+                    
+                    <th class="header" scope="col">TEMA&nbsp;DE&nbsp;PERFIL&nbsp;DE&nbsp;TESIS</th>
+                    <th class="header" scope="col">RESULTADO</th>
+                    <th class="header" scope="col">INSTANCIA&nbsp;SUSTENTACIÓN</th>
+                    <th class="header" scope="col">Acta&nbsp;de&nbsp;sustentación&nbsp;de&nbsp;Tesis</th>
+                    <th class="header" scope="col">Hoja&nbsp;de&nbsp;evaluación</th>
+                    <th class="header" scope="col">Nombramiento&nbsp;docente&nbsp;guía</th>
+                    <th class="header" scope="col">Otros&nbsp;documentos&nbsp;de&nbsp;respaldo&nbsp;(perfil,otros)</th>
+                    <th class="header" scope="col">Designación&nbsp;de&nbsp;tribunal</th>
+                    
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in maestrantes %}
+                <tr>
+                    <td>{{ usuario.id_sustentacion }}</td>
+                    <td>{{ usuario.user.ru }}</td>
+                    <td>{{ usuario.user }}</td>
+                    <td>{{ usuario.fecha_sustentacion }}</td>                   
+                    <td>{{ usuario.docente_guia }}</td>
+                    <td>{{ usuario.tribunal_perfil_1 }}</td>
+                    <td>{{ usuario.tribunal_perfil_2 }}</td>
+                    <td>{{ usuario.tema_perfil }}</td>
+                    <td>
+                        {% if usuario.resultado %}
+                        <div class="alert alert-success d-flex align-items-center" role="alert">
+                            <svg class="bi flex-shrink-0 me-2" width="2" height="5" role="img" aria-label="Info:">
+                                <use xlink:href="#info-fill" />
+                            </svg>
+                            <div>
+                                PROCEDENTE
+                            </div>
+                        </div>
+
+                        {% else %}
+                        <div class="alert alert-warning  d-flex align-items-center" role="alert">
+                            <svg class="bi flex-shrink-0 me-2" width="2" height="5" role="img" aria-label="Success:">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div>
+                                IMPROCEDENTE
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                    </td>
+                    <td>
+
+                        {% if usuario.instancia == 1 %}
+                        1º instancia
+                        {% elif usuario.instancia == 2 %}
+                        2º instancia
+                        {% elif usuario.instancia == 3 %}
+                        3º instancia
+                        {% endif %}
+
+
+                    </td>
+                    <td>
+                        {% if usuario.acta %}
+                        <a href="{{ usuario.acta.url }}" class="btn btn-outline-success" target="_blank">Ver
+                            documento</a>
+                        <a href="{{ usuario.acta.url }}" download class="btn btn-outline-success">Descargar</a>
+                        {% else %}
+                        sin documento
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if usuario.hoja_evaluacion %}
+                        <a href="{{ usuario.hoja_evaluacion.url }}" class="btn btn-outline-success" target="_blank">Ver
+                            documento</a>
+                        <a href="{{ usuario.hoja_evaluacion.url }}" download class="btn btn-outline-success">Descargar</a>
+                        {% else %}
+                        sin documento
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if usuario.carta_externa %}
+                        <a href="{{ usuario.carta_externa.url }}" class="btn btn-outline-success" target="_blank">Ver
+                            documento</a>
+                        <a href="{{ usuario.carta_externa.url }}" download class="btn btn-outline-success">Descargar</a>
+                        {% else %}
+                        sin documento
+                        {% endif %}
+                    </td>      
+                    <td>
+                        {% if usuario.documento_respaldo %}
+                        <a href="{{ usuario.documento_respaldo.url }}" class="btn btn-outline-success" target="_blank">Ver
+                            documento</a>
+                        <a href="{{ usuario.documento_respaldo.url }}" download class="btn btn-outline-success">Descargar</a>
+                        {% else %}
+                        sin documento
+                        {% endif %}
+                    </td>      
+                    <td>
+                        {% if usuario.carta_externa_designacion %}
+                        <a href="{{ usuario.carta_externa_designacion.url }}" class="btn btn-outline-success" target="_blank">Ver
+                            documento</a>
+                        <a href="{{ usuario.carta_externa_designacion.url }}" download class="btn btn-outline-success">Descargar</a>
+                        {% else %}
+                        sin documento
+                        {% endif %}
+                    </td>                  
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+{% endblock extrajs %}
+
+{% endblock %}

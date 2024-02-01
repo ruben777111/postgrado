@@ -1,0 +1,127 @@
+{% load static %}
+<div id="myPrintArea">
+  <div class="modal-dialog modal-xl " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="card border-primary" style="width: 100%;">
+          <form action="{% url 'usuario:guardar_informe_guia' %}" method="POST" enctype="multipart/form-data">
+          <div class="card-body ">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-3">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-center">
+                    FORMULARIO PARA INFORME FINAL DE DOCENTE GUÍA Y APROBACIÓN PARA DEFENSA DE TESIS <br> R-0997 V.0
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <hr>
+
+              {% csrf_token %}
+            <div class="row row-cols-1">
+              {% for usuario in maestrantes|slice:":1" %}
+              <input type="hidden" name="id_maestrante" value="{{usuario.user.id_maestrante}}">
+              <div class="col">MAESTRANTE: {{ usuario.user }}</div>
+              <div class="col">DOCENTE GUÍA: {{usuario.user.guia}}</div>
+              <div class="col">DOCENTE REVISOR: {{usuario.user.revisor}}</div>
+              <div class="col">TÍTULO DE LA TESIS: {{usuario.user.tema_tesis}}</div>
+              {% endfor %}
+            </div>
+          </div>
+          <hr>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table" id="tablaprueba">
+                <thead>
+                  <tr>
+                    <th scope="col" style="font-size: 12px; text-align:center;">CAPÍTULO</th>
+                    <th scope="col" style="font-size: 12px; text-align:center;">OBSERVACIÓN <br>Observaciones emitidas
+                      en el informe del tribunal revisor</th>
+                    <th scope="col" style='font-size: 12px; text-align:center;'>¿ SE INCORPORARON LAS OPTIMIZACIONES
+                      RESPECTIVAS TOMANDO EN CUENTA LA OBSERVACIÓN ?</th>
+                    <th scope="col" style="font-size: 12px; text-align:center;">PAGINA(S). EN LAS QUE SE EVIDENCIA LA
+                      OPTIMIZACIÓN DE LA TESIS TOMANDO EN CUENTA LA OBSERVACIÓN</th>
+                    <th scope="col" style="font-size: 12px; text-align:center;">FUNTAMENTACIÓN llenar esta casilla en
+                      caso de no haber tomado en cuenta el número </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  {% for usuario in maestrantes %}
+                  <tr>
+                    <td style="width:100px"><input type="hidden" name="cap" value="{{ usuario.capitulo }}"> {{ usuario.capitulo }}</td>
+                    <td style="width:300px"><input type="hidden" name="desc" value="{{ usuario.descripcion }}">{{ usuario.descripcion }}</td>
+                    <td style="width:200px">
+
+                      <select name="opcion" required class="form-control">
+                        <option value="">Elige una opción</option>
+                        <option>SI</option>
+                        <option>NO</option>
+                      </select>
+                    </td>
+                    <td style="width:300px"><textarea class="form-control " rows="3" name="pag"
+                        placeholder="Paginas en la que se evidencia la optimización"></textarea></td>
+                    <td style="width:300px"><textarea class="form-control " rows="3" name="fun"
+                        placeholder="Fundamentación"></textarea></td>
+                  </tr>
+                  {% endfor %}
+                  
+                </tbody>
+              </table>
+              
+              OTRAS OBSERVACIONES:
+              <textarea class="form-control " name="otras_obs" style="width:100%" rows="3"  name="sug" placeholder="Otras observaciones: formato, estilo, ortografía, redacción, referencia, otros"></textarea>
+              
+  <hr>
+              Subir archivo de tesis mejorada: <br>
+              <input type="file" name="tesismejorada" id="tesismejorada" class="form-control" accept="application/pdf" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="checkbox" required>
+            <div class="text-primary"> - Marque la casilla para confirmar el registro del informe.</div>
+
+
+            <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="colores-botonaceptar">Confirmar</button>
+
+          </div>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/informe.js' %}"></script>
+<script>
+  $('input[type="file"]').on('change', function(){
+    var ext = $( this ).val().split('.').pop();
+    if ($( this ).val() != '') {
+      if(ext == "pdf"){
+  
+        if($(this)[0].files[0].size > 1048576){
+          console.log("El documento excede el tamaño máximo");
+          $('#modal-title').text('¡Precaución!');
+          $('#modal-msg').html("Se solicita un archivo no mayor a 1MB. Por favor verifica.");
+          $("#modal-gral").modal();           
+          $(this).val('');
+        }else{
+          $("#modal-gral").hide();
+        }
+      }
+      else
+      {
+        $( this ).val('');
+        alert("Por favor, subir un archivo en formato PDF");
+      }
+    }
+  });</script>
+
+{% endblock extrajs %}

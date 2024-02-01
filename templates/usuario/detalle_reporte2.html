@@ -1,0 +1,51 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="card border-primary" style="width: 100%;">
+                <div class="card-body ">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col col-lg-3">
+                                <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                            </div>
+                            <div class="col">
+                                <h5 class="card-title text-center">
+                                    REPORTE GENERAL <br> R-0877 V.0
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6 class="card-title text-center">
+                        EN CONOCIMIENTO DE LA PROCEDENCIA DEL TRABAJO PARA DEFENSA DE TESIS, EMITO LAS SIGUIENTES CONSIDERACIONES:
+                    </h6>
+
+                    <div class="row row-cols-1">
+                        <div class="col">ELABORADO POR: {{object.user.revisor}}</div>
+                        <div class="col">TÍTULO:{{object.user.tema_tesis}}</div>
+                        <div class="col">MAESTRANTE: {{object.user}}</div>
+                        <div class="col">DOCENTE GUÍA: {{object.user.guia}}</div>
+                        
+                        
+                        <div class="col">FECHA DE REGISTRO DEL INFORME: {{ object.user.reportegeneral.fecha_registro2 }}</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="modal-body">
+                    
+                    {{ object.reporte2 }} <br>
+
+                    
+                 
+                    
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-circle btn-sm" data-bs-dismiss="modal"
+                        style="background-color: #1D2939;color:#eaf0f0;">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

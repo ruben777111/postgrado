@@ -1,0 +1,101 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i>INFORMACIÓN GENERAL DEL USUARIO</h5>
+</div>
+<hr />
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:400px">#</th>
+                    <th scope="col">INFORMACIÓN</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>NOMBRE(S):</td>
+                    <td>{{user.nombre_usuario}}</td>
+
+                </tr>
+                <tr>
+                    <td>APELLIDO PATERNO:</td>
+                    <td>{{user.paterno}}</td>
+
+
+                </tr>
+                <tr>
+                    <td>APELLIDO MATERNO:</td>
+                    <td>{{user.materno}}</td>
+                </tr>
+
+                <tr>
+                    <td>C.I.:</td>
+                    <td colspan="2">{{user.ci_usuario}}</td>
+                </tr>
+
+                <tr>
+                    <td>DEPARTAMENTO:</td>
+                    <td>{{user.departamento}}</td>
+                </tr>
+                <tr>
+                    <td>NÚMERO DE CELULAR:</td>
+                    <td>{{user.cel_usuario}}</td>
+                </tr>
+                <tr>
+                    <td>NÚMERO DE CELULAR REFERENCIA:</td>
+                    <td>{{user.cel_usuario}}</td>
+                </tr>
+                <tr>
+                    <td>CORREO INSTITUCIONAL:</td>
+                    <td>{{user.correo_inst}}</td>
+                </tr>
+                <tr>
+                    <td>CORREO PERSONAL:</td>
+                    <td>{{user.correo}}</td>
+                </tr>
+                {% if user.tipo_usuario == 1 %}
+                <tr>
+                    <td>R.U.:</td>
+                    <td>{{user.maestrante.ru}}</td>
+                </tr>
+                <tr>
+                    <td>PROGRAMA:</td>
+                    <td>{{user.maestrante.programa}}</td>
+                </tr>
+                <tr>
+                    <td>VERSIÓN DEL PROGRAMA:</td>
+                    <td>{{user.maestrante.version}}</td>
+                </tr>
+                <tr>
+                    <td>GESTION:</td>
+                    <td>{{user.maestrante.gestion}}</td>
+                </tr>
+                {% endif %}
+
+                {% if user.tipo_usuario == 2 %}
+                <tr>
+                    <td>ESPECIALIDAD DOCENTE:</td>
+                    <td>{{user.docente.especialidad_docente}}</td>
+                </tr>
+                {% endif %}
+
+
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block extrajs %}
+
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+{% endblock extrajs %}
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+    <li class="nav-item">
+        <a class="colores-segundario" href="{% url 'usuario:listar_sustentacion_perfil'  %}">Sustentación perfil</a>
+    </li>
+    <li class="nav-item">
+        <a class="colores-primario ext" href="{% url 'usuario:listar_sustentacion_perfil_historial'  %}">Registro de
+            sustentación perfil </a>
+    </li>
+
+</ul>
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i>LISTA DE SUSTENTACIÓN DE PERFIL DE TESIS DE MAESTRANTES</h5>
+</div>
+<hr />
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+        <table id="data" class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th class="header" scope="col">R.U.</th>
+
+                    <th class="header" scope="col">MAESTRANTE</th>
+                    <th class="header" scope="col">FECHA&nbsp;SUSTENTACIÓN</th>
+                    <th class="header" scope="col">HORA&nbsp;SUSTENTACIÓN</th>
+                    <th class="header" scope="col">DOCENTE&nbsp;GUÍA&nbsp;PROVISIONAL</th>
+                    <th class="header" scope="col">TRIBUNAL&nbsp;1</th>
+                    <th class="header" scope="col">TRIBUNAL&nbsp;2</th>
+                    <th class="header" scope="col">INSTANCIA&nbsp;SUSTENTACIÓN </th>
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in actividades %}
+                <tr>
+                    <td>{{ usuario.ru }}</td>
+                    <td>{{ usuario.maestrante }}</td>
+                    <td>{{ usuario.cronograma.fecha_3 }}</td>
+                    <td>{{ usuario.cronograma.hora_sustentacion }}</td>
+                    <td>{{ usuario.provisional }}</td>
+                    <td>{{ usuario.tribunalperfil.tribunal_perfil_1 }}</td>
+                    <td>{{ usuario.tribunalperfil.tribunal_perfil_2 }}</td>
+                    <td>
+
+                        {% if usuario.instancia == 1 %}
+                        1º instancia
+                        {% elif usuario.instancia == 2 %}
+                        2º instancia
+                        {% elif usuario.instancia == 3 %}
+                        3º instancia
+                        {% endif %}
+
+
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block extrajs %}
+
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+{% endblock extrajs %}
+
+{% endblock %}

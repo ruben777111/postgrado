@@ -1,0 +1,50 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="card border-light mb-3" style="max-width: 100%;">
+    <div class="card-body">
+        <ul class="nav nav-pills justify-content-end">
+            <li class="nav-item">
+                <a class=" colores-primario ext" href="{% url 'usuario:registrar_asistencia'  %}">Registrar asistencia</a>
+            </li>
+            <li class="nav-item">
+                <a class=" colores-primario ext" href="{% url 'usuario:listar_asesoramiento'  %}">Asesoramiento
+                    programado</a>
+            </li>
+            <li class="nav-item">
+                <a class=" colores-segundario" href="{% url 'usuario:listar_asistencia'  %}">Historial de
+                    asistencia</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="sb-nav-link-icon">
+        <h4><i class="far fa-id-card"></i> Lista de Maestrantes</h4>
+    </div>
+    <hr />
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table id="data" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="header" scope="col">R.U.</th>
+                        <th class="header" scope="col">Nombre</th>
+                        <th class="header" scope="col">Fecha&nbsp;de&nbsp;asistencia</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    <tr>
+                        <td>{{ usuario.maestrante.ru }}</td>
+                        <td>{{ usuario.maestrante }}</td>
+                        <td>{{ usuario.fecha }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

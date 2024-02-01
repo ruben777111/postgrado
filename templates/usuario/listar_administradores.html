@@ -1,0 +1,87 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> LISTA DE ADMINISTRADORES</h5>
+</div>
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+        <table id="data" class="table table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="size"> Opciónes&nbsp;de&nbsp;usuario</div>
+                    </th>
+                    <th class="header" scope="col">Nombre</th>
+                    <th class="header" scope="col">Apellido&nbsp;Paterno</th>
+                    <th class="header" scope="col">Apellido&nbsp;Materno</th>
+                    <th class="header" scope="col">Campo&nbsp;de&nbsp;especialidad</th>
+                    <th class="header" scope="col">Nº&nbsp;de&nbsp;celular</th>
+                    <th class="header" scope="col">Nº&nbsp;de&nbsp;celular&nbsp;2</th>
+                    <th class="header" scope="col">Ci</th>
+                    <th class="header" scope="col">Departamento</th>
+                    <th class="header" scope="col">Correo&nbsp;electronico</th>
+                    <th class="header" scope="col">Fecha&nbsp;de&nbsp;incorporación</th>
+
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in actividades %}
+
+                <tr>
+
+                    <td><button
+                            onclick="abrir_modal_editar_usuario('{% url 'usuario:editar_administrador' usuario.id %}')"
+                            class="btn btn-warning"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="abrir_modal_eliminar_usuario(' url 'usuario:eliminar_usuario' usuario.id %}')"
+                            class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+
+                        <a href="#" class="btn btn-primary"><i class="fas fa-file-alt"></i></a>
+                    </td>
+
+
+                    <td>{{ usuario.nombre_usuario }}</td>
+                    <td>{{ usuario.paterno }}</td>
+                    <td>{{ usuario.materno }}</td>
+                    <td>{{ usuario.descripcion }}</td>
+                    <td>{{ usuario.cel_usuario }}</td>
+                    <td>{{ usuario.cel_usuario2 }}</td>
+                    <td>{{ usuario.ci_usuario }}</td>
+                    <td>{{ usuario.departamento }}</td>
+                    <td>{{ usuario.correo }}</td>
+                    <td>{{ usuario.fecha_registro }}</td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="edicion" role="dialog">
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+</div>
+
+{% block extrajs %}
+
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_editar_usuario(url) {
+        $('#edicion').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_eliminar_usuario(url) {
+        $('#eliminar').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

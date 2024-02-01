@@ -1,0 +1,58 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="sb-nav-link-icon">
+        <h4><i class="far fa-id-card"></i> LISTA DE ACTIVIDADES</h4>
+    </div>
+    <hr />
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table id="data" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="header" scope="col">R.U.</th>
+                        <th class="header" scope="col">MAESTRANTE</th>
+                        <th class="header" scope="col">DESCRIPCIÓN</th>
+                        <th class="header" scope="col">FECHA</th>
+                     
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    <tr>
+                       
+                        <td>{{ usuario.actividad }}</td>
+                        <td>{{ usuario.requisito }}</td>
+                        <td>{{ usuario.tiempo }}</td>
+                        <td>{{ usuario.rol1 }}</td>
+                      
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+{% block extrajs %}
+
+<script src="{% static 'lib/js/informe.js' %}"></script>
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+
+{% endblock extrajs %}
+
+{% endblock %}

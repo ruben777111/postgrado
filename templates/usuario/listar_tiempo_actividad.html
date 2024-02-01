@@ -1,0 +1,58 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:seguimiento_tesis'  %}">Seguimiento</a>
+  </li>
+  <li class="nav-item">
+    <a class="colores-segundario" href="{% url 'usuario:listado_tiempo'  %}">Actividades vencidas </a>
+  </li>
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:listar_historial'  %}">Historial </a>
+  </li>
+</ul>
+<div class="sb-nav-link-icon">
+  <h5><i class="far fa-id-card"></i>
+    ACTIVIDADES VENCIDAS DEL MAESTRANTE
+  </h5>
+</div>
+<hr />
+<div class="container">
+  <div class="table-responsive">
+    <table id="data" class="table table-striped">
+      <thead>
+        <tr>
+          <th class="header" scope="col">R.U.</th>
+          <th class="header" scope="col">Maestrante</th>
+          <th class="header" scope="col">Fecha&nbsp;entrega</th>
+          <th class="header" scope="col">Requerimiento/evidencia</th>
+          <th class="header" scope="col">Tema&nbsp;tesis</th>
+          <th class="header" scope="col">#</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody_users">
+        {% for evi in maestrantes %}
+        <tr>
+          <td> {{ evi.ru }} </td>
+          <td>{{ evi.maestrante }}</td>
+          <td>{{ evi.tiempo }}</td>
+          <td>{{ evi.requerimiento}}</td>
+          <td>{{ evi.tema_tesis}}</td>
+          <td><a href="#" onclick="quitarlista({{ evi.id_maestrante }})" class="btn btn-success"><i
+                class="fas fa-exclamation-triangle"></i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+{% endblock extrajs %}
+{% endblock %}

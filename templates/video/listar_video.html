@@ -1,0 +1,70 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> LISTA DE VIDEOS</h5>
+</div>
+<hr />
+{% if user.tipo_usuario == None or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+<h5 class="card-title"><a href="{% url 'video:agregar_video'%}" class="btn btn-primary"><i class="fas fa-user-plus"></i>
+        Agregar nuevo Video</a></h5>
+{% endif %}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table id="data" class="table table-striped ">
+                <thead>
+                    <tr>
+
+                        <th class="header" scope="col">Titulo&nbsp;del&nbsp;video</th>
+                        <th class="header" scope="col">Enlace del video</th>
+                        {% if user.tipo_usuario == None or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        <th>
+                            <div class="size"> Opciónes&nbsp;de&nbsp;Video</div>
+                        </th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for video in videos %}
+                    <tr>
+                        <td>{{ video.titulo_video }}</td>
+                        <td><a href="{{ video.enlace_video }}" class="btn btn-outline-primary" target="_blank">Ver
+                                video</a></td>
+                                {% if user.tipo_usuario == 3 %}
+                                <td><button onclick="abrir_modal_editar_video('{% url 'video:editar_video' video.id_video %}')"
+                                        class="btn btn-primary"><i class="fa-solid fa-pen"></i></button>
+                                    <button
+                                        onclick="abrir_modal_eliminar_video('{% url 'video:eliminar_video' video.id_video %}')"
+                                        class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+                                 
+                                   
+                                </td> {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edicion" role="dialog">
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+</div>
+{% block extrajs %}
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_editar_video(url) {
+        $('#edicion').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_eliminar_video(url) {
+        $('#eliminar').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+</script>
+{% endblock extrajs %}
+{% endblock %}

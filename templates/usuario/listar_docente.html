@@ -1,0 +1,113 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> LISTA DE DOCENTES</h5>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table id="data" class="table table-striped">
+                <thead>
+                    <tr>
+
+                        {% if user.is_staff %}
+                        <th>
+                            <div class="size"> Opciónes&nbsp;de&nbsp;usuario</div>
+                        </th>
+                        {% endif %}
+                        <th class="header" scope="col">NOMBRE</th>
+                        <th class="header" scope="col">APELLIDO&nbsp;PATERNO</th>
+                        <th class="header" scope="col">APELLIDO&nbsp;MATERNO</th>
+                        <th class="header" scope="col">ESPECIALIDAD</th>
+                        {% if user.is_staff %}
+                        <th class="header" scope="col">C.I.</th>
+                        <th class="header" scope="col">DEPARTAMENTO</th>
+                        <th class="header" scope="col">Nº&nbsp;DE&nbsp;CELULAR</th>
+                        <th class="header" scope="col">ESTADO</th>
+                        <th class="header" scope="col">ACCIÓN</th>
+                        <th class="header" scope="col">Nº&nbsp;DE&nbsp;REFERENCIA</th>
+                        <th class="header" scope="col">CORREO&nbsp;INSTITUCIONAL</th>
+                        <th class="header" scope="col">CORREO&nbsp;PERSONAL</th>
+                        <th class="header" scope="col">NOMBRE&nbsp;DE&nbsp;USUARIO</th>
+                        <th class="header" scope="col">FECHA&nbsp;DE&nbsp;REGISTRO</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    <tr>
+                        {% if user.is_staff %}
+                        <td>
+                            {% if usuario.docente_activo %}
+                            <a href="#" onclick="eliminardocente({{ usuario.id_docente }})" class="btn btn-danger"><i
+                                    class="fas fa-user-minus" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Esta acción deshabilitará al docente"></i></a>
+                            {% else %}
+                            <a href="#" onclick="habilitardocente({{ usuario.id_docente }})" class="btn btn-success"><i
+                                    class="fas fa-user-check" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Esta acción habilitará al docente"></i></a>
+                            {% endif %}
+
+                            <button
+                                onclick="abrir_modal_edicion('{% url 'usuario:editar_docente' usuario.id_docente %}')"
+                                class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Editar datos"><i class="fas fa-user-edit"></i>
+                            </button>
+
+                        </td>
+                        {% endif %}
+                        <td>{{ usuario.nombre_usuario }}</td>
+                        <td>{{ usuario.paterno }}</td>
+                        <td>{{ usuario.materno }}</td>
+                        <td>{{ usuario.docente.especialidad_docente }}</td>
+                        {% if user.is_staff %}
+                        <td>{{ usuario.ci_usuario }}</td>
+                        <td>{{ usuario.departamento }}</td>
+                        <td>{{ usuario.cel_usuario }}</td>
+                        <td>
+                            
+                            {% if usuario.mostrar_numero %}
+                            Numero de celular visible en formularios
+                            {% else %}
+                            Numero de celular no visible en formularios
+                            {% endif %}
+                                
+
+                        </td>
+                        <td>
+                            {% if usuario.mostrar_numero %}
+                            <a href="#" onclick="deshabilitarnumero({{ usuario.id_docente }})"
+                                class="btn btn-outline-danger"><i class="fas fa-phone-slash" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="Esta acción deshabilitará numero del docente"></i></a>
+
+                            {% else %}
+
+                                    <a href="#" onclick="habilitarnumero({{ usuario.id_docente }})"
+                                    class="btn btn-outline-primary"><i class="fas fa-phone" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Esta acción habilitará numero del docente"></i></a>
+    
+                                    {% endif %}
+
+                        </td>
+                        <td>{{ usuario.cel_usuario2 }}</td>
+                        <td>{{ usuario.correo_inst }}</td>
+                        <td>{{ usuario.correo }}</td>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.fecha_registro }}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% block extrajs %}
+
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+{% endblock extrajs %}
+{% endblock %}

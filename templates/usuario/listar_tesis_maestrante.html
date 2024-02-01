@@ -1,0 +1,186 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+  <h5><i class="far fa-id-card"></i> LISTA DE TESIS DE MAESTRANTES</h5>
+</div>
+<hr />
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+  <form class="row g-3" action="{% url 'usuario:busquedatesis' %}" method="GET">
+    {% csrf_token %}
+    <div class="col-auto"> <input type="number" class="form-control" name="busmaes" type="search"
+        placeholder="Ingresar R.U. del maestrante " required>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary mb-3">Aceptar</button>
+    </div>
+  </form>
+  {% for usuario in maestrantes %}
+  <div class="card">
+    <div class="card-body">
+      Maestrante: {{ usuario.maestrante }} <br>R.U: {{ usuario.ru }}
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Perfil de Tesis</td>
+          <td>
+            {% if usuario.perfil_tesis %}
+            <a href="{{ usuario.perfil_tesis.url }}" class="btn btn-outline-primary" target="_blank">Ver</a>
+            <a href="{{ usuario.perfil_tesis.url }}" download class="btn btn-outline-success">Descargar</a>
+            <a href="#" onclick="eliminarperfiltesis({{ usuario.id_maestrante }})" class="btn btn-success"><i
+                class="fas fa-user-minus"></i></a>
+            {% else %}
+            <span class="text-muted">No entregado</span>
+            {% endif %}
+          </td>
+          <td><button
+              onclick="abrir_modal_doc1('{% url 'usuario:editar_perfil_tesis' usuario.id_maestrante %}')"
+              class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>Perfil de Tesis mejorada</td>
+          <td>
+            {% if usuario.perfil_tesis_mejorado %}
+            <a href="{{ usuario.perfil_tesis_mejorado.url }}" class="btn btn-outline-primary"
+              target="_blank">Ver</a>
+            <a href="{{ usuario.perfil_tesis_mejorado.url }}" download
+              class="btn btn-outline-success">Descargar</a>
+
+            {% else %}
+            <span class="text-muted">No entregado</span>
+            {% endif %}
+          </td>
+          <td> <button
+              onclick="abrir_modal_doc2('{% url 'usuario:editar_perfil_mejorado' usuario.id_maestrante %}')"
+              class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
+
+        </tr>
+        <tr>
+          <td>Borrador de Tesis</td>
+          <td>
+            {% if usuario.borrador_tesis %}
+            <a href="{{ usuario.borrador_tesis.url }}" class="btn btn-outline-primary"
+              target="_blank">Ver</a>
+            <a href="{{ usuario.borrador_tesis.url }}" download class="btn btn-outline-success">Descargar</a>
+
+            {% else %}
+            <span class="text-muted">No entregado</span>
+
+            {% endif %}
+          </td>
+          <td><button
+              onclick="abrir_modal_doc3('{% url 'usuario:editar_borrador_tesis' usuario.id_maestrante %}')"
+              class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
+        </tr>
+
+
+        <tr>
+          <td>Tesis mejorada</td>
+          <td>
+            {% if usuario.tesis_mejorado %}
+            <a href="{{ usuario.tesis_mejorado.url }}" class="btn btn-outline-primary"
+              target="_blank">Ver</a>
+            <a href="{{ usuario.tesis_mejorado.url }}" download class="btn btn-outline-success">Descargar</a>
+            {% else %}
+            <span class="text-muted">No entregado</span>
+            {% endif %}
+          </td>
+          <td><button
+              onclick="abrir_modal_doc4('{% url 'usuario:editar_tesis_mejorado' usuario.id_maestrante %}')"
+              class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
+        </tr>
+        <tr>
+          <td>Tesis habilitada a defensa</td>
+          <td>
+            {% if usuario.tesis_mejorado_aprobacion %}
+            <a href="{{ usuario.tesis_mejorado_aprobacion.url }}" class="btn btn-outline-primary"
+              target="_blank">Ver</a>
+            <a href="{{ usuario.tesis_mejorado_aprobacion.url }}" download
+              class="btn btn-outline-success">Descargar</a>
+            {% else %}
+            <span class="text-muted">No entregado</span>
+            {% endif %}
+          </td>
+          <td><button
+              onclick="abrir_modal_doc5('{% url 'usuario:editar_tesis_aprobacion' usuario.id_maestrante %}')"
+              class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
+        </tr>
+
+        <tr>
+          <td>Tesis para empaste</td>
+          <td>
+            {% if usuario.tesis_optimizado %}
+            <a href="{{ usuario.tesis_optimizado.url }}" class="btn btn-outline-primary"
+              target="_blank">Ver</a>
+            <a href="{{ usuario.tesis_optimizado.url }}" download
+              class="btn btn-outline-success">Descargar</a>
+            {% else %}
+            <span class="text-muted">No entregado</span>
+            {% endif %}
+          </td>
+          <td><button
+              onclick="abrir_modal_doc6('{% url 'usuario:editar_tesis_optimizado' usuario.id_maestrante %}')"
+              class="btn btn-primary"><i class="fas fa-user-edit"></i></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</div>
+<div class="modal fade" id="doc1" role="dialog">
+</div>
+<div class="modal fade" id="doc2" role="dialog">
+</div>
+<div class="modal fade" id="doc3" role="dialog">
+</div>
+<div class="modal fade" id="doc4" role="dialog">
+</div>
+<div class="modal fade" id="doc5" role="dialog">
+</div>
+<div class="modal fade" id="doc6" role="dialog">
+</div>
+{% block extrajs %}
+<script src="{% static 'lib/js/informe.js' %}"></script>
+<script type="text/javascript">
+  var $ = jQuery.noConflict();
+
+  function abrir_modal_doc1(url) {
+      $('#doc1').load(url, function () {
+          $(this).modal('show');
+      });
+  }
+
+  function abrir_modal_doc2(url) {
+      $('#doc2').load(url, function () {
+          $(this).modal('show');
+      });
+  }
+  function abrir_modal_doc3(url) {
+      $('#doc3').load(url, function () {
+          $(this).modal('show');
+      });
+  }
+  function abrir_modal_doc4(url) {
+      $('#doc4').load(url, function () {
+          $(this).modal('show');
+      });
+  }
+  function abrir_modal_doc5(url) {
+      $('#doc5').load(url, function () {
+          $(this).modal('show');
+      });
+  }
+  function abrir_modal_doc6(url) {
+      $('#doc6').load(url, function () {
+          $(this).modal('show');
+      });
+  }
+
+</script>
+{% endblock extrajs %}
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> TEMA DE TESIS DEL MAESTRANTE</h5>
+</div>
+<hr />
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+        <table id="data" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        <div> #</div>
+                    </th>
+                    <th class="header" scope="col">R.U.</th>
+                    <th class="header" scope="col">MAESTRANTE</th>
+                    <th class="header" scope="col">TEMA&nbsp;PERFIL&nbsp;DE&nbsp;TESIS</th>
+                    <th class="header" scope="col">TEMA&nbsp;DE&nbsp;TESIS</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in actividades %}
+                <tr>
+                    <td>
+                        <button
+                            onclick="abrir_modal_edicion('{% url 'usuario:registrar_tema_tesis' usuario.id_maestrante %}')"
+                            class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
+                    </td>
+                    <td>{{ usuario.ru }}</td>
+                    <td>{{ usuario.maestrante }}</td>
+                    <td>
+                        {% if usuario.tema_tesis_perfil %}
+                        {{ usuario.tema_tesis_perfil }}
+                        {% else %}
+                        <div class="colores-primario-msg">
+                            Sin tema de peril de tesis
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if usuario.tema_tesis %}
+                        {{ usuario.tema_tesis }}
+                        {% else %}
+                        <div class="colores-primario-msg">
+                            Sin tema de tesis
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

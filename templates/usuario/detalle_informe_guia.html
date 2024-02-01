@@ -1,0 +1,142 @@
+{% load static %}
+<div id="seleccion">
+  <div class="modal-dialog modal-xl " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="card border-primary" style="width: 100%;">
+          <div class="card-body ">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-3">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-center">
+                    FORMULARIO PARA INFORME FINAL DE DOCENTE GUÍA Y APROBACIÓN PARA DEFENSA DE TESIS <br> R-0997 V.0
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row row-cols-1">
+              {% for usuario in maestrantes|slice:":1" %}
+              <div class="col">ELABORADO POR: {{usuario.user.guia}}</div>
+              {% if usuario.user.guia.user.docente.mostrar_numero %}
+              <div class="col">Nº CELULAR DE DOCENTE REVISOR: {{usuario.user.guia.user.cel_usuario}}</div>  
+              
+              {% endif %}   
+              <div class="col">CORREO INSTITUCIONAL DEL DOCENTE GUÍA: {{usuario.user.guia.user.correo_inst}}</div>
+              <div class="col">TÍTULO DE LA TESIS: {{usuario.user.tema_tesis}}</div>
+
+              <div class="col">MAESTRANTE: {{ usuario.user }}</div>
+              
+              <div class="col">DOCENTE REVISOR: {{usuario.user.revisor}}</div>
+              
+              <div class="col">FECHA DE REGISTRO DEL INFORME: {{ usuario.user.informeguia.fecha_registro }}</div>
+            </div>
+          </div>
+          <hr>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table" id="tablaprueba">
+                <thead>
+                  <tr>
+                    <tr>
+                      <th scope="col" style="font-size: 12px; text-align:center;">CAPÍTULO</th>
+                      <th scope="col" style="font-size: 12px; text-align:center;">OBSERVACIÓN <br>Observaciones emitidas
+                        en el informe del tribunal revisor</th>
+                      <th scope="col" style='font-size: 12px; text-align:center;'>¿ SE INCORPORARON LAS OPTIMIZACIONES
+                        RESPECTIVAS TOMANDO EN CUENTA LA OBSERVACIÓN ?</th>
+                      <th scope="col" style="font-size: 12px; text-align:center;">PAGINA(S). EN LAS QUE SE EVIDENCIA LA
+                        OPTIMIZACIÓN DE LA TESIS OMANDO EN CUENTA LA OBSERVACIÓN</th>
+                      <th scope="col" style="font-size: 12px; text-align:center;">FUNTAMENTACIÓN llenar esta casilla en
+                        caso de no haber tomado en cuenta el número </th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for usuario in maestrantes %}
+                  <tr>
+                    <td>{{ usuario.capitulo }}</td>
+                    <td>{{ usuario.obs }}</td>
+                    <td>{{ usuario.opcion }}</td>
+                    <td>{{ usuario.pagina }}</td>
+                    <td>{{ usuario.fundamentacion }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="col">OTRAS OBSERVACIONES:
+              {% if usuario.user.informeguia.otras_obs %}
+              {{usuario.user.informeguia.otras_obs}}
+              {% else %}
+              Ninguna
+              {% endif %}
+            </div>
+            <hr>
+            Tesis mejorada:
+            {% if usuario.user.tesis_mejorado %}
+            <a href="{{ usuario.user.tesis_mejorado.url }}" class="btn btn-outline-primary"
+                target="_blank">Ver</a>
+            <a href="{{ usuario.user.tesis_mejorado.url }}" download
+                class="btn btn-outline-success">Descargar</a>
+  
+            {% else %}
+            <span class="text-muted">Sin&nbsp;archivo</span>
+            {% endif %}
+            {% endfor %}
+          </div>
+
+
+
+        </div>
+  
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:imprSelec('seleccion')" ><button id="generarPDFBtn" class="btn btn-primary no-imprimir">Generar PDF</button></a>
+        <button type="button" class="btn btn-secondary no-imprimir" data-bs-dismiss="modal"
+          style="background-color: #1D2939;color:#eaf0f0;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+  {% block extracss %}
+<style>
+    @media print {
+        .no-imprimir {
+            display: none;
+        }
+                    /* Estilo para el cuerpo del documento */
+                    body {
+            font-size: 12px; /* Tamaño de fuente predeterminado */
+        }
+
+        /* Estilo para la tabla */
+        table {
+            font-size: 12px; /* Tamaño de fuente para la tabla */
+        }
+    }
+
+</style>
+
+{% endblock extracss %}
+  {% block extrajs %}
+  <script>
+    function imprSelec(nombre) {
+      var ficha = document.getElementById(nombre);
+      var ventimp = window.open('about:blank', '', 'width=600, height=600');
+      ventimp.document.write('<html><head><style type="text/css">@page { size: landscape; margin: 20mm 10mm; }</style></head><body>');
+      ventimp.document.write('<style type="text/css">');
+      ventimp.document.write('body { font-family: Arial, sans-serif; font-size: 12px; }');
+       ventimp.document.write('</style>');  
+      ventimp.document.write(ficha.innerHTML);
+      ventimp.document.write('</body></html>');
+      ventimp.document.close();
+      ventimp.print();
+      ventimp.close();
+    }
+  </script>
+  
+  
+  
+  {% endblock extrajs %}
+  

@@ -1,0 +1,42 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+  <li class="nav-item">
+    <a class="colores-segundario" href="{% url 'usuario:seguimiento_tesis'  %}">Seguimiento</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:listar_historial'  %}">Historial </a>
+  </li>
+</ul>
+<br>
+<div class="sb-nav-link-icon">
+  <h5><i class="far fa-id-card"></i> SEGUIMIENTO AL PROCESO DE TESIS</h5>
+</div>
+<hr />
+
+  <form class="row g-3" action="{% url 'usuario:busqueda' %}" method="GET">
+    {% csrf_token %}
+    <div class="col-8" style="text-align: right;"> <input class="form-control" name="busmaestrante" type="number"
+        placeholder="Ingresar R.U. del maestrante" aria-label="Busqueda" required>
+    </div>
+
+    <div class="col-3">
+      <button type="submit" class="btn btn-primary mb-3">Buscar</button>
+    </div>
+  </form>
+  {% for evidencia in actividades %}
+
+  <a href="{% url 'usuario:seguimiento_tesis_actividades' evidencia.nro_requisito  %}"
+    class="list-group-item list-group-item-action">
+    {{evidencia.nro_requisito}} - {{evidencia.actividad}}</a>
+
+  {% empty %}
+  <footer class="blockquote-footer">Sin registros</footer>
+
+  {% endfor %}
+
+
+
+{% endblock %}

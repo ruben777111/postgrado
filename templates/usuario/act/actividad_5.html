@@ -1,0 +1,44 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form id="informe" method="POST" action="{% url 'usuario:docente_guia_4' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card">  
+            <div class="card-body">
+              <h5>Maestrante: {{ object.maestrante }}</h5>
+              R.U.: {{ object.ru }} <br>
+              C.I.: {{ object.user.ci_usuario }}
+              <hr>
+              <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
+              Tema de perfil de tesis:
+              <input type="text"  class="form-control" name="tema" placeholder="Tema de perfil de tesiss"><br>              
+              Acta de sustentación de Tesis
+              <input type="file" name="acta" class="form-control" >
+              <hr>         
+
+              <input type="radio" name="resultado" value="1"> TEMA PROCEDIDO<br>       
+              <hr>
+
+              <input type="radio" name="resultado" value="0"> TEMA IMPROCEDIDO<br>          
+              
+            
+          
+          
+              <hr>
+              <p>Requerimientos / evidencia: </p>
+              <p> Sustentación del tema de investigación de tesis.</p>
+            </div>
+            <div class="modal-footer">
+              <input type="checkbox" required>
+              <div class="text-primary"> - Marque la casilla para confirmar el registro de la actividad.</div>
+              <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="colores-botonaceptar">Confirmar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

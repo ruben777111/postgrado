@@ -1,0 +1,114 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i>LISTA DE MAESTRANTES</h5>
+</div>
+<hr />
+<input type="search" width="100px" id="filtro-nombre" placeholder="Filtrar por nombre">
+<input type="search" id="filtro-apellido" placeholder="Filtrar por apellido paterno">
+<input type="search" id="filtro-materno" placeholder="Filtrar por apellido materno">
+<input type="search" id="filtro-ru" placeholder="Filtrar por R.U.">
+
+
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+        <table id="data" class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th class="header" scope="col">R.U.</th>
+                    
+                    <th class="header" scope="col">MAESTRANTE</th>
+                    
+                  
+                    <th class="header" scope="col">C.I.</th>
+                    <th class="header" scope="col">DEPARTAMENTO</th>
+                    
+                    <th class="header" scope="col">PROGRAMA</th>
+                    <th class="header" scope="col">VERSIÓN&nbsp;DEL&nbsp;PROGRAMA</th>
+                    <th class="header" scope="col">GESTIÓN</th>
+                    <th class="header" scope="col">DOCENTE&nbsp;GUÍA</th>
+                    <th class="header" scope="col">DOCENTE&nbsp;REVISOR</th>
+                    
+                    <th class="header" scope="col">TRIBUNAL&nbsp;INTERNO</th>
+                
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in actividades %}
+                <tr>
+                   
+
+                    <td>{{ usuario.ru }}</td>
+                    <td>{{ usuario.maestrante }}</td>
+                  
+                    <td>{{ usuario.ci_usuario }}</td>
+                    <td>{{ usuario.departamento }}</td>
+                    
+                    <td>{{ usuario.programa }}</td>
+                    <td>{{ usuario.version }}</td>
+                    <td>{{ usuario.gestion }}</td>
+                    <td>{{ usuario.guia }}</td>
+                    <td>{{ usuario.revisor }}</td>
+                    <td>{{ usuario.tribunaltesis.tribunal_tesis_2 }}</td>
+          
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block extrajs %}
+
+<script>
+    var $ = jQuery.noConflict();
+    $(document).ready(function () {
+
+        var table = $('#data').DataTable({
+            "language": {
+                "lengthMenu": "Mostrar" + `
+                <select class="custom-select custom-select-sm form-control form-control-sm">
+                    <option value ='10'>10</option>
+                    <option value ='25'>25</option>
+                    <option value ='50'>50</option>
+                    <option value ='100'>100</option>
+                    <option value ='-1'>Todos</option>
+                    ` + " registros por página",
+                "zeroRecords": "No hay registros disponibles",
+                "info": "Mostrar _PAGE_ de _PAGES_ paginas",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                "search": "Buscar",
+                "paginate": {
+                    'next': "Siguiente",
+                    'previous': "Anterior"
+                }
+            }
+        });
+
+        // Agregar filtros para las columnas específicas (nombre, apellido, R.U.)
+        $('#filtro-nombre').on('keyup', function () {
+            table.column(1).search(this.value).draw();
+        });
+
+        $('#filtro-apellido').on('keyup', function () {
+            table.column(3).search(this.value).draw();
+        });
+        $('#filtro-materno').on('keyup', function () {
+            table.column(4).search(this.value).draw();
+        });
+        $('#filtro-ru').on('keyup', function () {
+            table.column(0).search(this.value).draw();
+        });
+    });
+</script>
+{% endblock extrajs %}
+
+{% endblock %}
+
+
+
+

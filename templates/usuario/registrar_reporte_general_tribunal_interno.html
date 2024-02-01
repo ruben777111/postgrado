@@ -1,0 +1,71 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="card border-primary" style="width: 100%;">
+                <form id="informe" action="{% url 'usuario:registrar_reportegeneral_tribunal_interno' object.id_reportegeneral %}" method="POST">
+
+                    <div class="card-body ">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col col-lg-3">
+                                    <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid"  alt="Responsive image">
+                                </div>
+                                <div class="col">
+                                    <h5 class="card-title text-center">
+                                        REPORTE GENERAL TRIBUNAL INTERNO<br> R-0877 V.0
+                                    </h5>
+                                </div>
+
+                            </div>
+                        </div>
+                        <hr>
+                        <h6 class="card-title text-center">
+                            CONSIDERACIONES PARA LA DEFENSA FINAL DE TESIS
+                            
+                        </h6>
+                        
+                            <div class="row row-cols-1">
+                                <div class="col">MAESTRANTE: {{object.user}}</div>
+                                <div class="col">DOCENTE GUÍA: {{object.user.guia}}</div>
+                                <div class="col">TRIBUNAL INTERNO: {{object.user.tribunaltesis.tribunal_tesis_1}}</div>
+                                <div class="col">TÍTULO DE LA TESIS: {{object.user.tema_tesis}}</div>
+                            </div>                       
+
+                    </div>
+
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <h6 class="card-title"> En conocimiento de la procedencia del trabajo para Defensa de Tesis, emito las siguientes consideraciones: </h6>
+                        
+                        {{ form.reporte }}
+     
+
+                        </div>
+
+                        <div class="modal-footer">
+                            
+                                {{ form.aceptar_revisor }}
+                                <div class="text-primary"> - Marque la casilla para confirmar el registro de la actividad.</div>
+
+                            
+
+                            <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="colores-botonaceptar" >Confirmar</button>
+            
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/informe.js' %}"></script>
+<!-- Agrega el CDN de jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+{% endblock extrajs %}
+

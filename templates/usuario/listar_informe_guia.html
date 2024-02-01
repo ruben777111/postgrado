@@ -1,0 +1,138 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+
+
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> FORMULARIO DE INFORME FINAL DE DOCENTE GUÍA Y APROBACIÓN PARA DEFENSA DE TESIS - Formularios R-0997 - R-0996 </h5>
+
+    <hr />
+</div>
+<ul class="nav nav-pills justify-content-end">
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listar_informe_guia_pendiente'  %}">Pendientes</a>
+    </li>
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listar_informe_guia_realizado'  %}">Realizados </a>
+    </li>
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listar_informe_guia'  %}">Todos </a>
+    </li>
+  </ul>
+  <br>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+
+            <table name="f1" id="data" class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th class="header" scope="col">R.U.</th>
+                        <th class="header" scope="col">MAESTRANTE</th>
+                        <th class="header" scope="col">TEMA&nbsp;DE&nbsp;TESIS</th>
+                        <th class="header" scope="col">DOCENTE&nbsp;GUÍA</th>
+                        <th class="header" scope="col">DOCENTE&nbsp;REVISOR</th>
+                        <th class="header" scope="col">FECHA&nbsp;LIMITE&nbsp;DE&nbsp;PRESENTACIÓN</th>
+                        <th class="header" scope="col" style="width:200px">R-0997</th>
+                        <th class="header" scope="col" style="width:200px">R-0996</th>
+
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    <tr><td>{{ usuario.user.ru }}</td>
+                        <td>{{ usuario.user }}</td>
+                        <td>{{ usuario.user.tema_tesis }}</td>
+                        <td>{{ usuario.user.guia }}</td>
+                        <td>{{ usuario.user.revisor }}</td>
+                        <td>{{ usuario.user.cronograma2.fecha_formulario_guia }}</td>
+
+
+                        {% if usuario.user.informe.aceptar_revisor %}
+                        <td>
+
+                            {% if not usuario.user.informeguia.aceptar_guia and user.tipo_usuario == 2 %}
+
+                            <button type="button"
+                            onclick="abrir_modal_editar_usuario('{% url 'usuario:registrar_informe_guia' usuario.user.id_maestrante %}')"
+                            class="btn btn-primary"><i class="fas fa-file-signature"></i></button>
+
+
+                            {% elif usuario.user.informeguia.aceptar_guia %}
+                            
+                            <div class="colores-primario-msg">
+                                <button type="button"
+                                    onclick="abrir_modal_detalle('{% url 'usuario:detalle_informe_guia' usuario.user.id_maestrante %}')"
+                                    class="btn btn-primary"><i class="fas fa-file-signature"></i></button>
+                                    Ver informe guía
+                                </div>
+                            {% else %}
+                            formulario no emitido 
+                            {% endif %}
+
+
+
+
+                        </td>
+                        <td>
+                            <div class="colores-primario-msg">
+                                <button type="button"
+                                    onclick="abrir_modal_ver('{% url 'usuario:detalle_informe_revisor' usuario.user.id_maestrante %}')"
+                                    class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
+                                Ver informe revisor
+                            </div>
+                        </td>
+                        {% else %}
+
+                        <td></td>
+                        <td>EL informe no fue emitido.</td>
+                        {% endif %}
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+<div class="modal fade" id="detalle" role="dialog">
+
+</div>
+
+{% block extrajs %}
+<script src="{% static 'lib/js/check.js' %}"></script>
+<script src="{% static 'lib/js/fecha.js' %}"></script>
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_editar_usuario(url) {
+        $('#edicion').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_ver(url) {
+        $('#eliminar').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_detalle(url) {
+        $('#detalle').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

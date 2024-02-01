@@ -1,0 +1,89 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="card border-light mb-3" style="max-width: 100%;">
+  <div class="card-body">
+    <h5><i class="far fa-id-card"></i> FORMULARIO DE REGISTRO DE DOCENTE</h5>
+    <hr />
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <form id="informe" method="POST">
+          {% if messages %}
+          <div class="alert alert-danger">
+            <ul class="errorlist">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+          <div class="card colores-formulario">
+          {% csrf_token %}
+          
+          {% if form.errors %}
+          {% for field in form %}
+              {% for error in field.errors %} 
+                 <div class="alert alert-danger">
+                      <strong>{{ error|escape }}</strong>
+                 </div>
+              {% endfor %}
+          {% endfor %}
+       {% endif %}
+          
+
+       {{ form.tipo_usuario }}<br>
+       {{ form.nombre_usuario.label }}
+       {{ form.nombre_usuario }} <br>
+
+       {{ form.paterno.label }}
+       {{ form.paterno }}<br>
+
+       {{ form.materno.label }}
+       {{ form.materno }}<br>
+
+
+
+       {{ form.ci_usuario.label }}
+       {{ form.ci_usuario }}<br>
+
+       {{ form.departamento.label }}
+       {{ form.departamento }} <br>
+
+
+
+       {{ form.cel_usuario.label }}
+       {{ form.cel_usuario }}<br>
+
+       {{ form.cel_usuario2.label }}
+       {{ form.cel_usuario2 }}<br>
+
+       {{ form.correo.label }}
+       {{ form.correo }}<br>
+
+       {{ form.correo_inst.label }}
+       {{ form.correo_inst }}<br>
+
+
+       {{ form.docente_interno.label }}
+       {{ form.docente_interno }}<br>
+
+       {{ form.docente_externo.label }}
+       {{ form.docente_externo }}<br>
+
+       {{ form.especialidad_docente.label }}
+       {{ form.especialidad_docente }}<br>
+          </div>
+            <div class="modal-footer">
+              <button type="submit" class="colores-botoncerrar">Registrar</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
+{% endblock extrajs %}
+
+{% endblock %}

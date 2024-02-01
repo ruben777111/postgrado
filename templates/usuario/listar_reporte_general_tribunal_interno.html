@@ -1,0 +1,161 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> Reporte General Tribunal Interno</h5>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table name="f1" id="data" class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+
+                        <th class="header" scope="col">MAESTRANTE</th>
+
+                        <th class="header" scope="col">TRIBUNAL TESIS</th>
+                        
+                        <th class="header" scope="col">FECHA LIMITE</th>
+                        <th class="header" scope="col">MEJORA&nbsp;DE&nbsp;TESIS&nbsp;SEGUNDA&nbsp;INSTANCIA</th>
+                        <th class="header" scope="col">#</th>
+                        <th class="header" scope="col">#</th>
+                       
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    
+                    {% if  usuario.user.tribunaltesis.tribunal_tesis_2 == user.docente_revisor or usuario.user == user.maestrante or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        
+                    
+                        
+                    <tr>
+                        <td>{{ usuario.user }}</td>
+                        <td>{{ usuario.user.tribunaltesis.tribunal_tesis_2 }}</td>
+
+                        <td>{{ usuario.user.cronograma2.fecha_reporte_general }}</td>
+                        <td>
+
+                            {% if usuario.user.tesis_segunda_instancia %}
+                            <a href="{{ usuario.user.tesis_segunda_instancia.url }}" class="btn btn-outline-primary"
+                                target="_blank">Ver</a>
+                            <a href="{{ usuario.user.tesis_segunda_instancia.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+
+                            {% else %}
+                            <span class="text-muted">Sin&nbsp;archivo</span>
+                            {% endif %}
+
+
+                        </td>
+                        <td>
+
+                            {% if not usuario.aceptar_revisor and user.tipo_usuario == 2 %}
+                            <button type="button"
+                                onclick="abrir_modal_registrar('{% url 'usuario:registrar_reportegeneral_tribunal_interno' usuario.id_reportegeneral %}')"
+                                class="btn btn-primary "><i class=" fas fa-file-signature"></i></button>
+                            {% elif usuario.aceptar_revisor %}
+                            <div class="colores-primario-msg">
+                                <button type="button"
+                                    onclick="abrir_modal_ver('{% url 'usuario:detalle_reporte_segunda_instancia' usuario.id_reportegeneral %}')"
+                                    class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
+                                Ver reporte
+                            </div>
+                            {% endif %}
+                        </td>
+
+                        <td>
+
+                            {% if usuario.activar_reporte2 %}
+                            
+                            {% if not usuario.aceptar_revisor2 and user.tipo_usuario == 2 %}
+                            <button type="button"
+                                onclick="abrir_modal_registrar2('{% url 'usuario:registrar_reportegeneral2' usuario.id_reportegeneral %}')"
+                                class="btn btn-primary "><i class=" fas fa-file-signature"></i></button>
+                            {% elif usuario.aceptar_revisor2 %}
+                            <div class="colores-primario-msg">
+                                <button type="button"
+                                    onclick="abrir_modal_ver2('{% url 'usuario:detalle_reporte2' usuario.id_reportegeneral %}')"
+                                    class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
+                                Ver reporte
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="reg1" role="dialog">
+
+</div>
+<div class="modal fade" id="reg2" role="dialog">
+
+</div>
+<div class="modal fade" id="reg3" role="dialog">
+
+</div>
+<div class="modal fade" id="det1" role="dialog">
+
+</div>
+<div class="modal fade" id="det2" role="dialog">
+
+</div>
+
+<div class="modal fade" id="det3" role="dialog">
+
+</div>
+
+
+{% block extrajs %}
+<script src="{% static 'lib/js/check.js' %}"></script>
+<script src="{% static 'lib/js/fecha.js' %}"></script>
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_registrar(url) {
+        $('#reg1').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+    function abrir_modal_registrar2(url) {
+        $('#reg2').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_registrar3(url) {
+        $('#reg3').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_ver(url) {
+        $('#det1').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+    function abrir_modal_ver2(url) {
+        $('#det2').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_ver3(url) {
+        $('#det3').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

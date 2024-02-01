@@ -1,0 +1,88 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> LISTA DE DOCUMENTOS </h5>
+</div>
+{% if user.is_staff %}
+<h5 class="card-title"><a href="{% url 'documento:agregar_documento'%}" class="btn btn-primary"><i
+            class="fas fa-user-plus"></i> Agregar nuevo documento</a></h5>
+{% endif %}
+<hr />
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table id="data" class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+
+                        <th class="header" scope="col">Titulo&nbsp;del&nbsp;documento</th>
+                        <th class="header" scope="col">Documento</th>
+                        {% if user.tipo_usuario == None or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        <th>
+                            <div class="size"> Opciónes&nbsp;de&nbsp;documento</div>
+                        </th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for documento in documentos %}
+                    <tr>
+
+                        <td>{{ documento.titulo_documento }}</td>
+                        <td>
+                            {% if documento.archivo_documento %}
+                            <a href="{{ documento.archivo_documento.url }}" class="btn btn-outline-primary"
+                                target="_blank">Ver</a>
+                            <a href="{{ documento.archivo_documento.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+                        </td>
+                        {% else %}
+                        <span class="text-muted">Sin&nbsp;archivo</span>
+                        {% endif %}
+                        </td>
+                        {% if user.tipo_usuario == None or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        <td><button
+                                onclick="abrir_modal_editar_documento('{% url 'documento:editar_documento' documento.id_documento %}')"
+                                class="btn btn-primary"><i class="fa-solid fa-pen"></i></button>
+                            <button
+                                onclick="abrir_modal_eliminar_documento('{% url 'documento:eliminar_documento' documento.id_documento %}')"
+                                class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+
+                            
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edicion" role="dialog">
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+</div>
+{% block extrajs %}
+<!-- script src="{% static 'lib/js/revisor/revisor.js' %}"></script>-->
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_editar_documento(url) {
+        $('#edicion').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_eliminar_documento(url) {
+        $('#eliminar').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

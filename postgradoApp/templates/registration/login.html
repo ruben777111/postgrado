@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SISTEMA POSTGRADO USB</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{% static 'lib/css/styles2.css' %}" rel="stylesheet">
+</head>
+
+<body class="align">
+  <div class="resolucion">  
+
+    <div class="login">
+  
+      <header class="login__header">
+        <img class="card-img-top" src="{% static 'lib/img/img-fondo3.png' %}" alt="Card image cap">
+     
+      </header>
+
+      <form action="" class="login__form" method="POST">
+        {% csrf_token %}
+        <div>
+            <input class="form-control inp usrnm" type="text" name="username"
+            placeholder="Nombre de Usuario" required>
+        </div>
+  
+        <div>
+          
+          <input class="form-control inp pswd" type="password" name="password"
+                                placeholder="Contraseña" required>
+        </div>
+  
+        <div>
+          <input class="button" type="submit" value="Iniciar sesión">
+        </div>
+        <p style="text-align: center;">
+            <a href="{% url 'usuario:password' %}">Olvidé mi contraseña</a>
+            {% if form.errors %}
+            <div class="alert alert-warning" role="alert">
+              <p> Su nombre de usuario o contraseña no coinciden. Inténtalo de nuevo.</p>
+            </div>
+            
+            {% endif %}
+        </p>
+      </form>
+
+
+    </div>
+  
+
+
+  
+    </svg>
+  </div>
+  </body>
+  
+  <!-- https://fontawesome.com/icons/lock?style=solid -->
+
+</html>

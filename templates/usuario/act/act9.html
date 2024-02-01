@@ -1,0 +1,113 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:seguimiento_tesis'  %}">Seguimiento</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:listar_historial'  %}">Historial </a>
+  </li>
+</ul>
+<br>
+{% if mensaje %}
+{{ mensaje }}
+{% else %}
+<div class="sb-nav-link-icon">
+
+  <h5><i class="far fa-id-card"></i>
+    {% for actividades in actividad %}
+    {{ actividades.actividad }} <br><br>
+    {{ actividades.requisito }}
+
+    {% endfor %}
+  </h5>
+</div>
+<form id="miFormularioavance" action="{% url 'usuario:actividad_9' %}" method="POST">
+  {% csrf_token %}
+  <div class="card">
+    <div class="card-header">
+      Programar fecha para la presentación del segundo avance
+    </div>
+    <div class="card-body">
+      <input type="date" name="fecha" class="form-control" required>
+      <button type="submit"  class="btn btn-primary mb-1">Aceptar</button>
+    </div>
+  </div>
+  <!-- <input type="date" value="2024-07-23" min="2023-08-21" max="2023-08-25">-->
+  <hr />
+
+
+  <div class="table-responsive">
+    <table id="data" class="table table-striped">
+      <thead>
+        <tr>
+          <th class="header" scope="col"></th>
+          <th class="header" scope="col">Seleccionar&nbsp;Maestrante</th>
+          <th class="header" scope="col">R.U.</th>
+          <th class="header" scope="col">Limite de presentación del borrador de tesis</th>
+          <th class="header" scope="col"></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody_users">
+        {% for evi in maestrantesevi %}
+        <tr>
+          <td>
+            {% if today <= evi.cronograma2.fecha_borrador or evi.cronograma2.fecha_borrador_prorroga %} <input
+              type="checkbox" name="checks[]" value="{{ evi.id_maestrante }}">
+              {% endif %}
+          </td>
+
+          <td>{{ evi.maestrante }}</td>
+          <td> {{ evi.ru }} </td>
+          <td>
+            {% if evi.cronograma2.fecha_borrador_prorroga %}
+
+            <div class="container" style="color: blue;"> {{ evi.cronograma2.fecha_borrador_prorroga }} - Prorroga</div>
+
+            {% elif today > evi.cronograma2.fecha_borrador %}
+            <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador }} - Presentación de Borrador
+              de tesis caducada
+            </div>
+
+
+            {% else %}
+            {{ evi.cronograma2.fecha_borrador }}
+
+            {% endif %}
+
+          </td>
+          <td>
+            {% if today > evi.cronograma2.fecha_borrador and evi.cronograma2.fecha_borrador_prorroga == None %}
+            <a href="#" onclick="prorroga({{ evi.id_maestrante }})" class="btn btn-primary"><i class="fas fa-check"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Habilitar maestrante para prorroga"></i></a>
+            {% endif %}
+
+
+
+
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</form>
+
+{% endif %}
+{% block extrajs %}
+<script>
+  document.getElementById('miFormularioavance').addEventListener('submit', function(event) {
+      event.preventDefault(); // Evitar que el formulario se envíe automáticamente
+  
+      avanceuno();
+  });
+  </script>
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+{% endblock extrajs %}
+{% endblock %}

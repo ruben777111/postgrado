@@ -1,0 +1,35 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+        <div class="card-body">
+        <div class="card" style="width: 100%;">
+            <div class="card-header text-center">
+                <h5 class="mt-4"><i class="fas fa-file-signature me-2 "></i>REGISTRAR PROGRAMA</h5>
+            </div>
+            <div class="card-body">
+                <form id="informe" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <td>{{ form.as_p }}</td>
+                    <div class="card-footer text-muted text-center">
+                        
+                        <button type="submit" class="btn btn-primary"   onclick="return botonaceptar();">Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/informe.js' %}"></script>
+
+
+
+
+
+{% endblock extrajs %}
+
+
+{% endblock %}

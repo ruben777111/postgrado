@@ -1,0 +1,72 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:seguimiento_tesis'  %}">Seguimiento</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:listar_historial'  %}">Historial </a>
+  </li>
+</ul>
+<br>
+{% if mensaje %}
+{{ mensaje }}
+{% else %}
+<div class="sb-nav-link-icon">
+  <h5><i class="far fa-id-card"></i>
+    {% for actividades in actividad %}
+    {{ actividades.actividad }} <br><br>
+    {{ actividades.requisito }}
+
+    {% endfor %}
+  </h5>
+</div>
+<hr />
+
+<div class="table-responsive">
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th class="header" scope="col">R.U.</th>
+        <th class="header" scope="col">Maestrante</th>
+        <th class="header" scope="col">Fecha&nbsp;sustentación</th>
+
+        <th class="header" scope="col">Dictamen&nbsp;del&nbsp;acto&nbsp;de&nbsp;sustentación</th>
+
+
+      </tr>
+    </thead>
+    <tbody id="tableBody_users">
+      {% for evi in maestrantesevi %}
+      <tr>
+        <td> {{ evi.ru }} </td>
+        <td>{{ evi.maestrante }}</td>
+        <td>{{ evi.cronograma.fecha_3 }}</td>
+        <td>
+          <a href="#" onclick="improcedenciatema({{ evi.id_maestrante }})" class="btn btn-danger"><i
+              class="fas fa-times" data-bs-toggle="tooltip" data-bs-placement="top"
+              title="Tema de perfil improcedente"></i></a>
+
+          <a href="#" onclick="procedenciatema({{ evi.id_maestrante }})" class="btn btn-primary"><i class="fas fa-check"
+              data-bs-toggle="tooltip" data-bs-placement="top" title="Tema de perfil procedente"></i></a>
+
+
+
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endif %}
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+{% endblock extrajs %}
+{% endblock %}

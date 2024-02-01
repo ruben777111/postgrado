@@ -1,0 +1,58 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="sb-nav-link-icon">
+        <h4><i class="far fa-id-card"></i> LISTA DE EVIDENCIAS / REQUISITOS</h4>
+    </div>
+    <hr />
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table id="data" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="header" scope="col">#</th>
+                        <th class="header" scope="col">Nº requisito.</th>
+                        <th class="header" scope="col">Actividad</th>
+                        <th class="header" scope="col">Evidencia</th>
+                        <th class="header" scope="col">Tiempo/Dias</th>
+                        <th class="header" scope="col">Técnico</th>
+                        <th class="header" scope="col">Investigación</th>
+                        <th class="header" scope="col">Postgrado</th>
+                    
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    <tr>
+                        <td><button onclick="abrir_modal_edicion('{% url 'usuario:editar_evidencia' usuario.id_requisito %}')"
+                            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Editar datos"><i class="fas fa-user-edit"></i></button></td>
+                        <td>{{ usuario.nro_requisito }}</td>
+                        <td>{{ usuario.actividad }}</td>
+                        <td>{{ usuario.requisito }}</td>
+                        <td>{{ usuario.tiempo }}</td>
+                        <td>{{ usuario.rol1 }}</td>
+                        <td>{{ usuario.rol2 }}</td>
+                        <td>{{ usuario.rol3 }}</td>
+               
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+
+
+{% endblock %}

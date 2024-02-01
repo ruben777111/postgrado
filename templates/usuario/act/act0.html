@@ -1,0 +1,77 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<ul class="nav nav-pills justify-content-end">
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:seguimiento_tesis'  %}">Seguimiento</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="colores-primario ext" href="{% url 'usuario:listar_historial'  %}">Historial </a>
+  </li>
+</ul>
+
+<br>
+{% if mensaje %}
+{{ mensaje }}
+{% else %}
+<div class="sb-nav-link-icon">
+  <h5><i class="far fa-id-card"></i>
+    {% for actividades in actividad %}
+    {{ actividades.actividad }} <br><br>
+    {{ actividades.requisito }}
+    {% endfor %}
+  </h5>
+</div>
+<hr />
+<div class="table-responsive">
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th class="header" scope="col">R.U.</th>
+        <th class="header" scope="col">Maestrante</th>
+        <th class="header" scope="col">Fecha/hora&nbsp;programada</th>
+        <th class="header" scope="col">Programar fecha</th>
+        <th class="header" scope="col">#</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody_users">
+      {% for evi in maestrantesevi %}
+      <tr>
+        <td> {{ evi.ru }} </td>
+        <td>{{ evi.maestrante }}</td>
+        <td>
+          {% if evi.cronograma.fecha_induccion %}
+          {{ evi.cronograma.fecha_induccion }} a hrs: {{ evi.cronograma.hora_induccion }}
+          {% else %}
+          Sin fecha ni hora designado
+          {% endif %}
+        </td>
+        <td>
+          <button onclick="abrir_modal_edicion('{% url 'usuario:formulario_asistencia' evi.id_maestrante %}')"
+            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+              class="fas fa-calendar-check"></i></button>
+
+        </td>
+        <td>
+          <a href="#" onclick="actividad01({{ evi.id_maestrante }})" class="btn btn-primary"><i class="fas fa-user-plus"
+              data-bs-toggle="tooltip" data-bs-placement="top"
+              title="Esta acción habilitará al usuario para el desarrollo de Tesis"></i></a>
+
+        </td>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endif %}
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+{% endblock extrajs %}
+{% endblock %}

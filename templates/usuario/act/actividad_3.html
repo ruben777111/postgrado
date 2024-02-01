@@ -1,0 +1,40 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form id="informe" method="POST" action="{% url 'usuario:actividad_3' object.id_maestrante %}">
+          {% csrf_token %}
+          <div class="card">
+            <div class="card-body">
+              <h5>Maestrante: {{ object.maestrante }}</h5>
+              Instancia: 
+                {% if object.instancia == 1 %}
+                1º instancia
+                {% elif object.instancia == 2 %}
+                2º instancia
+                {% elif object.instancia == 3 %}
+                3º instancia
+                {% endif %}
+                <br>
+              R.U.: {{ object.ru }} <br>
+              C.I.: {{ object.user.ci_usuario }} <br>
+              DOCENTE GUÍA PROVISIONAL: {{ object.provisional }}<br>
+              <hr>
+              {{ form.as_p }}
+              {{ form2.as_p }}
+             
+              
+            </div>
+            <div class="modal-footer">
+              <input type="checkbox" required>
+              <div class="text-primary"> - Marque la casilla para confirmar el registro de la actividad.</div>
+              <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="colores-botonaceptar">Confirmar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

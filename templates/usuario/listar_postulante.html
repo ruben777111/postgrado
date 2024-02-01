@@ -1,0 +1,63 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i>LISTA DE MAESTRANTES</h5>
+</div>
+<hr />
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+        <table id="data" class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th class="header" scope="col">R.U.</th>
+                    <th class="header" scope="col">NOMBRE(S) APELLIDO(S)</th>
+                    <th> TIPO</th>
+                    <th> #</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in actividades %}
+                <tr>
+
+
+                    <td>{{ usuario.ru }}</td>
+                    <td>{{ usuario.maestrante }}</td>
+                    <td>
+                    
+                    {% if usuario.programa_regular %}
+                    Programa regular en curso
+                        {% elif usuario.reincorporacion %}
+                        Reincorporación a nueva versión de programa
+                        {% elif usuario.vigencia_matricula %}
+                        
+                        Reincorporación con vigencia de matricula
+
+                        
+                    {% endif %}
+                        
+                        
+                    
+                    
+                    </td>
+                    <td>
+                        <a href="#" onclick="habilitarusuario({{ usuario.id_maestrante }})" class="btn btn-primary"><i
+                                class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Habilitar para el desarrollo de Tesis"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block extrajs %}
+
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+{% endblock extrajs %}
+
+{% endblock %}

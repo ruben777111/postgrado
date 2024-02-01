@@ -1,0 +1,141 @@
+@use postcss-preset-env {
+    stage: 0;
+  }
+  
+  /* ---------- GENERAL ---------- */
+  * {
+    box-sizing: inherit;
+  }
+  
+ 
+  
+  body {
+    
+    /* background: radial-gradient(#467df9 , 40%,#044299); */
+    background: linear-gradient(to bottom right, #dbe3e3,#dbe3e3);
+    font-family: 'Varela Round', sans-serif;
+    line-height: 1.5;
+    margin: 0;
+    min-block-size: 100vh;
+    padding: 5vmin;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  input {
+    background-image: none;
+    border: none;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s;
+  }
+  
+  svg {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+  }
+  
+  /* ---------- ALIGN ---------- */
+  .align {
+    display: grid;
+    place-items: center;
+  }
+  
+  /* ---------- BUTTON ---------- */
+  
+  .button {
+    background: linear-gradient(to top, #467df9 , 20%,#044299);
+    color: #fff;
+    padding: 0.25em 8em;
+    border-radius: 0.5rem;
+  }
+  
+  .button:focus,
+  .button:hover {
+    background-color: #282cad;
+  }
+  
+  /* ---------- ICONS ---------- */
+  .icons {
+    display: none;
+  }
+  
+  .icon {
+    fill: currentcolor;
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+  }
+  
+  /* ---------- LOGIN ---------- */
+  .login {
+    width: 800px;
+  }
+  
+  .login__header {
+    background: linear-gradient(to top, #fff , 30%,#fff);
+    border-top-left-radius: 1.25em;
+    border-top-right-radius: 1.25em;
+    color: #fff;
+    padding: 1.25em 1.625em;
+  }
+  
+  .login__header :first-child {
+    margin-top: 0;
+  }
+  
+  .login__header :last-child {
+    margin-bottom: 0;
+  }
+  
+  .login h2 .icon {
+    margin-right: 14px;
+  }
+  
+  .login__form {
+    background: linear-gradient(to top, #dbe3e3 , 50%,#fff);
+    border-bottom-left-radius: 1.25em;
+    border-bottom-right-radius: 1.25em;
+    color: #fff;
+    display: grid;
+    gap: 0.875em;
+    padding: 2em 1.625em;
+  }
+  .login__form_cambio {
+    background: linear-gradient(to top, #467df9 , 50%,#467df9);
+    border-bottom-left-radius: 1.25em;
+    border-bottom-right-radius: 1.25em;
+    color: #eaf0f0;
+    display: grid;
+    gap: 0.875em;
+    padding: 6em 1.625em;
+  } 
+  .login input {
+    border-radius: 0.1875em;
+  }
+  
+  .login input[type="text"],
+  .login input[type="password"] {
+    background-color: #fff;
+    color: #0b0b0b;
+    padding: 0.25em 0.125em;
+    width: 100%;
+  }
+  
+  .login input[type="submit"] {
+    display: block;
+    margin: 0 auto;
+  }
+  input{
+    background: rgb(250, 250, 250);
+    border: 1px solid #393939;
+    
+    color: #393939;
+    width: 300px;
+    padding: 15px 10em;
+}
+

@@ -1,0 +1,160 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h3><i class="far fa-id-card"></i> Tesis</h3>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="header" scope="col">Descripción</th>
+                        <th class="header" scope="col">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Perfil de Tesis</td>
+                        <td>
+                            {% if user.maestrante.perfil_tesis %}
+                            <a href="{{ user.maestrante.perfil_tesis.url }}" class="btn btn-outline-success"
+                                target="_blank">Ver documento</a>
+                            <a href="{{ user.maestrante.perfil_tesis.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+                        </td>
+                        {% else %}
+                        <button type="button"
+                            onclick="abrir_modal_editar_usuario('{% url 'usuario:tesis_perfil' user.maestrante.id_maestrante %}')"
+                            class="btn btn-primary"><i class="fa-solid fa-pen"></i></button> Cargar archivo
+
+                        {% endif %}
+                        </td>
+                    </tr>
+
+                    {% if user.maestrante.perfil_tesis %}
+                    <tr>
+
+                        <td>Perfil de Tesis mejorado</td>
+                        <td>
+                            {% if user.maestrante.perfil_tesis_mejorado %}
+                            <a href="{{ user.maestrante.perfil_tesis_mejorado.url }}" class="btn btn-outline-success"
+                                target="_blank">Ver documento</a>
+                            <a href="{{ user.maestrante.perfil_tesis_mejorado.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+                            {% else %}
+                            <button type="button"
+                                onclick="abrir_modal_editar_usuario('{% url 'usuario:tesis_perfil_mejorado' user.maestrante.id_maestrante %}')"
+                                class="btn btn-primary"><i class="fas fa-file-upload"></i></button> Cargar archivo
+
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if user.maestrante.perfil_tesis_mejorado %}
+                    <tr>
+                        <td>Borrador de Tesis</td>
+                        <td>
+                            {% if user.maestrante.borrador_tesis %}
+                            <a href="{{ user.maestrante.borrador_tesis.url }}" class="btn btn-outline-success"
+                                target="_blank">Ver documento</a>
+                            <a href="{{ user.maestrante.borrador_tesis.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+                            {% else %}
+                            <button type="button"
+                                onclick="abrir_modal_editar_usuario('{% url 'usuario:tesis_borrador' user.maestrante.id_maestrante %}')"
+                                class="btn btn-primary"><i class="fas fa-file-upload"></i></button> Cargar archivo
+
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if user.maestrante.borrador_tesis %}
+                    <tr>
+                        <td>Tesis mejorado</td>
+                        <td>
+                            {% if user.maestrante.tesis_mejorado %}
+                            <a href="{{ user.maestrante.tesis_mejorado.url }}" class="btn btn-outline-success"
+                                target="_blank">Ver documento</a>
+                            <a href="{{ user.maestrante.tesis_mejorado.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+                            {% else %}
+                            <button type="button"
+                                onclick="abrir_modal_editar_usuario('{% url 'usuario:tesis_mejorado' user.maestrante.id_maestrante %}')"
+                                class="btn btn-primary"><i class="fas fa-file-upload"></i></button> Cargar archivo
+
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if user.maestrante.tesis_mejorado %}
+                    <tr>
+
+                        <td>Tesis mejorado para aprobación</td>
+                        <td>
+                            {% if user.maestrante.tesis_mejorado_aprobacion %}
+                            <a href="{{ user.maestrante.tesis_mejorado_aprobacion.url }}"
+                                class="btn btn-outline-success" target="_blank">Ver documento</a>
+                            <a href="{{ user.maestrante.tesis_mejorado_aprobacion.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+                            {% else %}
+                            <button type="button"
+                                onclick="abrir_modal_editar_usuario('{% url 'usuario:tesis_aprobado' user.maestrante.id_maestrante %}')"
+                                class="btn btn-primary"><i class="fas fa-file-upload"></i></button> Cargar archivo
+
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if user.maestrante.tesis_mejorado_aprobacion %}
+                    <tr>
+
+                        <td>Tesis optimizado</td>
+                        <td>
+                            {% if user.maestrante.tesis_optimizado %}
+                            <a href="{{ user.maestrante.tesis_optimizado.url }}" class="btn btn-outline-success"
+                                target="_blank">Ver documento</a>
+                            <a href="{{ user.maestrante.tesis_optimizado.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+                            {% else %}
+                            <button type="button"
+                                onclick="abrir_modal_editar_usuario('{% url 'usuario:tesis_optimizado' user.maestrante.id_maestrante %}')"
+                                class="btn btn-primary"><i class="fas fa-file-upload"></i></button> Cargar archivo
+
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+{% block extrajs %}
+
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_editar_usuario(url) {
+        $('#edicion').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form id="informe" method="POST" action="{% url 'usuario:registrar_avance_2' %}">
+          {% csrf_token %}
+          <div class="card">  
+            <div class="card-body">
+              <input type="hidden" name="id_maestrante" value="{{object.id_maestrante}}">
+              <h5>Maestrante: {{ object.maestrante }}</h5>
+              R.U.: {{ object.ru }} <br>
+              C.I.: {{ object.user.ci_usuario }}
+              <hr>
+          
+              <p>
+               Fecha para la presentación del segundod avance, en caso de que el primer avance haya sido aprobada:
+                  <input type="date" class="form-control" name="fecha" required>
+               
+                </p>
+         
+            </div>
+            <div class="modal-footer">
+              <input type="checkbox" required>
+              <div class="text-primary"> - Marque la casilla para confirmar el registro de la actividad.</div>
+              <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="colores-botonaceptar">Confirmar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

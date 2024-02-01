@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Copia de seguridad</title>
+</head>
+<body>
+    <h1>Realizar copia de seguridad</h1>
+    <p>Haz clic en el botón para realizar una copia de seguridad de la base de datos:</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Realizar copia de seguridad</button>
+    </form>
+
+
+</body>
+</html>

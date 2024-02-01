@@ -1,0 +1,29 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="card border-light mb-3" style="max-width: 100%;">
+  <div class="card-body">
+    <h5><i class="far fa-id-card"></i> FORMULARIO DE REGISTRO DE MAESTRANTE</h5>
+    <hr />
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <form method="post" class="maestrante-form">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Guardar Maestrante</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<form>
+
+
+
+</form>
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
+
+{% endblock extrajs %}
+
+{% endblock %}

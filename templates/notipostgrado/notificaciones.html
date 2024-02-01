@@ -1,0 +1,57 @@
+<!-- notifications.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones en tiempo real</title>
+    <!-- Incluye la biblioteca JavaScript de Channels -->
+    
+
+</head>
+<body>
+    <h1>Notificaciones en tiempo real</h1>
+    
+    <div id="notification-container">
+        <!-- Aquí se mostrarán las notificaciones en tiempo real -->
+    </div>
+    
+    <script>
+        
+        // channels.js
+
+(function () {
+    const socketScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const socketPath = "/ws/some_path/";  // Reemplaza "/ws/some_path/" con la ruta WebSocket de tu aplicación
+
+    const socketURL = `${socketScheme}://${window.location.host}${socketPath}`;
+    const socket = new WebSocket(socketURL);
+
+    socket.onopen = () => {
+        console.log("WebSocket connection established.");
+    };
+
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        // Maneja los datos recibidos desde el servidor, por ejemplo, actualiza la interfaz de usuario con las notificaciones en tiempo real.
+        console.log("Received data from server:", data);
+    };
+
+    socket.onclose = (event) => {
+        if (event.wasClean) {
+            console.log(`Closed cleanly, code=${event.code}, reason=${event.reason}`);
+        } else {
+            console.error(`Connection died`);
+        }
+    };
+
+    socket.onerror = (error) => {
+        console.error(`WebSocket error: ${error.message}`);
+    };
+
+    // Aquí puedes agregar funciones para enviar datos al servidor a través del WebSocket, si es necesario.
+})();
+
+    </script>
+</body>
+</html>
