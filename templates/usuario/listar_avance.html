@@ -10,7 +10,7 @@
         </div>
    
 
-{% if not user.tipo_usuario == 1 %}
+{% if user.tipo_usuario == 2 or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
 
     
 
@@ -38,6 +38,7 @@
                         <th class="header" scope="col">DOCENTE GUÍA</th>
                         <th class="header" scope="col">FECHA LIMITE DE PRESENTACIÓN DEL FORMULARIO</th>
                         <th class="header" scope="col">#</th>
+                        <th class="header" scope="col">HISTORIAL DE AVANCE</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody_users">
@@ -46,7 +47,21 @@
                         <td>{{ usuario.user.ru }}</td>
                         <td>{{ usuario.user }}</td>
                         <td>{{ usuario.user.guia }}</td>
-                        <td>{{ usuario.user.cronograma2.fecha_avance1 }}</td>
+                        <td>
+                            
+                            {% if usuario.aceptar_avance %}
+                                
+                            <span style="color: blue;"> {{ usuario.user.cronograma2.fecha_avance1 }} - Entregado
+                                </span>
+                            {% elif usuario.user.cronograma2.fecha_avance1 < today  %}
+                            <span style="color: red;">{{ usuario.user.cronograma2.fecha_avance1 }} - expiró fecha de entrega</span>
+                          {% else %}
+                            {{ usuario.user.cronograma2.fecha_avance1 }}
+                            
+                          {% endif %}
+
+
+                        </td>
                        
                         <td>
                             {% if not usuario.aceptar_avance and user.tipo_usuario == 2 %}
@@ -65,9 +80,14 @@
                                     class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
                                 Ver avance
                             </div>
+                            {% else %}
+                            formulario no emitido 
                             {% endif %}
                            
                         </td>
+                        <td>      <a href="{% url 'usuario:listar_avance_historial' usuario.user.maestrante.username %}"><p class="text-primary">Historial de avance</p></a>
+                                
+                </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -86,9 +106,8 @@
 
 </div>
 
+
 {% block extrajs %}
-<script src="{% static 'lib/js/check.js' %}"></script>
-<script src="{% static 'lib/js/fecha.js' %}"></script>
 <script src="{% static 'lib/js/data.js' %}"></script>
 <script type="text/javascript">
     var $ = jQuery.noConflict();
@@ -105,7 +124,6 @@
 
 
 </script>
-
 
 {% endblock extrajs %}
 

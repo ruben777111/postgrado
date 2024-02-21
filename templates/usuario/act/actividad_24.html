@@ -38,27 +38,8 @@
   </div>
 </div>
 {% block extrajs %}
-<script>
-  $('input[type="file"]').on('change', function(){
-    var ext = $( this ).val().split('.').pop();
-    if ($( this ).val() != '') {
-      if(ext == "pdf"){
-  
-        if($(this)[0].files[0].size > 1048576){
-          console.log("El documento excede el tamaño máximo");
-          $('#modal-title').text('¡Precaución!');
-          $('#modal-msg').html("Se solicita un archivo no mayor a 1MB. Por favor verifica.");
-          $("#modal-gral").modal();           
-          $(this).val('');
-        }else{
-          $("#modal-gral").hide();
-        }
-      }
-      else
-      {
-        $( this ).val('');
-        alert("Por favor, subir un archivo en formato PDF");
-      }
-    }
-  });</script>
+<script src="{% static 'lib/js/pdf.js' %}"></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script src="{% static 'lib/js/actividad.js' %}"></script>
+   
 {% endblock extrajs %}

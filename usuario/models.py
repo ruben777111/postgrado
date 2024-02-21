@@ -110,6 +110,7 @@ class Usuario(AbstractBaseUser):
         return True
     def __str__(self):
         return "%s "% (self.nombre_usuario)+ "%s "% (self.paterno)+ "%s "% (self.materno)
+
 class Docente(Usuario):
     id_docente = models.AutoField(primary_key=True)
     especialidad_docente = models.CharField(max_length=130, blank=True, null=True)
@@ -152,14 +153,11 @@ class DocenteProvisional(models.Model):
 
 class Maestrante(Usuario):
     id_maestrante = models.AutoField(primary_key = True)    
-    
-#    user = models.OneToOneField(Usuario,on_delete=models.CASCADE,blank = True, null = True)    
-
     programa = models.ForeignKey(Programa, on_delete=models.CASCADE,blank = True, null = True)
     ru = models.IntegerField( blank = False, null = True)
     sede = models.CharField('Sede',max_length=100,blank=True,null=True,choices=sede)
     gestion = models.IntegerField( blank = False, null = True)
-    #form_habilitacion = models.FileField(validators=[ext_validator],upload_to='tesis/actividades/habilitacion/', max_length=254,blank = True, null = True)     
+    
     perfil_tesis = models.FileField(validators=[ext_validator],upload_to='tesis/actividades/borrador/', max_length=254,blank = True, null = True)     
     perfil_tesis_mejorado = models.FileField(validators=[ext_validator],upload_to='tesis/actividades/', max_length=254,blank = True, null = True)     
     borrador_tesis = models.FileField(validators=[ext_validator],upload_to='tesis/actividades/', max_length=254,blank = True, null = True)     
@@ -228,7 +226,8 @@ class Maestrante(Usuario):
     def __str__(self):
         return "%s "% (self.nombre_usuario)+ "%s "% (self.paterno)+ "%s "% (self.materno)
 
-
+    def nombre_completo(self):
+        return f"{self.nombre_usuario} {self.paterno} {self.materno} {self.programa}"
 
 
 
@@ -407,7 +406,7 @@ class ActividadesMaestrante(models.Model):
 class CentroActividades(models.Model):
     maestrante = models.ForeignKey(Maestrante, on_delete=models.CASCADE, blank=True, null=True, related_name='actividades_maestrante')
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, blank=True, null=True)
-
+    numero_actividad = models.IntegerField(blank = True, null = True)
     id_actividad = models.AutoField(primary_key = True)  
     observacion = models.TextField(max_length=1000,blank=True,null=True)
     fecha_programada = models.DateField(null=True, blank=True)
@@ -427,6 +426,7 @@ class Cronograma(models.Model):
     user = models.OneToOneField(Maestrante,on_delete=models.CASCADE,blank = True, null = True)
     fecha_induccion  = models.DateField(blank = True, null = True)    
     hora_induccion = models.TimeField(null=True, blank=True)
+    reunion_realizada = models.BooleanField(default = False)
     fecha_1  = models.DateField(blank = True, null = True)    
     fecha_2  = models.DateField(blank = True, null = True)
     fecha_3  = models.DateField(blank = True, null = True)
@@ -459,6 +459,7 @@ class Cronograma2(models.Model):
     fecha_sustentacion  = models.DateField(blank = True, null = True)
     hora_sustentacion = models.TimeField(null=True, blank=True)
     fecha_tesis_mejorada  = models.DateField(blank = True, null = True)
+    fecha_reporte_general_tribunal_interno  = models.DateField(blank = True, null = True)
     class Meta:
         verbose_name='Cronograma2'
         verbose_name_plural='Cronogramas2'
@@ -585,11 +586,14 @@ class InformeGuiaFormulario(models.Model):
         return "%s "% (self.user) 
 class AsistenciaInduccion(models.Model):
     id_asistencia = models.AutoField(primary_key = True)
-    maestrante = models.OneToOneField(Maestrante,on_delete=models.CASCADE,blank = True, null = True)
+    maestrante = models.ForeignKey(Maestrante,on_delete=models.CASCADE,blank = True, null = True)
     fecha_asesoramiento = models.DateField(null=True, blank=True)
     hora_asesoramiento = models.TimeField(null=True, blank=True)
-    fecha = models.DateField('Fecha de registro',  auto_now = False, auto_now_add = True) 
-    obs  = models.TextField('Observaciones',max_length=400,blank=True,null=True)
+    fecha_realizada = models.DateField(null=True, blank=True) 
+    hora_realizada = models.TimeField(null=True, blank=True)
+    enlace_reunion = models.URLField(null=True, blank=True,max_length=1000)
+    obs  = models.TextField('Observaciones',max_length=700,blank=True,null=True)
+    hoja_reunion = models.FileField(validators=[ext_validator],upload_to='tesis/', max_length=254,blank = True, null = True)         
     class Meta:
         verbose_name='Registro de asistencia'
         verbose_name_plural='Registros de asistencias'
@@ -602,12 +606,11 @@ class Avance(models.Model):
     cap1 = models.IntegerField( 'Capitulo I', blank = True, null = True)
     cap2 = models.IntegerField( 'Capitulo II', blank = True, null = True)
     cap3 = models.IntegerField( 'Capitulo III', blank = True, null = True)
-    cap4 = models.IntegerField( 'Capitulo IV', blank = True, null = True)
-    cap5 = models.IntegerField( 'Capitulo V', blank = True, null = True)
-    bibliografia = models.IntegerField( 'Bibliografía', blank = True, null = True)
-    anexos = models.IntegerField( 'Anexos', blank = True, null = True)
-    obs = models.TextField(max_length=500,blank=True,null=True)
-    sug = models.TextField(max_length=500,blank=True,null=True)
+
+    cap1_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap2_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap3_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+
     OPCIONES = [
         ('si', 'Aprobado'),
         ('no', 'No aprobado'),
@@ -633,12 +636,10 @@ class AvanceHistorial(models.Model):
     cap1 = models.IntegerField( 'Capitulo I', blank = True, null = True)
     cap2 = models.IntegerField( 'Capitulo II', blank = True, null = True)
     cap3 = models.IntegerField( 'Capitulo III', blank = True, null = True)
-    cap4 = models.IntegerField( 'Capitulo IV', blank = True, null = True)
-    cap5 = models.IntegerField( 'Capitulo V', blank = True, null = True)
-    bibliografia = models.IntegerField( 'Bibliografía', blank = True, null = True)
-    anexos = models.IntegerField( 'Anexos', blank = True, null = True)
-    obs = models.TextField(max_length=500,blank=True,null=True)
-    sug = models.TextField(max_length=500,blank=True,null=True)
+
+    cap1_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap2_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap3_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
     OPCIONES = [
         ('si', 'Aprobado'),
         ('no', 'No aprobado'),
@@ -646,7 +647,9 @@ class AvanceHistorial(models.Model):
     ]
     aprobacion = models.CharField(max_length=20, choices=OPCIONES)
     fecha_registro = models.DateField('Fecha de registro', auto_now = True, auto_now_add = False)       
+    fecha_programada =  models.DateField(null=True, blank=True)      
     aceptar_avance = models.BooleanField(default = False)
+    docete_guia = models.TextField(max_length=300,blank=True,null=True)
  
 
     class Meta:
@@ -659,19 +662,19 @@ class AvanceHistorial(models.Model):
 class Avance_2(models.Model):
     id_avance = models.AutoField(primary_key = True)
     user = models.OneToOneField(Maestrante,on_delete=models.CASCADE,blank = True, null = True)
-    cap1 = models.IntegerField( 'Capitulo I', blank = False, null = True)
-    cap2 = models.IntegerField( 'Capitulo II', blank = False, null = True)
-    cap3 = models.IntegerField( 'Capitulo III', blank = False, null = True)
-    cap4 = models.IntegerField( 'Capitulo IV', blank = False, null = True)
-    cap5 = models.IntegerField( 'Capitulo V', blank = False, null = True)
-    biblioragia = models.IntegerField( 'Bibliografía', blank = False, null = True)
-    anexos = models.IntegerField( 'Anexos', blank = False, null = True)
+    cap4 = models.IntegerField( 'Capitulo IV', blank = True, null = True)
+    cap5 = models.IntegerField( 'Capitulo V', blank = True, null = True)
+    cap6 = models.IntegerField( 'Capitulo VI', blank = True, null = True)
+    cap7 = models.IntegerField( 'REFERENCIAS', blank = True, null = True)
+
+    cap4_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap5_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap6_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap7_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
 
     fecha = models.DateField('Fecha de registro',  auto_now = False, auto_now_add = True) 
     aceptar_avance = models.BooleanField(default = False)
   
-    obs = models.TextField(max_length=500,blank=True,null=True)
-    sug = models.TextField(max_length=500,blank=True,null=True)
     OPCIONES = [
         ('si', 'Aprobado'),
         ('no', 'No aprobado'),
@@ -688,18 +691,23 @@ class Avance_2(models.Model):
 class Avance_2_Histoiral(models.Model):
     id_avance = models.AutoField(primary_key = True)
     user = models.ForeignKey(Maestrante,on_delete=models.CASCADE,blank = True, null = True)
-    cap1 = models.IntegerField( 'Capitulo I', blank = False, null = True)
-    cap2 = models.IntegerField( 'Capitulo II', blank = False, null = True)
-    cap3 = models.IntegerField( 'Capitulo III', blank = False, null = True)
-    cap4 = models.IntegerField( 'Capitulo IV', blank = False, null = True)
-    cap5 = models.IntegerField( 'Capitulo V', blank = False, null = True)
-    biblioragia = models.IntegerField( 'Bibliografía', blank = False, null = True)
-    anexos = models.IntegerField( 'Anexos', blank = False, null = True)
+    cap4 = models.IntegerField( 'Capitulo IV', blank = True, null = True)
+    cap5 = models.IntegerField( 'Capitulo V', blank = True, null = True)
+    cap6 = models.IntegerField( 'Capitulo VI', blank = True, null = True)
+    cap7 = models.IntegerField( 'REFERENCIAS', blank = True, null = True)
+
+    cap4_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap5_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap6_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
+    cap7_cualitativo = models.TextField(max_length=1000,blank=True,null=True)
 
     fecha = models.DateField('Fecha de registro',  auto_now = False, auto_now_add = True) 
     aceptar_avance = models.BooleanField(default = False)
-    obs = models.TextField(max_length=500,blank=True,null=True)
-    sug = models.TextField(max_length=500,blank=True,null=True)
+    fecha_programada =  models.DateField(null=True, blank=True)      
+    
+    docete_guia = models.TextField(max_length=300,blank=True,null=True)
+ 
+
     OPCIONES = [
         ('si', 'Aprobado'),
         ('no', 'No aprobado'),

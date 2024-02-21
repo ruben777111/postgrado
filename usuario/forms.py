@@ -425,34 +425,35 @@ class FormularioCronograma2(forms.ModelForm):
         fields = ('fecha_avance1','fecha_avance2','fecha_borrador','fecha_borrador_prorroga')
 
 class FormularioEvidencia(forms.ModelForm):
-    nro_requisito = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=-1, max_value=100)
-    actividad = forms.CharField(label='Actividad',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=10, max_length=240)
-    requisito = forms.CharField(label='Requisito',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=10, max_length=240)
-    tiempo = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=0, max_value=1000)
+    nro_requisito = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=-1)
+    actividad = forms.CharField(label='Actividad',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=5, max_length=600)
+    requisito = forms.CharField(label='Requisito',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=5, max_length=600)
+    tiempo = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False, max_value=1000)
   
     class Meta:
         model = Requisitos
         fields = ('nro_requisito','actividad','requisito','tiempo','rol1','rol2','rol3')
 
 class FormularioBancoNotificacion(forms.ModelForm):
-    numero_notificacion = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=-1, max_value=100)
+    numero_notificacion = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=-1)
    
-    titulo = forms.CharField(label='Titulo de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=10, max_length=300)
-    contenido = forms.CharField(label='Contenido de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=10, max_length=300)
-    descripcion = forms.CharField(label='Descripcion de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=10, max_length=300)
+    titulo = forms.CharField(label='Titulo de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}), max_length=300)
+    contenido = forms.CharField(label='Contenido de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}), max_length=300)
+    descripcion = forms.CharField(label='Descripcion de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),required=False, max_length=300)
     class Meta:
         model = BancoNotificacion
         fields = ('numero_notificacion','titulo','contenido','descripcion')
 
 
 class FormularioAvance(forms.ModelForm):
-    cap1 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    cap2 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    cap3 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    cap4 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    cap5 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    anexos = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    bibliografia = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
+    cap1 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+    cap2 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+    cap3 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+
+    cap1_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap2_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap3_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+
     aceptar_avance = forms.BooleanField( required = True, widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}))
     aprobacion = forms.ChoiceField(
         widget=forms.RadioSelect,
@@ -460,17 +461,22 @@ class FormularioAvance(forms.ModelForm):
     )
     class Meta:
         model = Avance
-        fields = ('cap1','cap2','cap3','cap4','cap5','anexos','bibliografia','aceptar_avance','aprobacion')
+        fields = ('cap1','cap2','cap3','cap1_cualitativo','cap2_cualitativo','cap3_cualitativo','aceptar_avance','aprobacion')
 
 
 class FormularioAvance2(forms.ModelForm):
-    cap1 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    cap2 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    cap3 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    cap4 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    cap5 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    anexos = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
-    bibliografia = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
+    cap4 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+    cap5 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+    cap6 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+    cap7 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+
+    cap4_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap5_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap6_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap7_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+
+
+    
     aceptar_avance = forms.BooleanField( required = True, widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}))
     aprobacion = forms.ChoiceField(
         widget=forms.RadioSelect,
@@ -478,7 +484,7 @@ class FormularioAvance2(forms.ModelForm):
     )
     class Meta:
         model = Avance_2
-        fields = ('cap1','cap2','cap3','cap4','cap5','anexos','bibliografia','aceptar_avance','aprobacion')
+        fields = ('cap4','cap5','cap6','cap7','cap4_cualitativo','cap5_cualitativo','cap6_cualitativo','cap7_cualitativo','aceptar_avance','aprobacion')
                
 class FormularioDocenteGuia(forms.ModelForm):
         avance_tesis = forms.IntegerField(widget=forms.NumberInput(attrs={"type":"hidden"}))

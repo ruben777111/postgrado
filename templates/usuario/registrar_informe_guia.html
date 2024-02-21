@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <div class="card border-primary" style="width: 100%;">
-          <form action="{% url 'usuario:guardar_informe_guia' %}" method="POST" enctype="multipart/form-data">
+          <form id="informe" action="{% url 'usuario:guardar_informe_guia' %}" method="POST" enctype="multipart/form-data">
           <div class="card-body ">
             <div class="container">
               <div class="row">
@@ -24,6 +24,7 @@
             <div class="row row-cols-1">
               {% for usuario in maestrantes|slice:":1" %}
               <input type="hidden" name="id_maestrante" value="{{usuario.user.id_maestrante}}">
+              
               <div class="col">MAESTRANTE: {{ usuario.user }}</div>
               <div class="col">DOCENTE GUÍA: {{usuario.user.guia}}</div>
               <div class="col">DOCENTE REVISOR: {{usuario.user.revisor}}</div>
@@ -36,7 +37,7 @@
             <div class="table-responsive">
               <table class="table" id="tablaprueba">
                 <thead>
-                  <tr>
+                  <tr><th scope="col">Nº</th>
                     <th scope="col" style="font-size: 12px; text-align:center;">CAPÍTULO</th>
                     <th scope="col" style="font-size: 12px; text-align:center;">OBSERVACIÓN <br>Observaciones emitidas
                       en el informe del tribunal revisor</th>
@@ -52,6 +53,7 @@
                   
                   {% for usuario in maestrantes %}
                   <tr>
+                    <td>{{ forloop.counter }}</td>
                     <td style="width:100px"><input type="hidden" name="cap" value="{{ usuario.capitulo }}"> {{ usuario.capitulo }}</td>
                     <td style="width:300px"><input type="hidden" name="desc" value="{{ usuario.descripcion }}">{{ usuario.descripcion }}</td>
                     <td style="width:200px">
@@ -77,6 +79,7 @@
               
   <hr>
               Subir archivo de tesis mejorada: <br>
+              
               <input type="file" name="tesismejorada" id="tesismejorada" class="form-control" accept="application/pdf" required>
             </div>
           </div>
@@ -97,31 +100,9 @@
 </div>
 
 {% block extrajs %}
+<script src="{% static 'lib/js/pdf.js' %}"></script>
 
-
-<script src="{% static 'lib/js/informe.js' %}"></script>
-<script>
-  $('input[type="file"]').on('change', function(){
-    var ext = $( this ).val().split('.').pop();
-    if ($( this ).val() != '') {
-      if(ext == "pdf"){
-  
-        if($(this)[0].files[0].size > 1048576){
-          console.log("El documento excede el tamaño máximo");
-          $('#modal-title').text('¡Precaución!');
-          $('#modal-msg').html("Se solicita un archivo no mayor a 1MB. Por favor verifica.");
-          $("#modal-gral").modal();           
-          $(this).val('');
-        }else{
-          $("#modal-gral").hide();
-        }
-      }
-      else
-      {
-        $( this ).val('');
-        alert("Por favor, subir un archivo en formato PDF");
-      }
-    }
-  });</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'lib/js/actividad.js' %}"></script>
 
 {% endblock extrajs %}

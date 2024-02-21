@@ -1,166 +1,90 @@
 {% load static %}
-<div class="modal-dialog modal-lg " role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="card border-primary" style="width: 100%;">
-                    <div class="card-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col col-lg-3">
-                                    <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid"
-                                        alt="Responsive image">
-                                </div>
-                                <div class="col">
-                                    <h6 class="card-title text-center">
-                                        FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRIA
-                                    </h6>
-                                    <h6 class="card-title text-center">
-                                        R-0859 V.0
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="container">
-                            <div class="row row-cols-1">
-                                
-                                <div class="col">ELABORADO POR: {{object.guia}} </div>
-                                <div class="col">MAESTRANTE: {{object.user}} </div>
-                                <div class="col">PROGRAMA: {{object.programa}} </div>
-                                
-                                <!-- <div class="col">TEMA DE TESIS: {{object.tema_tesis}} </div> -->
-                                <div class="col">FECHA DE REGISTRO: {{ object.avance.fecha_registro }}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div class="modal-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">CAPÍTULO</th>
-                                            <th scope="col">DESCRIPCIÓN VALOR EN PORCENTEJE</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>CAPÍTULO I</td>
-                                            <td>
-                                                
-                                                {% if object.avance.cap1 %}
-                                                {{ object.avance.cap1 }} %
-                                                    {% else %}
-                                                    no asignado
-                                                {% endif %}
-                                                    
-                                                
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>CAPÍTULO II</td>
-                                            <td>
-                                                
-                                                {% if object.avance.cap2 %}
-                                                {{ object.avance.cap2 }} %
-                                                    {% else %}
-                                                    no asignado
-                                                {% endif %}
-                                                    
-                                                
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>CAPÍTULO III</td>
-                                            <td>
-                                                
-                                                {% if object.avance.cap3 %}
-                                                {{ object.avance.cap3 }} %
-                                                    {% else %}
-                                                    no asignado
-                                                {% endif %}
-                                                    
-                                                
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>CAPÍTULO IV</td>
-                                            <td>
-                                                
-                                                {% if object.avance.cap4 %}
-                                                {{ object.avance.cap4 }} %
-                                                    {% else %}
-                                                    no asignado
-                                                {% endif %}
-                                                    
-                                                
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>CAPÍTULO V</td>
-                                            <td>
-                                                
-                                                {% if object.avance.cap5 %} 
-                                                {{ object.avance.cap5 }} %
-                                                    {% else %}
-                                                    no asignado
-                                                {% endif %}
-                                                    
-                                                
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>BIBLIOGRAÍA</td>
-                                            <td>
-                                                
-                                                {% if object.avance.bibliografia %}
-                                                {{ object.avance.bibliografia }} %
-                                                    {% else %}
-                                                    no asignado
-                                                {% endif %}
-                                                    
-                                                
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>ANEXOS</td>
-                                            <td>
-                                                
-                                                {% if object.avance.anexos %}
-                                                {{ object.avance.anexos }} %
-                                                    {% else %}
-                                                    no asignado
-                                                {% endif %}
-                                                    
-                                                
-                                            </td>
-
-                                        </tr>
-                                        <td>RESULTADO</td>
-                                        <td>
+<div class="modal-dialog modal-xl " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+    
+          <div class="card-body">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-3">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h6 class="card-title text-center">
+                    FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRIA
+                  </h6>
+                  <h6 class="card-title text-center">
+                    R-0859 V.0
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="container">
+              <div class="row row-cols-1">
+                <div class="col">PROGRAMA: {{object.programa}} </div>
+                <div class="col">MAESTRANTE: {{object.maestrante}} </div>
+                <div class="col">DOCENTE GUÍA: {{object.guia}} </div>
+                <!-- <div class="col">TEMA DE TESIS: {{object.user.tema_tesis}} </div> -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">            
+            <div class="modal-body">
+              DESCRIPCIÓN DEL INFORME:<br>
+              A continuación, se describe a detalle el avance de la tesis de maestría considerando el cumplimiento de los indicadores de avance y de la estructura de la tesis: 
+              <br>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="col-2">Capítulo</th>
+                      <th scope="col">Cualitativo(observaciones relevantes por capitulo)</th>
+                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capitulo)</th>  
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>  
+                      <td><p>CAPÍTULO I</p> INTRODUCCIÓN A LA ESTRUCTURA PROPOSITIVA DE LA INVESTIGACIÓN</td>
+                      <td>{{ object.avance.cap1_cualitativo }}</td>  
+                      <td>{{ object.avance.cap1 }}%</td>  
+                      
                                           
-                                            {% if object.avance.aprobacion == 'si' %}
-                                            Aprobado
-                                            {% elif object.avance.aprobacion == 'no' %}
-                                            No aprobado
-                                            {% endif %}
-                                                
-                                            
-                                        </td>
+                    </tr>
+                    <tr>  
+                      <td><p>CAPÍTULO II</p> FUNDAMENTO TEÓRICO Y EPISTEMOLÓGICO.</td>
+                      <td>{{ object.avance.cap2_cualitativo }}</td> 
+                      <td>{{ object.avance.cap2 }}%</td>  
+                                           
+                    </tr>
+                    <tr>
+                      <td><p>CAPÍTULO III</p> METODOLOGÍA DE LA INVESTIGACIÓN</td>
+                      <td>{{ object.avance.cap3_cualitativo }}</td> 
+                      <td>{{ object.avance.cap3 }}%</td>        
+                                    
+                    </tr>
+                                        
+                  </tbody>
+                </table>
+  
+              </div>
 
-                                    </tr>
-                                    </tbody>
-                                </table>
+            </div>
+            <hr>
+            {{ form.aprobacion }}
+            <div class="modal-footer">
 
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
+              <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
            
             </div>
-        </div>
+            
+    
+      </div>
     </div>
+  </div>
 </div>
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'lib/js/actividad.js' %}"></script>
+{% endblock extrajs %}

@@ -1,9 +1,9 @@
 {% load static %}
-<div class="modal-dialog modal-lg " role="document">
+<div class="modal-dialog modal-xl " role="document">
   <div class="modal-content">
     <div class="modal-header">
       <div class="card border-primary" style="width: 100%;">
-        <form action="{% url 'usuario:registro_avance_2' object.id_avance %}" method="POST">
+        <form id="informe" action="{% url 'usuario:registro_avance_2' object.id_avance %}" method="POST">
           {% csrf_token %}
           <div class="card-body">
             <div class="container">
@@ -27,59 +27,58 @@
                 <div class="col">PROGRAMA: {{object.user.programa}} </div>
                 <div class="col">MAESTRANTE: {{object.user}} </div>
                 <div class="col">DOCENTE GUÍA: {{object.user.guia}} </div>
-                <div class="col">TEMA DE TESIS: {{object.user.tema_tesis}} </div>
+                <!-- <div class="col">TEMA DE TESIS: {{object.user.tema_tesis}} </div> -->
               </div>
             </div>
           </div>
           <div class="modal-body">            
             <div class="modal-body">
+              DESCRIPCIÓN DEL INFORME:<br>
+              A continuación, se describe a detalle el avance de la tesis de maestría considerando el cumplimiento de los indicadores de avance y de la estructura de la tesis: 
+              <br>
               <div class="table-responsive">
                 <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col">CAPÍTULO</th>
-                      <th scope="col">DESCRIPCIÓN VALOR EN PORCENTEJE</th>  
+                      <th scope="col" class="col-2">Capítulo</th>
+                      <th scope="col">Cualitativo(observaciones relevantes por capitulo)</th>
+                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capitulo)</th>  
                     </tr>
                   </thead>
                   <tbody>
                     <tr>  
-                      <td>CAPÍTULO I</td>
-                      <td>{{ form.cap1 }}</td>                      
+                      <td><p>Capítulo IV </p> PRESENTACIÒN DE RESULTADOS</td>
+                      <td>{{ form.cap4_cualitativo }}</td>  
+                      <td>{{ form.cap4 }}%</td>  
+                      
+                                          
                     </tr>
                     <tr>  
-                      <td>CAPÍTULO II</td>
-                      <td>{{ form.cap2 }}</td>                      
+                      <td><p>CAPÍTULO V</p>CONCLUSIONES Y RECOMENDACIONES </td>
+                      <td>{{ form.cap5_cualitativo }}</td> 
+                      <td>{{ form.cap5 }}%</td>  
+                                           
                     </tr>
                     <tr>
-                      <td>CAPÍTULO III</td>
-                      <td>{{ form.cap3 }}</td>                     
+                      <td><p>CAPÍTULO VI</p> PROPUESTA</td>
+                      <td>{{ form.cap6_cualitativo }}</td> 
+                      <td>{{ form.cap6 }}%</td>        
+                                    
                     </tr>
                     <tr>
-                      <td>CAPÍTULO IV</td>
-                      <td>{{ form.cap4 }}</td>                      
+                      <td>REFERENCIAS BIBLIOGRÁFICAS  </td>
+                      <td>{{ form.cap7_cualitativo }}</td> 
+                      <td>{{ form.cap7 }}%</td>        
+                                    
                     </tr>
-                    <tr>
-                      <td>CAPÍTULO V</td>
-                      <td>{{ form.cap5 }}</td>                      
-                    </tr>
-                    <tr>
-                      <td>BIBLIOGRAÍA</td>
-                      <td>{{ form.bibliografia }}</td>
-                      
-                    </tr>
-                    <tr>
-                      <td>ANEXOS</td>
-                      <td>{{ form.anexos }}</td>
-                      
-                    </tr>
-                  
-                    
+                                      
                   </tbody>
                 </table>
   
               </div>
 
             </div>
+            <hr>
             {{ form.aprobacion }}
             <div class="modal-footer">
              
@@ -97,3 +96,17 @@
     </div>
   </div>
 </div>
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'lib/js/actividad.js' %}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const cap3Cualitativo = document.getElementById("id_cap7_cualitativo");
+      const cap3 = document.getElementById("id_cap7");
+  
+      cap3Cualitativo.addEventListener("input", function() {
+          cap3.hidden = false; // Activar el campo cap3
+      });
+  });
+  </script>
+{% endblock extrajs %}

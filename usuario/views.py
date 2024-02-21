@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.utils.decorators import method_decorator
 from django.utils import timezone
+
+from django.db.models import Q
 import time
 from django.http import JsonResponse
 from datetime import datetime
@@ -13,7 +15,7 @@ from datetime import datetime
 from .forms import FormularioReporteGeneralTribunalInterno,FormularioBancoNotificacion,FormularioPrograma,FormularioAvance2,FormularioTribunalTesis,FormularioTribunalPerfil,FormularioCronograma2,FormularioEvidencia,FormularioUsuarioDocente,FormularioUsuarioMaestrante,FormularioAvance,FormularioDocenteProvisional,FormularioTesisOptimizado,FormularioTesisMejoradoAprobacion,FormularioTesisMejorado,FormularioPerfilTesisMejorado,FormularioBorradorTesis,FormularioPerfilTesis,FormularioTemaTesis,FormularioReporteGeneral2,FormularioReporteGeneral,FormularioCronograma,FormularioFechaSustentacion,FormularioAdministradores,FormularioMaestranteGuia
 from usuario.models import ReporteGeneralTribunalInterno,DocenteProvisional,SustentacionTesisHistorial,BancoNotificacion,Programa,AvanceHistorial,Avance_2_Histoiral,Avance_2,Cronograma2,SustentacionPerfilHistorial,TribunalPerfil,TribunalTesis,InformeGuiaFormulario,InformeGuia,InformeRevisor,Post,Requisitos1,Administracion,AsistenciaInduccion,Avance,Informe,ReporteGeneral,Requisitos,Cronograma,CentroActividades,Docente_Revisor,Docente,ActividadesMaestrante,Usuario,Maestrante
 from room.models import Room 
-from django.views.generic import View,TemplateView,UpdateView, CreateView,DeleteView,DetailView
+from django.views.generic import ListView,View,TemplateView,UpdateView, CreateView,DeleteView,DetailView
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
 from datetime import date,datetime,timedelta
@@ -32,7 +34,8 @@ from django.db.models import Q
 from django.conf import settings
 from django.contrib.auth.views import PasswordResetView
 
-
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 class CustomPasswordResetView(PasswordResetView):
     
@@ -41,7 +44,7 @@ class CustomPasswordResetView(PasswordResetView):
     def post(self, request, *args, **kwargs):
         username = self.request.POST.get('username')
         email = self.request.POST.get('correo_inst')
-        print(email)
+        
         if username and email:
             user = self.get_form().get_users(email, username).first()
             
@@ -53,7 +56,7 @@ class CustomPasswordResetView(PasswordResetView):
                    
                     return self.form_valid(form)
                 else:
-                    print(form.errors)
+                   
                     self.extra_context = {'CamposVacios': True}
             else:
                 self.extra_context = {'Nousuario': True}  # Agregamos token_expired al contexto
@@ -123,10 +126,9 @@ class ListadoMaestrante(View):
     model=Maestrante
     template_name='usuario/listar_maestrante.html'
     def get_queryset(self):
-        if self.request.user.tipo_usuario == 3 or self.request.user.tipo_usuario == 4 :
-            return self.model.objects.filter(maestrante_habilitado=True)
-        if self.request.user.tipo_usuario == 5:
-            return self.model.objects.filter(maestrante_habilitado=False)
+        
+        
+            return self.model.objects.filter()
  
     def get_context_data(self, **kwargs):
         contexto={}
@@ -143,11 +145,9 @@ class ListadoMaestranteGraduado(View):
     model=Maestrante
     template_name='usuario/listar_maestrante_tesis_concluido.html'
     def get_queryset(self):
-        if self.request.user.tipo_usuario == 3 or self.request.user.tipo_usuario == 4 :
-            return self.model.objects.filter(maestrante_habilitado=True)
-        if self.request.user.tipo_usuario == 5:
-            return self.model.objects.filter(maestrante_habilitado=False)
- 
+        
+            return self.model.objects.filter(tesis_terminado=True)
+        
     def get_context_data(self, **kwargs):
         contexto={}
         contexto['actividades']=self.get_queryset()
@@ -305,7 +305,7 @@ class ListadoAsistencia(View):
     model=AsistenciaInduccion
     template_name='usuario/listar_asistencia.html'
     def get_queryset(self):
-        return self.model.objects.all().order_by('-fecha')
+        return self.model.objects.all().order_by('-fecha_realizada')
  
     def get_context_data(self, **kwargs):
         contexto={}
@@ -569,6 +569,7 @@ class ListadoInformeGuia(View):
     def get_context_data(self, **kwargs):
         contexto={}
         contexto['actividades']=self.get_queryset()
+        contexto['today'] = date.today() 
         return contexto
 
     def get(self,request,**kwargs):
@@ -582,7 +583,7 @@ class ListadoInformeGuiaPendiente(View):
     context_object_name = 'actividades'
     def get_queryset(self):
         if self.request.user.is_staff:
-            return self.model.objects.filter()            
+            return self.model.objects.filter(aceptar_guia=False)            
         if self.request.user.tipo_usuario == 2:
             return self.model.objects.filter(user__guia=self.request.user.docente).filter(aceptar_guia=False)
         if self.request.user.tipo_usuario == 1:
@@ -591,6 +592,7 @@ class ListadoInformeGuiaPendiente(View):
     def get_context_data(self, **kwargs):
         contexto={}
         contexto['actividades']=self.get_queryset()
+        contexto['today'] = date.today() 
         return contexto
 
     def get(self,request,**kwargs):
@@ -603,9 +605,52 @@ class ListadoInformeGuiaRealizado(View):
     context_object_name = 'actividades'
     def get_queryset(self):
         if self.request.user.is_staff:
-            return self.model.objects.filter()            
+            return self.model.objects.filter(aceptar_guia=True)            
         if self.request.user.tipo_usuario == 2:
             return self.model.objects.filter(user__guia=self.request.user.docente).filter(aceptar_guia=True)
+        if self.request.user.tipo_usuario == 1:
+            return self.model.objects.filter(user=self.request.maestrante)
+ 
+    def get_context_data(self, **kwargs):
+        contexto={}
+        contexto['actividades']=self.get_queryset()
+        contexto['today'] = date.today() 
+        return contexto
+
+    def get(self,request,**kwargs):
+        return render(request,self.template_name,self.get_context_data())
+
+@method_decorator(login_required, name='dispatch')
+class ListadoReporteGeneralPendiente(View):
+    model=ReporteGeneral
+    template_name='usuario/listar_reporte_general.html'
+    context_object_name = 'actividades'
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return self.model.objects.filter(aceptar_revisor=False)            
+        if self.request.user.tipo_usuario == 2:
+            return self.model.objects.filter(user__revisor=self.request.user.docente_revisor).filter(aceptar_revisor=False)
+        if self.request.user.tipo_usuario == 1:
+            return self.model.objects.filter(user=self.request.maestrante)
+ 
+    def get_context_data(self, **kwargs):
+        contexto={}
+        contexto['actividades']=self.get_queryset()
+        return contexto
+
+    def get(self,request,**kwargs):
+        return render(request,self.template_name,self.get_context_data())
+
+@method_decorator(login_required, name='dispatch')
+class ListadoReporteGeneralRealizado(View):
+    model=ReporteGeneral
+    template_name='usuario/listar_reporte_general.html'
+    context_object_name = 'actividades'
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return self.model.objects.filter(aceptar_revisor=True)            
+        if self.request.user.tipo_usuario == 2:
+            return self.model.objects.filter(user__revisor=self.request.user.docente_revisor).filter(aceptar_revisor=True)
         if self.request.user.tipo_usuario == 1:
             return self.model.objects.filter(user=self.request.maestrante)
  
@@ -660,7 +705,52 @@ class ListadoInformeRevisor(View):
     def get(self,request,**kwargs):
      
             return render(request,self.template_name,self.get_context_data())
+@method_decorator(login_required, name='dispatch')
 
+class ListadoInformeRevisorGuia(View):
+    model=Informe
+    template_name='usuario/listar_informe_revisor_guia.html'
+    context_object_name = 'actividades'
+    
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return self.model.objects.filter()            
+        if self.request.user.tipo_usuario == 2:
+            return self.model.objects.filter(user__guia=self.request.user.docente)
+        if self.request.user.tipo_usuario == 1:
+            return self.model.objects.filter(user=self.request.user.maestrante)
+    
+    def get_context_data(self, **kwargs):
+        contexto={}
+        contexto['actividades']=self.get_queryset()
+        return contexto
+
+    def get(self,request,**kwargs):
+     
+            return render(request,self.template_name,self.get_context_data())
+@method_decorator(login_required, name='dispatch')
+
+class ListadoInformeGuiaRevisor(View):
+    model=Informe
+    template_name='usuario/listar_informe_guia_revisor.html'
+    context_object_name = 'actividades'
+    
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return self.model.objects.filter()            
+        if self.request.user.tipo_usuario == 2:
+            return self.model.objects.filter(user__revisor=self.request.user.docente_revisor)
+        if self.request.user.tipo_usuario == 1:
+            return self.model.objects.filter(user=self.request.user.maestrante)
+    
+    def get_context_data(self, **kwargs):
+        contexto={}
+        contexto['actividades']=self.get_queryset()
+        return contexto
+
+    def get(self,request,**kwargs):
+     
+            return render(request,self.template_name,self.get_context_data())
 @method_decorator(login_required, name='dispatch')
 
 class ListadoInformeRevisorPendiente(View):
@@ -670,7 +760,7 @@ class ListadoInformeRevisorPendiente(View):
     
     def get_queryset(self):
         if self.request.user.is_staff:
-            return self.model.objects.filter()            
+            return self.model.objects.filter(aceptar_revisor=False)            
         if self.request.user.tipo_usuario == 2:
             return self.model.objects.filter(user__revisor=self.request.user.docente_revisor).filter(aceptar_revisor=False)
     
@@ -691,7 +781,7 @@ class ListadoInformeRevisorRealizado(View):
     
     def get_queryset(self):
         if self.request.user.is_staff:
-            return self.model.objects.filter()            
+            return self.model.objects.filter(aceptar_revisor=True)            
         if self.request.user.tipo_usuario == 2:
             return self.model.objects.filter(user__revisor=self.request.user.docente_revisor).filter(aceptar_revisor=True)
     
@@ -785,7 +875,10 @@ class RegistrarMaestrante(CreateView):
     
             form.instance.username = username
             
-            contrasena_generada = generar_password(15)
+            contrasena_generada = 'rubenruben'
+            #contrasena_generada = generar_password(15)
+
+
             form.instance.set_password(contrasena_generada)
 
 
@@ -794,7 +887,7 @@ class RegistrarMaestrante(CreateView):
             
             destinatarios = [form.cleaned_data.get('correo_inst')]
 
-            enviar_correo_electronico(asunto, mensaje, destinatarios)
+            #enviar_correo_electronico(asunto, mensaje, destinatarios)
 
             response = super().form_valid(form)
         except Exception as e:
@@ -1091,6 +1184,26 @@ class HabilitarMaestranteGuia(UpdateView):
     template_name = 'usuario/editar_maestrante_guia.html'
     form_class = FormularioMaestranteGuia
     success_url = reverse_lazy('usuario:listar_designar') 
+    def form_valid(self, form):
+        # Obtener el objeto actual antes de la modificación
+        maestrante = self.get_object()
+
+        # Guardar el formulario sin realizar la acción por defecto
+        self.object = form.save(commit=False)
+
+        # Comparar los campos modificados con los originales
+        campos_modificados = {}
+        for field in form.changed_data:
+            campos_modificados[field] = {
+                'antes': getattr(maestrante, field),
+                'despues': form.cleaned_data.get(field)
+            }
+
+        # Aquí puedes hacer lo que quieras con los campos modificados
+        print("Campos modificados:", campos_modificados)
+
+        # Continuar con la acción por defecto de form_valid()
+        return super().form_valid(form)
 @method_decorator(login_required, name='dispatch')    
 class EditarTribunalPerfil(UpdateView):
 
@@ -1204,6 +1317,41 @@ class DesignarTribunalTesis(View):
             return render(request,self.template_name,self.get_context_data())
             
         return HttpResponseForbidden('Error')
+
+
+class ListarAvanceHistorial(ListView):
+
+    model = AvanceHistorial
+    template_name = 'usuario/listar_avance_historial.html'
+    context_object_name = 'avance_historial'
+
+    def get_queryset(self):
+        # Obtener el nombre de usuario de los parámetros de consulta
+        nombre_usuario = self.kwargs['nombre_usuario']
+      
+        
+        # Obtener el objeto User correspondiente al nombre de usuario
+        usuario = Maestrante.objects.get(username=nombre_usuario)
+       
+        # Filtrar los resultados según el usuario
+        return AvanceHistorial.objects.filter(user=usuario)
+    
+class ListarAvance2Historial(ListView):
+
+    model = Avance_2_Histoiral
+    template_name = 'usuario/listar_avance_2_historial.html'
+    context_object_name = 'avance_historial'
+
+    def get_queryset(self):
+        # Obtener el nombre de usuario de los parámetros de consulta
+        nombre_usuario = self.kwargs['nombre_usuario']
+       
+        
+        # Obtener el objeto User correspondiente al nombre de usuario
+        usuario = Maestrante.objects.get(username=nombre_usuario)
+      
+        # Filtrar los resultados según el usuario
+        return Avance_2_Histoiral.objects.filter(user=usuario)
 @method_decorator(login_required, name='dispatch')
 class ListarAvance(View):
     
@@ -1219,9 +1367,13 @@ class ListarAvance(View):
             return self.model.objects.filter(user=self.request.user.maestrante)
  
     def get_context_data(self, **kwargs):
-        contexto={}
-        contexto['actividades']=self.get_queryset()
-        return contexto
+        contexto = {}
+        contexto['actividades'] = self.get_queryset()
+        contexto['today'] = date.today() 
+        print(contexto)   
+        return contexto     
+ 
+         
 
     def get(self,request,**kwargs):       
         return render(request,self.template_name,self.get_context_data())
@@ -1234,7 +1386,7 @@ class ListarAvancePendiente(View):
     context_object_name = 'actividades'
     def get_queryset(self):            
         if self.request.user.is_staff:
-            return self.model.objects.filter()
+            return self.model.objects.filter(aceptar_avance=False)
         if self.request.user.tipo_usuario == 2:
             return self.model.objects.filter(user__guia=self.request.user.docente).filter(aceptar_avance=False)
         if self.request.user.tipo_usuario == 1:
@@ -1243,6 +1395,7 @@ class ListarAvancePendiente(View):
     def get_context_data(self, **kwargs):
         contexto={}
         contexto['actividades']=self.get_queryset()
+        contexto['today'] = date.today() 
         return contexto
 
     def get(self,request,**kwargs):       
@@ -1256,7 +1409,7 @@ class ListarAvanceRealizado(View):
     context_object_name = 'actividades'
     def get_queryset(self):            
         if self.request.user.is_staff:
-            return self.model.objects.filter()
+            return self.model.objects.filter(aceptar_avance=True)
         if self.request.user.tipo_usuario == 2:
             return self.model.objects.filter(user__guia=self.request.user.docente).filter(aceptar_avance=True)
         if self.request.user.tipo_usuario == 1:
@@ -1290,6 +1443,7 @@ class ListarAvance2(View):
     def get_context_data(self, **kwargs):
         contexto={}
         contexto['actividades']=self.get_queryset()
+        contexto['today'] = date.today() 
         return contexto
 
     def get(self,request,**kwargs):
@@ -1303,7 +1457,7 @@ class ListarAvance2Pendiente(View):
     context_object_name = 'actividades'
     def get_queryset(self):     
         if self.request.user.is_staff:
-            return self.model.objects.filter()       
+            return self.model.objects.filter(aceptar_avance=False)       
         if self.request.user.tipo_usuario == 2:
             return self.model.objects.filter(user__guia=self.request.user.docente).filter(aceptar_avance=False)
         if self.request.user.tipo_usuario == 1:
@@ -1312,6 +1466,7 @@ class ListarAvance2Pendiente(View):
     def get_context_data(self, **kwargs):
         contexto={}
         contexto['actividades']=self.get_queryset()
+        contexto['today'] = date.today() 
         return contexto
 
     def get(self,request,**kwargs):
@@ -1325,7 +1480,7 @@ class ListarAvance2Realizado(View):
     context_object_name = 'actividades'
     def get_queryset(self):     
         if self.request.user.is_staff:
-            return self.model.objects.filter()       
+            return self.model.objects.filter(aceptar_avance=True)       
         if self.request.user.tipo_usuario == 2:
             return self.model.objects.filter(user__guia=self.request.user.docente).filter(aceptar_avance=True)
         if self.request.user.tipo_usuario == 1:
@@ -1348,6 +1503,10 @@ class DetalleReporte(DetailView):
     template_name='usuario/detalle_reporte.html'    
 
 @method_decorator(login_required, name='dispatch')
+class RegistrarPostulante(DetailView):
+    model=Maestrante
+    template_name='usuario/registrar_postulante.html'
+@method_decorator(login_required, name='dispatch')
 class DetalleReporte2(DetailView):
     model=ReporteGeneral
     template_name='usuario/detalle_reporte2.html'   
@@ -1360,6 +1519,16 @@ class DetalleReporteSegundaInstancia(DetailView):
 class DetalleAvance(DetailView):
     model=Avance
     template_name='usuario/detalle_avance.html'    
+
+@method_decorator(login_required, name='dispatch')
+class DetalleAvanceHistorial(DetailView):
+    model=AvanceHistorial
+    template_name='usuario/detalle_avance_historial.html'   
+
+@method_decorator(login_required, name='dispatch')
+class DetalleAvance2Historial(DetailView):
+    model=Avance_2_Histoiral
+    template_name='usuario/detalle_avance_2_historial.html'    
 @method_decorator(login_required, name='dispatch')
 class DetalleAvance2(DetailView):
     model=Avance_2
@@ -1373,7 +1542,11 @@ class DetalleAvance2(DetailView):
 class FormularioAsistencia(DetailView):
     model=Maestrante
     template_name='usuario/formulario_asistencia.html'    
- 
+@method_decorator(login_required, name='dispatch')
+class FormularioAsistenciaRealizada(DetailView):
+    model=Maestrante
+    template_name='usuario/formulario_asistencia_realizada.html'    
+  
     
 @method_decorator(login_required, name='dispatch')
 class ListaCronograma(View):
@@ -1674,7 +1847,7 @@ class RegistrarAvanceDocente(UpdateView):
 
         if form.is_valid():        
             
-            AvanceHistorial.objects.create(user=self.object.user,cap1=self.object.cap1,cap2=self.object.cap2,cap3=self.object.cap3,cap4=self.object.cap4,cap5=self.object.cap5,aprobacion=self.object.aprobacion,aceptar_avance=self.object.aceptar_avance)   
+
             notificar = BancoNotificacion.objects.get(numero_notificacion=9)
             maestrante=get_object_or_404(Maestrante,id_maestrante=self.object.user.id_maestrante) 
 
@@ -1693,6 +1866,7 @@ class RegistrarAvanceDocente(UpdateView):
                 usuario.notificacion=True
                 usuario.save()
             CentroActividades.objects.create(maestrante=maestrante.maestrante,fecha_programada=cronograma2.fecha_avance1,usuario=request.user,evidencia=notificar.contenido+" - Docente guía : "+str(maestrante.guia))
+            AvanceHistorial.objects.create(user=self.object.user,cap1=self.object.cap1,cap2=self.object.cap2,cap3=self.object.cap3,cap1_cualitativo=self.object.cap1_cualitativo,cap2_cualitativo=self.object.cap2_cualitativo,cap3_cualitativo=self.object.cap3_cualitativo,aprobacion=self.object.aprobacion,aceptar_avance=self.object.aceptar_avance ,fecha_programada=cronograma2.fecha_avance1, docete_guia=request.user)   
             self.object = form.save()
             return redirect(self.get_success_url())
 
@@ -1714,7 +1888,7 @@ class RegistrarAvance2Docente(UpdateView):
 
         if form.is_valid():        
             
-            AvanceHistorial.objects.create(user=self.object.user,cap1=self.object.cap1,cap2=self.object.cap2,cap3=self.object.cap3,cap4=self.object.cap4,cap5=self.object.cap5,aprobacion=self.object.aprobacion,aceptar_avance=self.object.aceptar_avance)   
+            
             notificar = BancoNotificacion.objects.get(numero_notificacion=11)
             maestrante=get_object_or_404(Maestrante,id_maestrante=self.object.user.id_maestrante) 
             
@@ -1733,6 +1907,7 @@ class RegistrarAvance2Docente(UpdateView):
                 usuario.notificacion=True
                 usuario.save()
             CentroActividades.objects.create(maestrante=maestrante.maestrante,fecha_programada=cronograma2.fecha_avance2,usuario=request.user,evidencia=notificar.contenido+" - Docente guía : "+str(maestrante.guia))
+            Avance_2_Histoiral.objects.create(user=self.object.user,cap4=self.object.cap4,cap5=self.object.cap5,cap6=self.object.cap6,cap7=self.object.cap7, cap4_cualitativo=self.object.cap4_cualitativo,cap5_cualitativo=self.object.cap5_cualitativo,cap6_cualitativo=self.object.cap6_cualitativo,cap7_cualitativo=self.object.cap7_cualitativo,aprobacion=self.object.aprobacion,aceptar_avance=self.object.aceptar_avance,fecha_programada=cronograma2.fecha_avance2, docete_guia=request.user)   
             self.object = form.save()
             return redirect(self.get_success_url())
 
@@ -1774,6 +1949,44 @@ def DeshabilitarNumero(request,pk):
     paso.mostrar_numero=False
     paso.save()    
     return redirect('usuario:listar_docente')
+
+def AsistenciaRealizada(request):
+    if request.method =='POST':
+        idmaestrante = request.POST['id_maestrante']
+        maestrante = get_object_or_404(Maestrante,id_maestrante=idmaestrante)        
+        cronograma = get_object_or_404(Cronograma,user=maestrante)
+        cronograma.reunion_realizada = True
+        fecha = request.POST['fecharealizada']
+       
+        hora = request.POST['horarealizada']
+        enlace_reunion = request.POST['enlace']
+        observaciones = request.POST['observacion']
+
+        data = request.FILES
+        if 'archivo' in data:
+            documento_respaldo = request.FILES
+            documentorespaldo = documento_respaldo['archivo']  
+            AsistenciaInduccion.objects.create(maestrante= maestrante,
+                fecha_asesoramiento=cronograma.fecha_induccion,
+                                            hora_asesoramiento=cronograma.hora_induccion, 
+                                            fecha_realizada = fecha,
+                                            hora_realizada = hora,
+                                            enlace_reunion = enlace_reunion,
+                                            obs=observaciones,
+                                            hoja_reunion=documentorespaldo  
+                                                ) 
+        else:
+            AsistenciaInduccion.objects.create(maestrante= maestrante,
+                fecha_asesoramiento=cronograma.fecha_induccion,
+                                            hora_asesoramiento=cronograma.hora_induccion, 
+                                            fecha_realizada = fecha,
+                                            hora_realizada = hora,
+                                            enlace_reunion = enlace_reunion,
+                                            obs=observaciones 
+                                                ) 
+        cronograma.save()
+
+        return redirect('usuario:seguimiento_tesis')  
 
 def Asistencia(request):
     if request.method =='POST':
@@ -1818,7 +2031,7 @@ def GuardarInformeRevisor(request):
         descripcion= []       
         sugerencia = []
         maestrante = get_object_or_404(Maestrante,id_maestrante=idmaestrante)
-        maestrante.avance_tesis+=1
+        maestrante.avance_tesis=14
         
         usuario_existe = InformeGuia.objects.filter(user=maestrante.maestrante).exists()
         if not usuario_existe:
@@ -1893,7 +2106,7 @@ def GuardarInformeGuia(request):
         pagina = []
         funda = []
         maestrante = get_object_or_404(Maestrante,id_maestrante=idmaestrante)
-        maestrante.avance_tesis += 1
+        maestrante.avance_tesis = 15
         maestrante.tesis_mejorado=doc_tesismejorada
         
         informe = get_object_or_404(InformeGuia,user=maestrante.maestrante)
@@ -2003,7 +2216,7 @@ class RegistrarReporteGeneral(UpdateView):
                 usuario.notificacion=True
                 usuario.save()
 
-            requisitos = get_object_or_404(Requisitos,nro_requisito=105) 
+            requisitos = get_object_or_404(Requisitos,nro_requisito=15) 
             CentroActividades.objects.create(maestrante=maestrante.maestrante,fecha_programada=cronograma2.fecha_reporte_general,usuario=request.user,evidencia=requisitos.actividad+" - Docente revisor : "+str(maestrante.revisor))
             self.object = form.save()
             return redirect(self.get_success_url())
@@ -2058,6 +2271,39 @@ class RegistrarReporteGeneralTribunalInterno(UpdateView):
     template_name = 'usuario/registrar_reporte_general_tribunal_interno.html'
     form_class = FormularioReporteGeneralTribunalInterno
     success_url = reverse_lazy('usuario:listar_reporte_general_tribunal_interno') 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = FormularioReporteGeneralTribunalInterno(request.POST, instance=self.object)
+
+        if form.is_valid():        
+
+            maestrante=get_object_or_404(Maestrante,id_maestrante=self.object.user.id_maestrante) 
+            
+            cronograma2= get_object_or_404(Cronograma2,user=maestrante)
+            notificar = BancoNotificacion.objects.get(numero_notificacion=84)
+            Post.objects.create(user=maestrante,title=notificar.titulo,text=notificar.contenido+" : "+str(maestrante)+" - Tribunal interno 2 designado (Docente de Área - Revisor)  : "+str(maestrante.tribunaltesis.tribunal_tesis_2.user))   
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+            maestrante.notificacion=True
+            maestrante.save()
+
+            usuarios_administradores = Usuario.objects.filter(tipo_usuario=3)
+            for usuario in usuarios_administradores:
+                Post.objects.create(user=usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(maestrante)+" - Tribunal interno 2 designado (Docente de Área - Revisor)  : "+str(maestrante.tribunaltesis.tribunal_tesis_2.user))   
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(f'chat_{usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+                usuario.notificacion=True
+                usuario.save()
+
+            requisitos = get_object_or_404(Requisitos,nro_requisito=99) 
+            CentroActividades.objects.create(maestrante=maestrante.maestrante,fecha_programada=cronograma2.fecha_reporte_general_tribunal_interno,usuario=request.user,evidencia=requisitos.actividad+" Emitido - Tribunal interno 2 designado (Docente de Área - Revisor)  : "+str(maestrante.tribunaltesis.tribunal_tesis_2.user))
+            self.object = form.save()
+            return redirect(self.get_success_url())    
+
+
+
+
+
 @method_decorator(login_required, name='dispatch')
 class Act1Confirmar(DetailView):
     model=Maestrante
@@ -2097,7 +2343,7 @@ class RegistrarAct7obs(UpdateView):
         #requisitos = get_object_or_404(Requisitos,nro_requisito=(maestranteid.avance_tesis+1))                
         CentroActividades.objects.create(maestrante=maestranteid.maestrante,usuario=self.request.user,fecha_programada=maestranteid.tiempo)
         maestranteid.listacomunicacion=False
-        maestranteid.avance_tesis=maestranteid.avance_tesis+1
+        maestranteid.avance_tesis=5
         
         maestranteid.save()    
 
@@ -2262,7 +2508,24 @@ def SeguimientoTesisActividades(request,seguimiento):
 def Busqueda(request):
 
     if request.user.is_staff:
+        
+        busmaestrantetexto = request.GET.get("userId")
         busmaestrante = request.GET.get("busmaestrante")
+        
+
+        if busmaestrantetexto:
+                
+            try:
+                maestrante = Maestrante.objects.get(id_maestrante=busmaestrantetexto)
+                busmaestrante = maestrante.ru
+            except Usuario.DoesNotExist:
+                # Manejar el caso en el que no se encuentra un usuario con el ID especificado
+                return HttpResponseForbidden('Error, El usuario seleccionado no es maestrante')          
+
+            
+
+
+
         employers=Maestrante.objects.filter(ru=busmaestrante).filter(maestrante_habilitado=True)
         
         template_name = 'usuario/act/act.html'
@@ -2329,10 +2592,10 @@ def Busqueda(request):
 
             elif request.user.tipo_usuario == 4:               
                 actividad=Requisitos.objects.filter(nro_requisito=paso.avance_tesis).filter(rol2=True)                
-               
+            
             elif request.user.tipo_usuario == 5:                             
                 actividad=Requisitos.objects.filter(nro_requisito=paso.avance_tesis).filter(rol3=True)
-               
+            
             if actividad:
                 context = { 'maestrantesevi':employers,'actividad':actividad ,"today":date.today() }
             else:
@@ -2356,8 +2619,63 @@ def CronogramMaestrante(request):
     context = { 'cronograma':cronograma,'cronograma2':cronograma2 }
     return render(request,template_name,context)
 
+@login_required()
+def RegistrarPostulanteFuncion(request):
+    if request.method =='POST': 
+    
+        pk =  request.POST['id_maestrante']
+  
+        
+        documento_respaldo = request.FILES
+        documentorespaldo = documento_respaldo['informe']  
+
+        new_date=timezone.now()       
+        requisitos = Requisitos.objects.get(nro_requisito=1) 
+        maestrante = get_object_or_404(Maestrante,id_maestrante=pk)  
+        con=1
+        dia=1
+        while con<=requisitos.tiempo:
+            final_date=new_date+timedelta(days=dia)
+            if final_date.weekday() == 5 or final_date.weekday() == 6:
+                pass
+            else:        
+                con=con+1
+            dia=dia+1
+        maestrante.fecha_derivacion=timezone.now()
+        maestrante.avance_tesis=0
+        maestrante.maestrante_habilitado=True    
+
+        usuario_existe = Cronograma.objects.filter(user=maestrante).exists()
+        if not usuario_existe:
+            Cronograma.objects.create(user=maestrante,fecha_1=final_date)
 
 
+        usuario_existe = TribunalPerfil.objects.filter(user=maestrante).exists()
+        if not usuario_existe:
+            TribunalPerfil.objects.create(user=maestrante)
+
+
+        usuario_existe = AsistenciaInduccion.objects.filter(maestrante=maestrante).exists()
+        if not usuario_existe:
+            AsistenciaInduccion.objects.create(maestrante=maestrante) 
+    
+        notificar = BancoNotificacion.objects.get(numero_notificacion=0)
+        usuarios_administradores = Usuario.objects.filter(tipo_usuario=3)
+        
+        for usuario in usuarios_administradores:
+        
+            Post.objects.create(user=usuario,title=notificar.titulo,text=notificar.contenido+" : "+ str(maestrante)+" R.U.:"+ str(maestrante.ru))   
+        #room_name = usuario.username         
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f'chat_{usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+        usuario.notificacion=True
+        usuario.save()
+        requisitos = get_object_or_404(Requisitos,nro_requisito=100)
+        CentroActividades.objects.create(maestrante=maestrante.maestrante,usuario=request.user,evidencia=requisitos.actividad,archivo_documento=documentorespaldo) 
+        
+        maestrante.save()  
+        
+        return redirect('usuario:listar_postulante')
 @login_required()
 def BusquedaVarios(request,pk):
 
@@ -2502,3 +2820,24 @@ def enviar_mensaje_por_defecto(request):
         }
     )
     return JsonResponse({'status': 'Mensaje por defecto enviado'})
+
+
+
+
+def search_users(request):
+    if request.method == 'GET' and 'query' in request.GET:
+        query = request.GET.get('query', '')
+
+        users = Maestrante.objects.filter(
+            Q(nombre_usuario__icontains=query) |
+            Q(paterno__icontains=query) |
+            Q(materno__icontains=query) 
+        )
+
+        results = [{'id_maestrante': user.id_maestrante, 'username': user.nombre_completo()} for user in users]
+        return JsonResponse(results, safe=False)
+    return JsonResponse({}, status=400)
+
+
+
+

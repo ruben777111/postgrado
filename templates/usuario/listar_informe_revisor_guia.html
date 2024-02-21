@@ -1,0 +1,99 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> FORMULARIO DE INFORME DE DOCENTE REVISOR DE TESIS DE MAESTRIA (R-0996) </h5>
+    <hr />
+</div>
+
+<br>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table name="f1" id="data" class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th class="header" scope="col">R.U.</th>
+                        <th class="header" scope="col">MAESTRANTE</th>
+                        <th class="header" scope="col">DOCENTE REVISOR</th>
+                        <th class="header" scope="col">TEMA&nbsp;DE&nbsp;TESIS</th>
+                        <th class="header" scope="col">FECHA&nbsp;LIMITE&nbsp;DE&nbsp;PRESENTACIÓN&nbsp;DEL&nbsp;FORMULARIO</th>
+                        <th class="header" scope="col">#</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    <tr>
+                        <td>{{ usuario.user.ru }}</td>
+                        <td>{{ usuario.user }}</td>
+                        <td>{{ usuario.user.revisor }}</td>
+                        <td>{{ usuario.user.tema_tesis }}</td>
+                        <td>{{ usuario.user.cronograma2.fecha_formulario_revisor }}</td>
+                        <td>
+                    
+                    {% if usuario.aceptar_revisor %}
+                        
+                    
+                        
+                            <div class="colores-primario-msg">
+                                <button type="button"
+                                    onclick="abrir_modal_ver('{% url 'usuario:detalle_informe_revisor' usuario.user.id_maestrante %}')"
+                                    class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
+                                Ver informe
+                            </div>
+
+                            {% else %}
+                           
+Informe no emitido
+                                {% endif %}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+{% block extrajs %}
+<script src="{% static 'lib/js/check.js' %}"></script>
+<script src="{% static 'lib/js/fecha.js' %}"></script>
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_editar_usuario(url) {
+        $('#edicion').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_ver(url) {
+        $('#eliminar').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

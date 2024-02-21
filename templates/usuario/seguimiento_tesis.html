@@ -19,13 +19,27 @@
   <form class="row g-3" action="{% url 'usuario:busqueda' %}" method="GET">
     {% csrf_token %}
     <div class="col-8" style="text-align: right;"> <input class="form-control" name="busmaestrante" type="number"
-        placeholder="Ingresar R.U. del maestrante" aria-label="Busqueda" required>
+        placeholder="Ingresar R.U. del maestrante..." aria-label="Busqueda" required>
     </div>
 
     <div class="col-3">
       <button type="submit" class="btn btn-primary mb-3">Buscar</button>
     </div>
   </form>
+
+  <form class="row g-3" action="{% url 'usuario:busqueda' %}" method="GET">
+    {% csrf_token %}
+    <div class="col-8" >
+      <input type="hidden" id="userId" name="userId" value="">
+      <input class="form-control" type="search" id="searchInput" required name="busmaestrantetexto" placeholder="Buscar por nombre del maestrante..." autocomplete="off"> 
+      <ul id="searchResults"></ul>
+  </div>
+
+    <div class="col-3">
+      <button type="submit" class="btn btn-primary mb-3">Buscar</button>
+    </div>
+  </form>
+ 
   {% for evidencia in actividades %}
 
   <a href="{% url 'usuario:seguimiento_tesis_actividades' evidencia.nro_requisito  %}"
@@ -37,6 +51,61 @@
 
   {% endfor %}
 
+  {% block extrajs %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  $('#searchInput').on('input', function() {
+    var query = $(this).val().trim();
+    if (query === '') {
+      $('#searchResults').empty();
+      return;
+    }
+    $.ajax({
+      url: '/usuario/search-users/',
+      data: {
+        'query': query
+      },
+      success: function(data) {
+        $('#searchResults').empty();
+        $.each(data, function(index, user) {
+          $('#searchResults').append('<li class="result-item" data-user-id="' + user.id_maestrante + '">' + user.username + '</li>');
+        });
+      }
+    });
+  });
 
+  $(document).on('click', '.result-item', function() {
+    var userId = $(this).data('user-id');
+    // Actualizar el valor del campo oculto con el ID del usuario seleccionado
+    $('#userId').val(userId);
+    // Copiar el nombre del usuario en el campo de búsqueda (opcional)
+    var nombre = $(this).text();
+    $('#searchInput').val(nombre);
+  });
+
+  // Controlar la navegación por teclado en la lista de resultados
+  $('#searchInput').on('keydown', function(e) {
+    var $results = $('.result-item');
+    var currentIndex = $results.index($('.result-item:focus'));
+    var nextIndex;
+    switch(e.which) {
+      case 38: // Flecha arriba
+        e.preventDefault();
+        nextIndex = (currentIndex - 1 + $results.length) % $results.length;
+        break;
+      case 40: // Flecha abajo
+        e.preventDefault();
+        nextIndex = (currentIndex + 1) % $results.length;
+        break;
+      default:
+        return; // Salir si no se presiona la flecha arriba o abajo
+    }
+    $results.eq(nextIndex).focus();
+  });
+});
+
+</script>
+  {% endblock extrajs %}
 
 {% endblock %}

@@ -6,6 +6,20 @@
     <h5><i class="far fa-id-card"></i> Reporte General</h5>
     <hr />
 </div>
+{% if user.tipo_usuario == 2 or user.tipo_usuario == 3 or user.tipo_usuario == 5  %}
+<ul class="nav nav-pills justify-content-end">
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listado_reporte_general_pendiente'  %}">Pendientes</a>
+    </li>
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listado_reporte_general_realizado'  %}">Realizados </a>
+    </li>
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listar_reporte_general'  %}">Todos </a>
+    </li>
+  </ul>
+{% endif %}
+<br>
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         <div class="table-responsive">
@@ -13,14 +27,14 @@
                 <thead>
                     <tr>
 
-                        <th class="header" scope="col">Maestrante</th>
+                        <th class="header" scope="col">MAESTRANTE</th>
 
                         <th class="header" scope="col">DOCENTE REVISOR</th>
                         
                         <th class="header" scope="col">FECHA LIMITE</th>
                         <th class="header" scope="col">DOCUMENTO DE TESIS</th>
-                        <th class="header" scope="col">#</th>
-                        <th class="header" scope="col">#</th>
+                        <th class="header" scope="col">REPORTE GENERAL</th>
+                        <th class="header" scope="col">SEGUNDO REPORTE GENERAL</th>
                        
                     </tr>
                 </thead>
@@ -30,7 +44,19 @@
                         <td>{{ usuario.user }}</td>
                         <td>{{ usuario.user.revisor }}</td>
 
-                        <td>{{ usuario.user.cronograma2.fecha_reporte_general }}</td>
+                        <td>
+                            
+                            {% if usuario.user.reportegeneral.activar_reporte2 %}
+                            
+                            {{usuario.user.cronograma2.fecha_reporte_general2}} - Segundo reporte                        
+                            {% else %}
+                            {{ usuario.user.cronograma2.fecha_reporte_general }}
+                            
+                            {% endif %}
+                                
+                           
+                        
+                        </td>
                         <td>
 
                             {% if usuario.user.tesis_mejorado %}
@@ -56,8 +82,10 @@
                                 <button type="button"
                                     onclick="abrir_modal_ver('{% url 'usuario:detalle_reporte' usuario.id_reportegeneral %}')"
                                     class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
-                                Ver reporte
+                                Ver reporte 
                             </div>
+                            {% else %}
+                            Reporte no emitido
                             {% endif %}
                         </td>
 
@@ -74,8 +102,9 @@
                                 <button type="button"
                                     onclick="abrir_modal_ver2('{% url 'usuario:detalle_reporte2' usuario.id_reportegeneral %}')"
                                     class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
-                                Ver reporte
+                                    Ver reporte segundo reporte general
                             </div>
+                           
                             {% endif %}
                             {% endif %}
                         </td>

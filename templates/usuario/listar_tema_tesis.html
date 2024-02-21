@@ -16,8 +16,11 @@
                     </th>
                     <th class="header" scope="col">R.U.</th>
                     <th class="header" scope="col">MAESTRANTE</th>
-                    <th class="header" scope="col">TEMA&nbsp;PERFIL&nbsp;DE&nbsp;TESIS</th>
-                    <th class="header" scope="col">TEMA&nbsp;DE&nbsp;TESIS</th>
+                    <th class="header" scope="col">PROGRAMA</th>
+                    <th class="header" scope="col">TEMA&nbsp;DE&nbsp;PERFIL&nbsp;DE&nbsp;TESIS</th>
+                    <th class="header" scope="col">TÍTULO&nbsp;DEL&nbsp;BORRADOR&nbsp;DE&nbsp;TESIS</th>
+                    <th class="header" scope="col">TÍTULO&nbsp;DE&nbsp;TESIS</th>
+                    <th class="header" scope="col">TÍTULO&nbsp;DE&nbsp;TESIS</th>
                 </tr>
             </thead>
             <tbody id="tableBody_users">
@@ -30,6 +33,7 @@
                     </td>
                     <td>{{ usuario.ru }}</td>
                     <td>{{ usuario.maestrante }}</td>
+                    <td>{{ usuario.programa }}</td>
                     <td>
                         {% if usuario.tema_tesis_perfil %}
                         {{ usuario.tema_tesis_perfil }}

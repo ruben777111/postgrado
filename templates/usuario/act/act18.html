@@ -30,8 +30,15 @@
     <thead>
       <tr>
         <th class="header" scope="col">R.U.</th>
-        <th class="header" scope="col">Maestrante</th>
-        <th class="header" scope="col">Fecha&nbsp;sustentación</th>
+        <th class="header" scope="col">MAESTRANTE</th>
+        <th class="header" scope="col">PROGRAMA</th>
+        <th class="header" scope="col">FECHA&nbsp;SUSTENTACIÓN</th>        
+        <th class="header" scope="col">DOCENTE&nbsp;GUÍA</th>
+        <th class="header" scope="col">TRIBUNAL&nbsp;INTERNO&nbsp;1&nbsp;DESIGNADO (Presidente&nbsp;de&nbsp;tribunal)</th>
+        <th class="header" scope="col">TRIBUNAL&nbsp;INTERNO&nbsp;2&nbsp;DESIGNADO (Docente&nbsp;de&nbsp;area&nbsp;-&nbsp;Revisor)</th>
+        <th class="header" scope="col">INSTANCIA&nbsp;DEFENSA </th>
+
+        
 
         <th class="header" scope="col">Dictamen&nbsp;del&nbsp;acto&nbsp;de&nbsp;sustentación</th>
 
@@ -43,7 +50,31 @@
       <tr>
         <td> {{ evi.ru }} </td>
         <td>{{ evi.maestrante }}</td>
-        <td>{{ evi.cronograma.fecha_3 }}</td>
+        <td>{{ evi.programa }}</td>
+        <td>{{ evi.cronograma2.fecha_sustentacion }} - {{ evi.cronograma2.hora_sustentacion }} hrs</td>
+        
+        <td>{{ evi.guia }}</td>
+        <td>{{ evi.tribunaltesis.tribunal_tesis_1 }}</td>
+        <td>{{ evi.tribunaltesis.tribunal_tesis_2 }}</td>
+        <td>
+          {% if evi.maestrante.instancia_defensa == 1 %}
+          1º instancia
+          {% elif evi.maestrante.instancia_defensa == 2 %}
+          2º instancia
+          {% elif evi.maestrante.instancia_defensaa == 3 %}
+          3º instancia
+          {% elif evi.maestrante.instancia_defensa == 4 %}
+          4º instancia
+          {% elif evi.maestrante.instancia_defensa == 5 %}
+          5º instancia
+          {% elif evi.maestrante.instancia_defensa == 6 %}
+          6º instancia
+          {% elif evi.maestrante.instancia_defensa == 7 %}
+          7º instancia
+          
+          {% endif %}
+
+        </td>
         <td>
           <a href="#" onclick="tesisimprocedente({{ evi.id_maestrante }})" class="btn btn-danger"><i
               class="fas fa-times" data-bs-toggle="tooltip" data-bs-placement="top"

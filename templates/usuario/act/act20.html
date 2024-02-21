@@ -31,6 +31,7 @@
       <tr>
         <th class="header" scope="col">R.U.</th>
         <th class="header" scope="col">Maestrante</th>
+        <th class="header" scope="col">Programa</th>
         <th class="header" scope="col">Presentación de tesis mejorada</th>
         <th class="header" scope="col">#</th>
 
@@ -41,7 +42,15 @@
       <tr>
         <td> {{ evi.ru }} </td>
         <td>{{ evi.maestrante }}</td>
-        <td>{{ evi.cronograma2.fecha_tesis_mejorada }}</td>
+        <td>{{ evi.programa }}</td>
+        <td>{{ evi.cronograma2.fecha_tesis_mejorada }}
+          {% if evi.cronograma2.fecha_tesis_mejorada < today  %}
+            <span style="color: red;">{{ evi.cronograma2.fecha_tesis_mejorada }} - expiró fecha de entrega</span>
+          {% else %}
+            {{ evi.cronograma2.fecha_tesis_mejorada }}
+          {% endif %}
+
+        </td>
         
         <td>
 

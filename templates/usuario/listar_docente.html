@@ -24,8 +24,13 @@
                         <th class="header" scope="col">C.I.</th>
                         <th class="header" scope="col">DEPARTAMENTO</th>
                         <th class="header" scope="col">Nº&nbsp;DE&nbsp;CELULAR</th>
+                        
+                        {% if user.tipo_usuario == 3 %}
                         <th class="header" scope="col">ESTADO</th>
                         <th class="header" scope="col">ACCIÓN</th>
+                        {% endif %}
+                            
+
                         <th class="header" scope="col">Nº&nbsp;DE&nbsp;REFERENCIA</th>
                         <th class="header" scope="col">CORREO&nbsp;INSTITUCIONAL</th>
                         <th class="header" scope="col">CORREO&nbsp;PERSONAL</th>
@@ -65,6 +70,8 @@
                         <td>{{ usuario.ci_usuario }}</td>
                         <td>{{ usuario.departamento }}</td>
                         <td>{{ usuario.cel_usuario }}</td>
+
+                        {% if user.tipo_usuario == 3 %}
                         <td>
                             
                             {% if usuario.mostrar_numero %}
@@ -90,7 +97,9 @@
     
                                     {% endif %}
 
-                        </td>
+                        </td>                           
+                        {% endif %}
+
                         <td>{{ usuario.cel_usuario2 }}</td>
                         <td>{{ usuario.correo_inst }}</td>
                         <td>{{ usuario.correo }}</td>

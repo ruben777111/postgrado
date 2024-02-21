@@ -1,0 +1,97 @@
+{% load static %}
+<div class="modal-dialog modal-xl " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+    
+          <div class="card-body">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-3">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h6 class="card-title text-center">
+                    FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRIA
+                  </h6>
+                  <h6 class="card-title text-center">
+                    R-0859 V.0
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="container">
+              <div class="row row-cols-1">
+                <div class="col">PROGRAMA: {{object.user.programa}} </div>
+                <div class="col">MAESTRANTE: {{object.user}} </div>
+                <div class="col">DOCENTE GUÍA: {{object.docete_guia}} </div>
+                <!-- <div class="col">TEMA DE TESIS: {{object.user.tema_tesis}} </div> -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">            
+            <div class="modal-body">
+              DESCRIPCIÓN DEL INFORME:<br>
+              A continuación, se describe a detalle el avance de la tesis de maestría considerando el cumplimiento de los indicadores de avance y de la estructura de la tesis: 
+              <br>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="col-2">Capítulo</th>
+                      <th scope="col">Cualitativo(observaciones relevantes por capitulo)</th>
+                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capitulo)</th>  
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>  
+                      <td><p>CAPÍTULO I</p> INTRODUCCIÓN A LA ESTRUCTURA PROPOSITIVA DE LA INVESTIGACIÓN</td>
+                      <td>{{ object.cap1_cualitativo }}</td>  
+                      <td>{{ object.cap1 }}%</td>  
+                      
+                                          
+                    </tr>
+                    <tr>  
+                      <td><p>CAPÍTULO II</p> FUNDAMENTO TEÓRICO Y EPISTEMOLÓGICO.</td>
+                      <td>{{ object.cap2_cualitativo }}</td> 
+                      <td>{{ object.cap2 }}%</td>  
+                                           
+                    </tr>
+                    <tr>
+                      <td><p>CAPÍTULO III</p> METODOLOGÍA DE LA INVESTIGACIÓN</td>
+                      <td>{{ object.cap3_cualitativo }}</td> 
+                      <td>{{ object.cap3 }}%</td>        
+                                    
+                    </tr>
+                                        
+                  </tbody>
+                </table>
+  
+              </div>
+
+            </div>
+            <hr>
+            {% if object.aprobacion == 'si' %}
+            <div class="alert alert-primary" role="alert">
+             Avance aprobado
+           </div>          
+           {% endif %}
+           
+            {% if object.aprobacion == 'no' %}
+           <div class="alert alert-danger" role="alert">
+             Avance no aprobado
+           </div>    
+           {% endif %}     
+            <div class="modal-footer">
+             
+          
+              <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+             
+            </div>
+            
+    
+      </div>
+    </div>
+  </div>
+</div>

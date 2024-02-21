@@ -25,6 +25,7 @@
                     <tr>
                         <th class="header" scope="col">R.U.</th>
                         <th class="header" scope="col">MAESTRANTE</th>
+                        <th class="header" scope="col">DOCENTE REVISOR</th>
                         <th class="header" scope="col">TEMA&nbsp;DE&nbsp;TESIS</th>
                         <th class="header" scope="col">FECHA&nbsp;LIMITE&nbsp;DE&nbsp;PRESENTACIÓN&nbsp;DEL&nbsp;FORMULARIO</th>
                         <th class="header" scope="col">#</th>
@@ -35,6 +36,7 @@
                     <tr>
                         <td>{{ usuario.user.ru }}</td>
                         <td>{{ usuario.user }}</td>
+                        <td>{{ usuario.user.revisor }}</td>
                         <td>{{ usuario.user.tema_tesis }}</td>
                         <td>{{ usuario.user.cronograma2.fecha_formulario_revisor }}</td>
                         <td>
@@ -50,11 +52,13 @@
                                 Ver informe
                             </div>
 
-                            {% else %}
+                            {% elif user.tipo_usuario == 2 %}
                            
                             <button type="button"
                                 onclick="abrir_modal_editar_usuario('{% url 'usuario:registrar_informe_revisor' usuario.id_informe %}')"
                                 class="btn btn-primary "><i class=" fas fa-file-signature"></i></button>
+                                {% else %}
+                                Informe no emitido
                                 {% endif %}
                         </td>
 

@@ -1,0 +1,50 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+
+
+
+
+  
+<div class="sb-nav-link-icon">
+  <h5><i class="far fa-id-card"></i>
+   EL MAESTRANTE REALIZÓ LA ACTIVIDAD
+  </h5>
+</div>
+<hr />
+
+<div class="container">
+  <div class="table-responsive">
+    <table id="data" class="table table-striped">
+      <thead>
+        <tr>
+          <th class="header" scope="col">IR A SEGUIMIENTO DE TESIS</th>
+
+        </tr>
+      </thead>
+      <tbody id="tableBody_users">
+   
+        <tr>
+
+     
+          <td>
+            <a class="nav-link" href="{% url 'usuario:seguimiento_tesis'  %}">
+              <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
+              Seguimiento a Tesis
+          </a> 
+           </td> 
+        </tr>
+    
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+{% endblock extrajs %}
+{% endblock %}

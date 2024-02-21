@@ -10,7 +10,7 @@
               <input type="hidden" name="id_maestrante" value="{{object.id_maestrante}}">
               <h5>Maestrante: {{ object.maestrante }}</h5>
               R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.user.ci_usuario }}
+              C.I.: {{ object.ci_usuario }}
               <hr>
           
               <p>
@@ -36,3 +36,7 @@
     </div>
   </div>
 </div>
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'lib/js/actividad.js' %}"></script>
+{% endblock extrajs %}

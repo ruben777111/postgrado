@@ -10,10 +10,11 @@
               <h5>Maestrante: {{ object.maestrante }}</h5>
               R.U.: {{ object.ru }} <br>
               C.I.: {{ object.ci_usuario }}<br>
-              TRIBUNAL 1: {{ object.maestrante.tribunaltesis.tribunal_tesis_1 }}<br>
-              TRIBUNAL 2: {{ object.ci_usuario }}<br>
-              
-              Dictamen de la defensa de tesis : 
+              DOCENTE REVISOR: {{ object.maestrante.revisor }}<br>
+              TITULO DE LA TESIS: {{ object.tema_tesis }}<br>
+              DICTAMEN NOTA: {{ object.dictamen_nota }}<br>
+              DICTAMEN ESCALA: {{ object.dictamen_escala }}<br>
+            
               
               {% if object.procedencia_tesis %}
               <div style="color: rgb(74, 105, 231);">
@@ -33,7 +34,7 @@
               <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
 
 
-              <input type="checkbox" name="aprobacion">
+              <input type="checkbox" name="aprobacion" required>
               <div class="text-primary"> Aprobación para empaste de Tesis</div> <br>
               
               <input type="checkbox" name="recomendado">
@@ -54,27 +55,8 @@
   </div>
 </div>
 {% block extrajs %}
-<script>
-  $('input[type="file"]').on('change', function(){
-    var ext = $( this ).val().split('.').pop();
-    if ($( this ).val() != '') {
-      if(ext == "pdf"){
+<script src="{% static 'lib/js/pdf.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'lib/js/actividad.js' %}"></script>
   
-        if($(this)[0].files[0].size > 1048576){
-          console.log("El documento excede el tamaño máximo");
-          $('#modal-title').text('¡Precaución!');
-          $('#modal-msg').html("Se solicita un archivo no mayor a 1MB. Por favor verifica.");
-          $("#modal-gral").modal();           
-          $(this).val('');
-        }else{
-          $("#modal-gral").hide();
-        }
-      }
-      else
-      {
-        $( this ).val('');
-        alert("Por favor, subir un archivo en formato PDF");
-      }
-    }
-  });</script>
 {% endblock extrajs %}

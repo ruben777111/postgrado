@@ -13,6 +13,7 @@
               R.U.: {{ object.ru }} <br>
               C.I.: {{ object.ci_usuario }} <br>
               DOCENTE GUÍA: {{ object.guia }}<br>
+              DOCENTE REVISOR: {{ object.revisor }}<br>
               <hr>
               {{ form.as_p }}
               {{ form2.as_p }}
@@ -34,3 +35,7 @@
     </div>
   </div>
 </div>
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'lib/js/actividad.js' %}"></script>
+{% endblock extrajs %}

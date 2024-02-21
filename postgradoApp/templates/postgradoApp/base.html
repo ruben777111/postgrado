@@ -84,10 +84,7 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading text-Light ">MENU PRINCIPAL</div>
-                        <a class="nav-link" href="{% url 'lista_notificacion'  %}">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                            Notificaciónes
-                        </a>
+
 
 
                         {% if user.tipo_usuario == 1 %}
@@ -102,23 +99,33 @@
 
                         <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Informe del primer avance
+                            Ver informe de primer avance
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_avance_2'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Informe del segundo avance
+                            Ver informe de segundo avance
+                        </a>
+                        <a class="nav-link" href="{% url 'usuario:listar_informe_revisor_guia'  %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            Ver informe de docente revisor
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_informe_guia'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Informe guía - revisor
+                            Ver informe sobre correcciones de docente guía
                         </a>
+
                         <a class="nav-link" href="{% url 'usuario:listar_reporte_general'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Reporte general
+                            Ver reporte general de revisor 
                         </a>
+                        
                         <a class="nav-link" href="{% url 'usuario:listar_reporte_general_tribunal_interno'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Reporte general de tribunal interno
+                            Ver reporte general de tribunal interno
+                        </a>
+                        <a class="nav-link" href="{% url 'lista_notificacion'  %}">
+                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            Notificaciones
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_docente'  %}">
                             <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
@@ -130,34 +137,46 @@
 
                         <!-- 2 Docente  -->
                         {% if user.tipo_usuario == 2 %}
+                        <a class="nav-link" href="{% url 'lista_notificacion'  %}">
+                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            Notificaciones
+                        </a>
                         <div class="sb-sidenav-menu-heading text-Light ">Docente Guía</div>
 
                         <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Informe de avance
+                            Emitir informe de primer avance
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_avance_2'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Informe de segundo avance
+                            Emitir informe de segundo avance
+                        </a>
+                        <a class="nav-link" href="{% url 'usuario:listar_informe_revisor_guia'  %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            Ver informe de docente revisor
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_informe_guia'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Informe guía
+                            Emitir informe sobre correcciones 
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_reporte_general_guia'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Reporte general
+                            Ver reporte general de revisor 
                         </a>
 
 
                         <div class="sb-sidenav-menu-heading text-Light ">Docente Revisor</div>
                         <a class="nav-link" href="{% url 'usuario:listar_informe_revisor'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Informe revisor
+                            Emitir informe de revisor
+                        </a>
+                        <a class="nav-link" href="{% url 'usuario:listado_informe_guia_revisor'  %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            Ver informe de docente guía
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_reporte_general'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Reporte general
+                            Emitir reporte general 
                         </a>
                         <div class="sb-sidenav-menu-heading text-Light ">Tribunal interno</div>
 
@@ -171,22 +190,13 @@
                         <!-- -----------------------  -->
                         <!-- 3 4 5 tecnico de investigacion/ coordinadora de investigacion /postgrado -->
                         {% if user.is_staff %}
-                        <a class="nav-link" href="{% url 'usuario:seguimiento_tesis'  %}">
-                            <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
-                            Seguimiento a Tesis
-                        </a>
-                        {% if user.tipo_usuario == 5 %}
-                        <a class="nav-link" href="{% url 'usuario:listar_postulante'  %}">
-                            <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
-                            Maestrante postulante
-                        </a>
 
-                        {% endif %}
+
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayouts111" aria-expanded="false"
                             aria-controls="collapseLayouts111">
                             <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
-                            Maestrantes
+                            Datos de Maestrantes 
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
 
@@ -195,17 +205,25 @@
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="{% url 'usuario:registrar_maestrante'  %}">
                                     <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
-                                    Nuevo Maestrante
+                                    Registro nuevo maestrante 
                                 </a>
 
 
                                 <a class="nav-link" href="{% url 'usuario:listar_maestrante'  %}">
                                     <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
-                                    Listar Maestrantes
-                                </a>
+                                    Maestrantes en sistema (estado del maestrante)
+                                </a>         
+                                {% if user.tipo_usuario == 5 %}
+
+                                    <a class="nav-link" href="{% url 'usuario:listar_postulante'  %}">
+                                        <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
+                                        Maestrantes postulantes 
+                                    </a>
+                                {% endif %}
+                                
                                 <a class="nav-link" href="{% url 'usuario:listado_maestrante_tesis_concluido'  %}">
                                     <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
-                                    Listar Maestrantes Graduados
+                                    Listar Maestrantes Tesis concluido
                                 </a>
                             </nav>
                         </div>
@@ -215,7 +233,7 @@
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayouts5" aria-expanded="false" aria-controls="collapseLayouts5">
                             <div class="sb-nav-link-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                            Docentes
+                            Datos de Docentes
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseLayouts5" aria-labelledby="headingOne"
@@ -223,19 +241,23 @@
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="{% url 'usuario:registrar_docente'  %}">
                                     <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
-                                    Nuevo Docente
+                                    Registro nuevo Docente  
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_docente'  %}">
                                     <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
-                                    Lista de docentes
+                                    Lista de Docentes en sistema 
                                 </a>
                             </nav>
                         </div>
+                        <a class="nav-link" href="{% url 'usuario:seguimiento_tesis'  %}">
+                            <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
+                            Gestión a tesis
+                        </a>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayouts000" aria-expanded="false"
                             aria-controls="collapseLayouts000">
                             <div class="sb-nav-link-icon"> <i class="fas fa-atlas "></i></div>
-                            Proceso de Tesis
+                            Monitoreo de tesis
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseLayouts000" aria-labelledby="headingOne"
@@ -257,46 +279,46 @@
                                     <div class="sb-nav-link-icon"> <i class="fas fa-pen-square"></i></div>
                                     Tema de Tesis
                                 </a>
-
-                                <a class="nav-link" href="{% url 'usuario:listar_tesis_maestrante'  %}">
-                                    <div class="sb-nav-link-icon"> <i class="fas fa-file-invoice"></i></div>
-                                    Registro archivo de Tesis
+                                <a class="nav-link" href="{% url 'usuario:listar_asistencia'  %}">
+                                    <div class="sb-nav-link-icon"> <i class="fas fa-pen-square"></i></div>
+                                    Historial de asistencia a inducción
                                 </a>
-                                <a class="nav-link" href="{% url 'usuario:registrar_asistencia'  %}">
-                                    <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
-                                    Asesoramiento
+                                <a class="nav-link" href="{% url 'usuario:listar_sustentacion_perfil_historial'  %}">
+                                    <div class="sb-nav-link-icon"> <i class="fas fa-pen-square"></i></div>
+                                    Historial de sustentación perfil
                                 </a>
+                                <a class="nav-link" href="{% url 'usuario:listar_sustentacion_tesis_historial'  %}">
+                                    <div class="sb-nav-link-icon"> <i class="fas fa-pen-square"></i></div>
+                                    Historial de Defensa de tesis
+                                </a>
+                                
                             </nav>
                         </div>
-                        <a class="nav-link" href="{% url 'usuario:listar_sustentacion_perfil'  %}">
-                            <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
-                            Sustentación perfil
-                        </a>
-                        <a class="nav-link" href="{% url 'usuario:listar_sustentacion_tesis'  %}">
-                            <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
-                            Defensa de tesis
-                        </a>
-
+        
+                    
+                        {% if user.tipo_usuario == 3 %}
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseLayouts11" aria-expanded="false" aria-controls="collapseLayouts11">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                            Cronogramas
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLayouts11" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{% url 'usuario:cronograma'  %}">
-                                    <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                                    Cronograma de Perfil de Tesis
-                                </a>
-                                <a class="nav-link" href="{% url 'usuario:cronograma2'  %}">
-                                    <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                                    Cronograma de Tesis
-                                </a>
+                        data-bs-target="#collapseLayouts11" aria-expanded="false" aria-controls="collapseLayouts11">
+                        <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                        Cronogramas
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts11" aria-labelledby="headingOne"
+                        data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'usuario:cronograma'  %}">
+                                <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                                Cronograma hasta procedencia de tema
+                            </a>
+                            <a class="nav-link" href="{% url 'usuario:cronograma2'  %}">
+                                <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                                Cronograma de maestrantes en curso 
+                            </a>
 
-                            </nav>
-                        </div>
+                        </nav>
+                    </div>
+                        {% endif %}
+  
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayouts15" aria-expanded="false" aria-controls="collapseLayouts15">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-video"></i></div>
@@ -306,7 +328,10 @@
                         <div class="collapse" id="collapseLayouts15" aria-labelledby="headingOne"
                             data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
+                                
+                                {% if user.tipo_usuario == 3 %}
+                                    
+                                   <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
                                     <div class="sb-nav-link-icon"><i class="fas fa-file-upload  "></i></div>
                                     Formulario de primer avance
                                 </a>
@@ -316,22 +341,39 @@
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_informe_guia'  %}">
                                     <div class="sb-nav-link-icon"><i class="fas fa-film "></i></div>
-                                    Formulario de informe
-                                </a>
+                                    Formulario de informe docente guía
+                                </a>            
+                                <a class="nav-link" href="{% url 'usuario:listar_informe_revisor'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                                    Formulario de informe docente revisor
+                                </a>                 
+                                {% endif %}
+                                    
+
                                 <a class="nav-link" href="{% url 'usuario:listar_reporte_general'  %}">
                                     <div class="sb-nav-link-icon"><i class="fas fa-film "></i></div>
                                     Formulario de reporte
                                 </a>
+                                
+                                {% if user.tipo_usuario == 3 %}
                                 <a class="nav-link" href="{% url 'usuario:listar_reporte_general_tribunal_interno'  %}">
                                     <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
                                     Reporte general de tribunal interno
                                 </a>
+                                {% endif %}
+                                    
+                                
+
+
+                           
                             </nav>
                         </div>
 
-
-
-
+                        <a class="nav-link" href="{% url 'lista_notificacion'  %}">
+                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            Notificaciones
+                        </a>
+                        {% if user.tipo_usuario == 3 %}
                         <div class="sb-sidenav-menu-heading text-Light ">AJUSTES</div>
                         <!-- ------------------------------------------- -->
                         <a class="nav-link" href="{% url 'usuario:listado_evidencia'  %}">
@@ -348,6 +390,8 @@
                             Notificaciones/ajustes
                         </a>
                         {% endif %}
+                        {% endif %}
+                        
 
                         <!------------ Usuarios Administradores ---------------->
                         {% if user.tipo_usuario == None %}

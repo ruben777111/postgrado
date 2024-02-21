@@ -31,7 +31,8 @@
       <tr>
         <th class="header" scope="col">R.U.</th>
         <th class="header" scope="col">Maestrante</th>
-        <th class="header" scope="col">Resultado de la Tesis</th>
+        <th class="header" scope="col">Programa</th>
+        <th class="header" scope="col">Resultado del dictamen</th>
 
 
         <th class="header" scope="col">#</th>
@@ -43,12 +44,13 @@
       <tr>
         <td> {{ evi.ru }} </td>
         <td>{{ evi.maestrante }}</td>
+        <td>{{ evi.programa }}</td>
         <td>
 
-          {% if evi.cronograma.fecha_4 %}
-          {{ evi.cronograma.fecha_4 }}
-          {% else %}
-          Tema de perfil de tesis improcedente
+          {% if evi.procedencia_tema == True %}
+          Procedente
+          {% elif evi.procedencia_tema == False %}
+          Improcedente
           {% endif %}
 
 

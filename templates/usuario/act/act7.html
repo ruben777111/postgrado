@@ -49,6 +49,8 @@
           <th class="header" scope="col"></th>
           <th class="header" scope="col">Seleccionar&nbsp;Maestrante</th>
           <th class="header" scope="col">R.U.</th>
+          <th class="header" scope="col">Programa</th>
+          <th class="header" scope="col">DOCENTE GUÍA</th>
           <th class="header" scope="col">Limite de presentación del borrador de tesis</th>
 
           <th class="header" scope="col"></th>
@@ -66,6 +68,8 @@
           </td>
           <td>{{ evi.maestrante }}</td>
           <td> {{ evi.ru }} </td>
+          <td>{{ evi.programa }}</td>
+          <td>{{ evi.guia }}</td>
           <td>
             {% if evi.cronograma2.fecha_borrador_prorroga %}
 

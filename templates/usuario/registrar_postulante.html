@@ -1,0 +1,41 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form id="informe" method="POST" action="{% url 'usuario:registrar_postulante_funcion' %}"enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card">  
+            <div class="card-body">
+              <input type="hidden" name="id_maestrante" value="{{object.id_maestrante}}">
+              <h5>Maestrante: {{ object.maestrante }}</h5>
+              R.U.: {{ object.ru }} <br>
+              C.I.: {{ object.ci_usuario }}
+              <hr>
+          
+              <p>Derivar al maestrante para el proceso de Tesis:
+                <div class="colores-primario-aceptar">
+                  Solicitud de inicio del proceso / Solicitud de reincorporación: 
+                  <input type="file" name="informe" class="form-control" accept="application/pdf" required ><br>
+    
+                </div>
+                </p>
+              
+            </div>
+            <div class="modal-footer">
+              <input type="checkbox" required>
+              <div class="text-primary"> - Marque la casilla para confirmar el registro de la actividad.</div>
+              <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="colores-botonaceptar">Confirmar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% block extrajs %}
+<script src="{% static 'lib/js/pdf.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'lib/js/actividad.js' %}"></script>
+{% endblock extrajs %}

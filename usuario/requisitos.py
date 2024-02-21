@@ -1,7 +1,7 @@
 from django.shortcuts import redirect,get_object_or_404,render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from usuario.models import Docente_Revisor,SustentacionTesisHistorial,ReporteGeneralTribunalInterno,ReporteGeneral,TribunalTesis,BancoNotificacion,Informe,Docente,AsistenciaInduccion,Cronograma2,SustentacionPerfilHistorial,TribunalPerfil,Avance,Avance_2,Cronograma,Cronograma2,Post,Administracion,Requisitos,CentroActividades,Usuario,Maestrante
+from usuario.models import TribunalTesis,Docente_Revisor,SustentacionTesisHistorial,ReporteGeneralTribunalInterno,ReporteGeneral,TribunalTesis,BancoNotificacion,Informe,Docente,AsistenciaInduccion,Cronograma2,SustentacionPerfilHistorial,TribunalPerfil,Avance,Avance_2,Cronograma,Cronograma2,Post,Administracion,Requisitos,CentroActividades,Usuario,Maestrante
 from datetime import datetime, timedelta
 from django.utils import timezone
 from .forms import FormularioFechaSustentacionTesis,FormularioTribunalTesis,FormularioDocenteRevisor,FormularioDocenteGuia,FormularioFechaSustentacion,FormularioTribunalPerfil,FormularioDocenteProvisional,FormularioActividad2
@@ -75,21 +75,29 @@ def MaestranteHabilitar(request,pk):
 def RegistrarActividad01(request,pk):
 
     maestrante = get_object_or_404(Maestrante,id_maestrante=pk)
-    maestrante.avance_tesis += 1    
-      
-    requisitos = get_object_or_404(Requisitos,nro_requisito=0)        
-      
-    cronograma= get_object_or_404(Cronograma,user=maestrante)
-    notificar = BancoNotificacion.objects.get(numero_notificacion=1)
-    Post.objects.create(user=maestrante,title=notificar.titulo,text=notificar.contenido+" : "+str(cronograma.fecha_1.strftime("%d-%m-%Y")))   
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
-    CentroActividades.objects.create(maestrante=maestrante,usuario=request.user,evidencia=requisitos.actividad) 
-    maestrante.notificacion=True
+    if maestrante.avance_tesis == 0:
+        maestrante.avance_tesis = 1    
+        
+        requisitos = get_object_or_404(Requisitos,nro_requisito=0)        
+        
+        cronograma= get_object_or_404(Cronograma,user=maestrante)
+        notificar = BancoNotificacion.objects.get(numero_notificacion=1)
+        Post.objects.create(user=maestrante,title=notificar.titulo,text=notificar.contenido+" : "+str(cronograma.fecha_1.strftime("%d-%m-%Y")))   
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+        CentroActividades.objects.create(maestrante=maestrante,usuario=request.user,evidencia=requisitos.actividad) 
+        maestrante.notificacion=True
 
-    maestrante.save()
-    return redirect('usuario:seguimiento_tesis')
+        maestrante.save()
+        return redirect('usuario:seguimiento_tesis')
+    else:
+        template_name = 'usuario/act/actduo.html'
+        mensaje="El maestrante ya realizo la actividad"
+        context = { 'mensaje':mensaje} 
+        return render(request,template_name,context)
 
+
+#Nota: días hábiles desde la derivación de postgrado, actividad de días requisito-1
 
 # Actividad 1 ---------------- Registro de formulario de habilitación
 @method_decorator(login_required, name='dispatch')
@@ -106,7 +114,7 @@ def FormularioActividad0(request):
         form_habilitacion = request.FILES #returns a dict-like object
         form_habilitacion_doc = form_habilitacion['form_habilitacion']    
         maestrante = get_object_or_404(Maestrante,id_maestrante=id_maestrante)  
-        maestrante.avance_tesis+=1
+        maestrante.avance_tesis =2
         requisitosactividad = get_object_or_404(Requisitos,nro_requisito=1) 
         requisitos = get_object_or_404(Requisitos,nro_requisito=3) 
         cronograma = get_object_or_404(Cronograma,user=maestrante)                
@@ -151,7 +159,7 @@ class RegistrarActividad1(UpdateView):
 
         if form.is_valid():        
             self.object = form.save(commit=False)
-            self.object.avance_tesis += 1           
+            self.object.avance_tesis = 3           
             
             requisitos = get_object_or_404(Requisitos,nro_requisito=2) 
             CentroActividades.objects.create(maestrante=self.object.maestrante,usuario=request.user,evidencia=requisitos.actividad+", Docente guía provisional : "+str(self.object.provisional)) 
@@ -193,7 +201,7 @@ class RegistrarActividad2(UpdateView):
 
         if form.is_valid():        
             self.object = form.save(commit=False)
-            self.object.avance_tesis += 1
+            self.object.avance_tesis = 4
             
             self.object = form.save()
             requisitos = get_object_or_404(Requisitos,nro_requisito=3)
@@ -239,12 +247,16 @@ class RegistrarActividad3(UpdateView):
         CentroActividades.objects.create(maestrante=maestranteid.maestrante,usuario=self.request.user,evidencia=requisitos.actividad)
         notificar = BancoNotificacion.objects.get(numero_notificacion=5)
 
-        Post.objects.create(user=maestranteid,title=notificar.titulo,text=notificar.contenido)   
+        cronograma = get_object_or_404(Cronograma,user=maestranteid.maestrante)
+        fecha_formateada = cronograma.fecha_3.strftime("%d-%m-%Y")
+        hora_formateada = cronograma.hora_sustentacion.strftime("%H:%M")
+
+        Post.objects.create(user=maestranteid,title=notificar.titulo,text=notificar.contenido+", fecha: "+str(fecha_formateada)+"- hora: "+str(hora_formateada))   
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(f'chat_{maestranteid.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
         maestranteid.notificacion=True
         maestranteid.listacomunicacion=False
-        maestranteid.avance_tesis=maestranteid.avance_tesis+1        
+        maestranteid.avance_tesis=5        
         maestranteid.save()    
 
 # Actividad 5 ------------ Registro de dictamen del acto de sustentación del tema
@@ -259,7 +271,7 @@ def ProcedentePerfil(request,pk):
         Cronograma2.objects.create(user=maestrante.maestrante)  
 
     maestrante.procedencia_tema=True
-    maestrante.avance_tesis+=1
+    maestrante.avance_tesis=6
     
     new_date=timezone.now()  
 
@@ -318,7 +330,7 @@ def ProcedentePerfil(request,pk):
 def ImProcedentePerfil(request,pk):
     maestrante = get_object_or_404(Maestrante,id_maestrante=pk)
     maestrante.procedencia_tema=False
-    maestrante.avance_tesis+=1
+    maestrante.avance_tesis=6
     notificar_1 = BancoNotificacion.objects.get(numero_notificacion=96)
     Post.objects.create(user=maestrante,title=notificar_1.titulo,text=notificar_1.contenido)
     channel_layer = get_channel_layer()
@@ -367,7 +379,7 @@ class RegistrarDocenteGuia(UpdateView):
                 resultado=True
                 cartaexterna = self.request.FILES.get('carta')
                 fecha_recepcion = self.request.POST['recepcion_perfil']
-                self.object.avance_tesis += 1    
+                self.object.avance_tesis = 7    
                 usuario_existe = Avance.objects.filter(user=self.object.maestrante).exists()
                 if not usuario_existe:
                     Avance.objects.create(user=self.object.maestrante)     
@@ -389,7 +401,7 @@ class RegistrarDocenteGuia(UpdateView):
                 cronograma2 = get_object_or_404(Cronograma2,user=self.object.maestrante)
                 
                 notificar = BancoNotificacion.objects.get(numero_notificacion=97)
-                Post.objects.create(user=self.object.maestrante,title=notificar.titulo,text=notificar.contenido+", fecha: "+str(cronograma2.fecha_borrador))
+                Post.objects.create(user=self.object.maestrante,title=notificar.titulo,text=notificar.contenido+", fecha: "+str(cronograma2.fecha_borrador.strftime("%d-%m-%Y")))
                 channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.group_send)(f'chat_{self.object.maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
                 self.object.notificacion=True
@@ -428,7 +440,14 @@ class RegistrarDocenteGuia(UpdateView):
                 self.object.instancia += 1           
                 self.object.maestrante_habilitado=False
                 self.object.avance_tesis= None
-          
+                notificar = BancoNotificacion.objects.get(numero_notificacion=91)
+                usuarios_administradores = Usuario.objects.filter(tipo_usuario=5)
+                for usuario in usuarios_administradores:
+                    Post.objects.create(user=usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(self.object.maestrante))   
+                    channel_layer = get_channel_layer()
+                    async_to_sync(channel_layer.group_send)(f'chat_{usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+                    usuario.notificacion=True
+                    usuario.save()          
             self.object = form.save()
             return redirect(self.get_success_url())
 
@@ -451,7 +470,7 @@ def RegistrarActividad6(request):
         if check:
             for i in check:  
                 maestrante=get_object_or_404(Maestrante,id_maestrante=i)                
-                maestrante.avance_tesis +=1                              
+                maestrante.avance_tesis =8                              
                 
                 cronograma2=get_object_or_404(Cronograma2,user=maestrante.maestrante)
                 cronograma2.fecha_avance1=fecha
@@ -483,10 +502,19 @@ def RegistrarActividad6(request):
 def RegistrarAvance(request,pk):
     maestrante = get_object_or_404(Maestrante,id_maestrante=pk)
     avance = get_object_or_404(Avance,user=maestrante.maestrante)
+    cronograma2 = get_object_or_404(Cronograma2,user=maestrante.maestrante)
+    cronograma2.fecha_avance1=None
+    cronograma2.save()
+    avance.cap1=None
+    avance.cap2=None
+    avance.cap3=None
+    avance.cap1_cualitativo = None
+    avance.cap2_cualitativo = None
+    avance.cap3_cualitativo = None
     avance.aceptar_avance=False
     avance.aprobacion=1
     avance.save()
-    maestrante.avance_tesis-=1
+    maestrante.avance_tesis=7
     
     CentroActividades.objects.create(maestrante=maestrante.maestrante,usuario=request.user,evidencia="Registro del formulario del primer avance : NO APROBADO") 
     maestrante.save()    
@@ -531,7 +559,7 @@ def RegistrarActividad9(request):
         if check:
             for i in check:  
                 maestrante=get_object_or_404(Maestrante,id_maestrante=i)
-                maestrante.avance_tesis +=1
+                maestrante.avance_tesis =10
                 
                 
                 cronograma2=get_object_or_404(Cronograma2,user=maestrante.maestrante)
@@ -563,10 +591,21 @@ def RegistrarActividad9(request):
 def RegistrarAvance2(request,pk):
     maestrante = get_object_or_404(Maestrante,id_maestrante=pk)
     avance = get_object_or_404(Avance_2,user=maestrante.maestrante)
+    cronograma2 = get_object_or_404(Cronograma2,user=maestrante.maestrante)
+    cronograma2.fecha_avance2=None
+    cronograma2.save()
+    avance.cap4=None
+    avance.cap5=None
+    avance.cap6=None
+    avance.cap7=None
+    avance.cap4_cualitativo = None
+    avance.cap5_cualitativo = None
+    avance.cap6_cualitativo = None
+    avance.cap7_cualitativo = None
     avance.aceptar_avance=False
     avance.aprobacion=1
     avance.save()
-    maestrante.avance_tesis-=1
+    maestrante.avance_tesis=9
        
     CentroActividades.objects.create(maestrante=maestrante.maestrante,usuario=request.user,evidencia="Registro del formulario del segundo avance : NO APROBADO") 
     maestrante.save() 
@@ -621,7 +660,7 @@ def FormularioActividad11(request):
         cronograma2 = get_object_or_404(Cronograma2,user=maestrante.maestrante)
 
         maestrante.tema_tesis=tema 
-        maestrante.avance_tesis+=1       
+        maestrante.avance_tesis=12       
         cronograma2.fecha_recepcion_borrador=fecha_recepcion_borrador        
         cronograma2.borrador_tesis=True
         cronograma2.save()
@@ -631,7 +670,7 @@ def FormularioActividad11(request):
         maestrante.save()
     return redirect('usuario:seguimiento_tesis') 
 
-#Actividad 12---------- Registro borrador de tesis
+#Actividad 12---------- Designar docente revisor
 @method_decorator(login_required, name='dispatch')
 class RegistrarActividad12(UpdateView):
 
@@ -648,7 +687,7 @@ class RegistrarActividad12(UpdateView):
 
         if form.is_valid():        
             self.object = form.save(commit=False)
-            self.object.avance_tesis += 1
+            self.object.avance_tesis = 13
           
             
             con=1
@@ -691,16 +730,25 @@ class RegistrarActividad12(UpdateView):
             if not usuario_existe:   
                 Informe.objects.create(user=self.object.maestrante) 
             self.object = form.save()
+
+            notificar = BancoNotificacion.objects.get(numero_notificacion=90)
+            usuarios_administradores = Usuario.objects.filter(tipo_usuario=3)    
+            for usuario in usuarios_administradores:
+                Post.objects.create(user=usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(self.object.maestrante))   
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(f'chat_{usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+                usuario.notificacion=True
+                usuario.save()
             return redirect(self.get_success_url())
 
         return self.form_invalid(form)
 
-# Actividad 15 ------------ Registro de dictamen del acto de sustentación del tema
+# Actividad 15 ------------ R-0877 Reporte general
 @login_required()
 def ProcedenteReporte(request,pk):
     maestrante = get_object_or_404(Maestrante,id_maestrante=pk)
     requisitos = get_object_or_404(Requisitos,nro_requisito=16) 
-    maestrante.avance_tesis+=1
+    maestrante.avance_tesis=16
     
     new_date=timezone.now()  
     con=1
@@ -724,8 +772,8 @@ def ProcedenteReporte(request,pk):
     date_obj = datetime.strptime(final_date, "%Y-%m-%d")
     formatted_date = date_obj.strftime("%d/%m/%Y")  
 
-    notificarm = BancoNotificacion.objects.get(numero_notificacion=24)
-    Post.objects.create(user=maestrante,title=notificarm.titulo,text=notificarm.contenido+" : "+str(maestrante)) 
+    notificarm = BancoNotificacion.objects.get(numero_notificacion=23)
+    Post.objects.create(user=maestrante,title=notificarm.titulo,text=notificarm.contenido+" : "+str(maestrante)+", fecha de presentación: "+str(formatted_date)) 
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
     maestrante.notificacion=True
@@ -784,7 +832,7 @@ def ActivarReporte2(request,pk):
 
     return redirect('usuario:seguimiento_tesis')
 
-
+# Actividad 16 ------------ Tesis para habilitación a defensa
 @method_decorator(login_required, name='dispatch')
 class RegistrarActividad16(DetailView):
 
@@ -808,7 +856,7 @@ def FormularioActividad16(request):
 
 
         maestrante.tema_tesis=tema 
-        maestrante.avance_tesis+=1
+        maestrante.avance_tesis=17
         usuario_existe = TribunalTesis.objects.filter(user=maestrante.maestrante).exists()
         if not usuario_existe:          
             TribunalTesis.objects.create(user=maestrante.maestrante) 
@@ -852,18 +900,24 @@ class RegistrarActividad17(UpdateView):
         return super().form_valid(form)
     
     def adicional(self,pk):
-        maestranteid = get_object_or_404(Maestrante,id_maestrante=pk)                  
+        maestranteid = get_object_or_404(Maestrante,id_maestrante=pk)  
+
+        cronograma2 = get_object_or_404(Cronograma2,user=maestranteid.maestrante)
+        
+        fecha_formateada = cronograma2.fecha_sustentacion.strftime("%d-%m-%Y")
+        hora_formateada = cronograma2.hora_sustentacion.strftime("%H:%M")
+        
         requisitos = get_object_or_404(Requisitos,nro_requisito=17)
         CentroActividades.objects.create(maestrante=maestranteid.maestrante,usuario=self.request.user,evidencia=requisitos.actividad)
         notificar = BancoNotificacion.objects.get(numero_notificacion=20)
 
-        Post.objects.create(user=maestranteid,title=notificar.titulo,text=notificar.contenido)
+        Post.objects.create(user=maestranteid,title=notificar.titulo,text=notificar.contenido+", fecha: "+str(fecha_formateada)+"- hora: "+str(hora_formateada))
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(f'chat_{maestranteid.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
 
         #maestranteid.notificacion=True
         maestranteid.listacomunicacion=False
-        maestranteid.avance_tesis=maestranteid.avance_tesis+1        
+        maestranteid.avance_tesis=18       
         maestranteid.save()
 
 # Actividad 18 ------------- Dictamen de la defensa de tesis.
@@ -871,7 +925,7 @@ class RegistrarActividad17(UpdateView):
 def ProcedenteTesis(request,pk):
     maestrante = get_object_or_404(Maestrante,id_maestrante=pk)
     maestrante.procedencia_tesis=True
-    maestrante.avance_tesis+=1
+    maestrante.avance_tesis=19
     
     requisitos = get_object_or_404(Requisitos,nro_requisito=20)
     new_date=timezone.now()  
@@ -887,8 +941,14 @@ def ProcedenteTesis(request,pk):
     cronograma2 = get_object_or_404(Cronograma2,user=maestrante.maestrante)
     cronograma2.fecha_tesis_mejorada = final_date
     cronograma2.save()
-    notificarm = BancoNotificacion.objects.get(numero_notificacion=23)
-    Post.objects.create(user=maestrante,title=notificarm.titulo,text=notificarm.contenido+" : "+str(maestrante)+", fecha: "+str(final_date)) 
+    notificarm = BancoNotificacion.objects.get(numero_notificacion=24)
+    Post.objects.create(user=maestrante,title=notificarm.titulo,text=notificarm.contenido+" : "+str(maestrante)) 
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+    maestrante.notificacion=True
+
+    notificarmaes = BancoNotificacion.objects.get(numero_notificacion=89)
+    Post.objects.create(user=maestrante,title=notificarmaes.titulo,text=notificarmaes.contenido+" : "+str(maestrante)+", fecha: "+str(final_date.strftime("%d-%m-%Y"))) 
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
     maestrante.notificacion=True
@@ -909,10 +969,21 @@ def ProcedenteTesis(request,pk):
 @login_required()
 def ImProcedenteTesis(request,pk):
     maestrante = get_object_or_404(Maestrante,id_maestrante=pk)
- 
-    maestrante.avance_tesis+=1
-
-
+    maestrante.procedencia_tesis=False
+    maestrante.avance_tesis=19
+    notificarmaes = BancoNotificacion.objects.get(numero_notificacion=88)
+    Post.objects.create(user=maestrante,title=notificarmaes.titulo,text=notificarmaes.contenido+" : "+str(maestrante)) 
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+    maestrante.notificacion=True
+    notificar = BancoNotificacion.objects.get(numero_notificacion=22)
+    usuarios_administradores = Usuario.objects.filter(tipo_usuario=3)    
+    for usuario in usuarios_administradores:
+        Post.objects.create(user=usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(maestrante))   
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f'chat_{usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+        usuario.notificacion=True
+        usuario.save()
     requisitos = get_object_or_404(Requisitos,nro_requisito=18)
     CentroActividades.objects.create(maestrante=maestrante.maestrante,usuario=request.user,evidencia=requisitos.actividad+" Tesis Improcedente")
     maestrante.save()
@@ -948,7 +1019,7 @@ def FormularioActividad19(request):
         maestrante.dictamen_escala=escala 
         maestrante.dictamen_nota=numeral
         if maestrante.procedencia_tesis:
-            maestrante.avance_tesis+=1
+            maestrante.avance_tesis=20
         else:
             maestrante.avance_tesis=24
         
@@ -970,6 +1041,9 @@ def FormularioActividad19(request):
                                                    ) 
         
         CentroActividades.objects.create(maestrante=maestrante.maestrante,usuario=request.user,evidencia=requisitos.actividad) 
+
+
+
         maestrante.save() 
         #SustentacionTesisHistorial
     return redirect('usuario:seguimiento_tesis') 
@@ -991,9 +1065,16 @@ def FormularioActividad20(request):
             maestrante.tesis_recomendada = True  
         obs = request.POST['obs']
         maestrante.observacion_empaste = obs       
-          
+        notificar = BancoNotificacion.objects.get(numero_notificacion=87)
+        usuarios_administradores = Usuario.objects.filter(tipo_usuario=5)    
+        for usuario in usuarios_administradores:
+            Post.objects.create(user=usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(maestrante))   
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(f'chat_{usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+            usuario.notificacion=True
+            usuario.save()          
  
-        maestrante.avance_tesis+=1
+        maestrante.avance_tesis=21
         
         requisitos = get_object_or_404(Requisitos,nro_requisito=20)
  
@@ -1020,7 +1101,7 @@ def FormularioActividad21(request):
         maestrante.recepcion_solicitud = fecha_recepcion  
         maestrante.observacion_pago = obs         
         
-        maestrante.avance_tesis+=1
+        maestrante.avance_tesis=22
         
         requisitos = get_object_or_404(Requisitos,nro_requisito=21)
  
@@ -1046,12 +1127,20 @@ def FormularioActividad22(request):
       
         maestrante.codigo_empaste = codigo_empaste         
         
-        maestrante.avance_tesis+=1
+        maestrante.avance_tesis=23
         
         requisitos = get_object_or_404(Requisitos,nro_requisito=22)
- 
+
         
         CentroActividades.objects.create(maestrante=maestrante.maestrante,usuario=request.user,evidencia=requisitos.actividad) 
+        notificar = BancoNotificacion.objects.get(numero_notificacion=86)
+        usuarios_administradores = Usuario.objects.filter(tipo_usuario=3)    
+        for usuario in usuarios_administradores:
+            Post.objects.create(user=usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(maestrante))   
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(f'chat_{usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+            usuario.notificacion=True
+            usuario.save()  
         maestrante.save() 
 
     return redirect('usuario:seguimiento_tesis') 
@@ -1110,9 +1199,37 @@ def FormularioActividad24(request):
 
         maestrante.tesis_segunda_instancia = tesis_segunda_instancia
         maestrante.hoja_de_evaluacion = hoja_doc
-        maestrante.avance_tesis+=1
-       
-        maestrante.tesis_terminado = True
+        maestrante.avance_tesis=25
+
+        requisitos = get_object_or_404(Requisitos,nro_requisito=99)
+        new_date=timezone.now()  
+        con=1
+        dia=1
+        while con<=requisitos.tiempo:
+            final_date=new_date+timedelta(days=dia)
+            if final_date.weekday() == 5 or final_date.weekday() == 6:
+                pass
+            else:        
+                con=con+1
+            dia=dia+1
+        cronograma2 = get_object_or_404(Cronograma2,user=maestrante.maestrante)
+        cronograma2.fecha_reporte_general_tribunal_interno = final_date
+        cronograma2.save()
+
+        notificarmaes = BancoNotificacion.objects.get(numero_notificacion=85)
+        Post.objects.create(user=maestrante,title=notificarmaes.titulo,text=notificarmaes.contenido+" : "+str(maestrante)+", fecha: "+str(final_date.strftime("%d-%m-%Y"))) 
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+        maestrante.notificacion=True
+
+        #docente_tribunal = get_object_or_404(Docente_Revisor,user=maestrante.tribunaltesis.tribunal_tesis_2.user)
+        #print(docente_tribunal)
+        Post.objects.create(user=maestrante.tribunaltesis.tribunal_tesis_2.user,title=notificarmaes.titulo,text=notificarmaes.contenido+" : "+str(maestrante)+", fecha: "+str(final_date.strftime("%d-%m-%Y"))) 
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f'chat_{maestrante.tribunaltesis.tribunal_tesis_2.user.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+        maestrante.notificacion=True
+
+
         usuario_existe = ReporteGeneralTribunalInterno.objects.filter(user=maestrante.maestrante).exists()
         if not usuario_existe:
             ReporteGeneralTribunalInterno.objects.create(user=maestrante.maestrante)         
@@ -1129,7 +1246,33 @@ def ProcedenteReporteTribunalInterno(request,pk):
     maestrante = get_object_or_404(Maestrante,id_maestrante=pk)
     requisitos = get_object_or_404(Requisitos,nro_requisito=25) 
     maestrante.avance_tesis=16 
-    maestrante.instancia_defensa += 1  
+    maestrante.instancia_defensa += 1 
+
+    #notificarmaes = BancoNotificacion.objects.get(numero_notificacion=23)
+    #Post.objects.create(user=maestrante,title=notificarmaes.titulo,text=notificarmaes.contenido+" : "+str(maestrante)+", fecha: "+str(final_date.strftime("%d-%m-%Y"))) 
+    #channel_layer = get_channel_layer()
+    #async_to_sync(channel_layer.group_send)(f'chat_{maestrante.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+   # maestrante.notificacion=True
+    
+    notificar = BancoNotificacion.objects.get(numero_notificacion=21)
+    usuarios_administradores = Usuario.objects.filter(tipo_usuario=5)    
+    for usuario in usuarios_administradores:
+        Post.objects.create(user=usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(maestrante))   
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f'chat_{usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
+        usuario.notificacion=True
+        usuario.save()       
+
     CentroActividades.objects.create(maestrante=maestrante.maestrante,usuario=request.user,evidencia=requisitos.actividad)
+    if maestrante.procedencia_tesis == False:
+        cronograma2=get_object_or_404(Cronograma2,user=maestrante.maestrante)
+        tribunaltesis=get_object_or_404(TribunalTesis,user=maestrante.maestrante)  
+        tribunaltesis.tribunal_tesis_1 = None
+        tribunaltesis.tribunal_tesis_2 = None
+        cronograma2.fecha_sustentacion = None
+        cronograma2.hora_sustentacion = None
+        cronograma2.save()
+        tribunaltesis.save()
     maestrante.save()
+
     return redirect('usuario:seguimiento_tesis')

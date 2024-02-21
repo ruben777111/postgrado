@@ -5,14 +5,11 @@
     <h5><i class="far fa-id-card"></i>LISTA DE MAESTRANTES</h5>
 </div>
 <hr />
-<input type="search" width="100px" id="filtro-nombre" placeholder="Filtrar por nombre">
-<input type="search" id="filtro-apellido" placeholder="Filtrar por apellido paterno">
-<input type="search" id="filtro-materno" placeholder="Filtrar por apellido materno">
-<input type="search" id="filtro-ru" placeholder="Filtrar por R.U.">
-
 
 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <div class="table-responsive">
+  
+
         <table id="data" class="table table-striped">
             <thead>
                 <tr>
@@ -50,10 +47,7 @@
                                 class="fas fa-user-minus" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Esta acción deshabilitara al maestrante"></i></a>
                           {% else %}
-                                         <a href="#" onclick="habilitarusuario({{ usuario.id_maestrante }})" class="btn btn-primary"><i
-                                    class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="Esta acción habilitará al usuario para el desarrollo de Tesis"></i></a>
-
+                               
                         {% endif %}
                             
 

@@ -42,9 +42,11 @@
                     
                     </td>
                     <td>
-                        <a href="#" onclick="habilitarusuario({{ usuario.id_maestrante }})" class="btn btn-primary"><i
-                                class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="Habilitar para el desarrollo de Tesis"></i></a>
+                        
+
+                                <button onclick="abrir_modal_ver('{% url 'usuario:registro_postulante' usuario.id_maestrante %}')"
+                                class="btn btn-primary data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+                                  class="fas fa-user-plus"></i></button>
                     </td>
                 </tr>
                 {% endfor %}

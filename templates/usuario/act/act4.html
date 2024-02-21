@@ -31,6 +31,7 @@
       <tr>
         <th class="header" scope="col">R.U.</th>
         <th class="header" scope="col">Maestrante</th>
+        <th class="header" scope="col">Programa</th>
 
 
 
@@ -43,7 +44,7 @@
       <tr>
         <td> {{ evi.ru }} </td>
         <td>{{ evi.maestrante }}</td>
-
+        <td>{{ evi.programa }}</td>
         <td>
 
           <button onclick="abrir_modal_edicion('{% url 'usuario:actividad_3' evi.id_maestrante  %}')"

@@ -39,6 +39,7 @@
             <table class="table" id="tablaprueba">
               <thead>
                 <tr>
+                  <th scope="col">Nº</th>
                   <th scope="col">CAPÍTULO</th>
                   <th scope="col">DESCRIPCIÓN DE LA OBSERVACIÓN</th>
                   <th scope="col">SUGERENCIAS</th>
@@ -46,7 +47,8 @@
               </thead>
               <tbody>
                 {% for usuario in maestrantes %}
-                <tr>
+                <tr> 
+                  <td>{{ forloop.counter }}</td>
                   <td>{{ usuario.capitulo }}</td>
                   <td>{{ usuario.descripcion }}</td>
                   <td>{{ usuario.sugerencia }}</td>

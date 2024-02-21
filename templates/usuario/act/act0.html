@@ -30,6 +30,7 @@
       <tr>
         <th class="header" scope="col">R.U.</th>
         <th class="header" scope="col">Maestrante</th>
+        <th class="header" scope="col">Programa</th>
         <th class="header" scope="col">Fecha/hora&nbsp;programada</th>
         <th class="header" scope="col">Programar fecha</th>
         <th class="header" scope="col">#</th>
@@ -40,17 +41,26 @@
       <tr>
         <td> {{ evi.ru }} </td>
         <td>{{ evi.maestrante }}</td>
+        <td>{{ evi.programa }}</td>
         <td>
           {% if evi.cronograma.fecha_induccion %}
           {{ evi.cronograma.fecha_induccion }} a hrs: {{ evi.cronograma.hora_induccion }}
+          {% if evi.cronograma.reunion_realizada %}
+          <div class="text-primary">Reunión realizada</div>
+          
+          {% endif %}
           {% else %}
           Sin fecha ni hora designado
           {% endif %}
+          
         </td>
         <td>
           <button onclick="abrir_modal_edicion('{% url 'usuario:formulario_asistencia' evi.id_maestrante %}')"
             class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
               class="fas fa-calendar-check"></i></button>
+              <button onclick="abrir_modal_ver('{% url 'usuario:formulario_asistencia_realizada' evi.id_maestrante %}')"
+              class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+                class="fas fa-calendar-check"></i></button>
 
         </td>
         <td>

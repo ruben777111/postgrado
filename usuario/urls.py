@@ -8,10 +8,11 @@ urlpatterns=[
    
     path('password/',views.CustomPasswordResetView.as_view(template_name="autenticacion/password-reset.html"), name='password'),
     path('backup/', views.backup_database, name='backup_database'),
-    
+    path('search-users/', views.search_users, name='search_users'),
     #path('password/',views.CustomPasswordResetView.as_view(),name='password'),
     path('listado_docente/',views.ListadoDocente.as_view(),name='listar_docente'),
     path('listado_maestrante/',staff_member_required(views.ListadoMaestrante.as_view(),login_url='index'),name='listar_maestrante'),
+    
     path('listado_maestrante_tesis_concluido/',staff_member_required(views.ListadoMaestranteGraduado.as_view(),login_url='index'),name='listado_maestrante_tesis_concluido'),
     path('listado_postulante/',staff_member_required(views.ListadoPostulante.as_view(),login_url='index'),name='listar_postulante'),
     path('listado_administradores/',staff_member_required(views.ListadoAdministradores.as_view(),login_url='index'),name='listar_administradores'),     
@@ -46,7 +47,9 @@ urlpatterns=[
     path('listado_asistencia/',staff_member_required(views.ListadoAsistencia.as_view(),login_url='index'),name='listar_asistencia'),
     path('registrar_asistencia/',staff_member_required(views.RegistroAsistencia.as_view(),login_url='index'),name='registrar_asistencia'),
     path('asistencia/',staff_member_required(views.Asistencia,login_url='index'),name='asistencia'),
+    path('asistencia_realizada/',staff_member_required(views.AsistenciaRealizada,login_url='index'),name='asistencia_realizada'),
     path('formulario_asistencia/<int:pk>',staff_member_required(views.FormularioAsistencia.as_view(),login_url='index'),name='formulario_asistencia'),
+    path('formulario_asistencia_realizada/<int:pk>',staff_member_required(views.FormularioAsistenciaRealizada.as_view(),login_url='index'),name='formulario_asistencia_realizada'),
     path('editar_docente/<int:pk>',staff_member_required(views.ActualizarDocente.as_view(),login_url='index'), name = 'editar_docente'),  
     path('editar_administrador/<int:pk>',staff_member_required(views.ActualizarAdministrador.as_view(),login_url='index'), name = 'editar_administrador'),
     path('editar_evidencia/<int:pk>',staff_member_required(views.EditarEvidencia.as_view(),login_url='index'), name = 'editar_evidencia'),
@@ -135,17 +138,25 @@ urlpatterns=[
     path('listado_informe_guia_pendiente/',views.ListadoInformeGuiaPendiente.as_view(),name='listar_informe_guia_pendiente'),
     path('listado_informe_guia_realizado/',views.ListadoInformeGuiaRealizado.as_view(),name='listar_informe_guia_realizado'),
 
+    path('listado_reporte_general_pendiente/',views.ListadoReporteGeneralPendiente.as_view(),name='listado_reporte_general_pendiente'),
+    path('listado_reporte_general_realizado/',views.ListadoReporteGeneralRealizado.as_view(),name='listado_reporte_general_realizado'),
+
+
 
     path('listado_informe_revisor/',views.ListadoInformeRevisor.as_view(),name='listar_informe_revisor'),    
+    path('listado_informe_revisor_guia/',views.ListadoInformeRevisorGuia.as_view(),name='listar_informe_revisor_guia'),    
+    path('listado_informe_guia_revisor/',views.ListadoInformeGuiaRevisor.as_view(),name='listado_informe_guia_revisor'),    
     path('listado_informe_revisor_pendiente/',views.ListadoInformeRevisorPendiente.as_view(),name='listar_informe_revisor_pendiente'),    
     path('listado_informe_revisor_realizado/',views.ListadoInformeRevisorRealizado.as_view(),name='listar_informe_revisor_realizado'),    
 
 
     path('listado_avance/',views.ListarAvance.as_view(),name='listar_avance'),
+    path('listado_avance_historial/<str:nombre_usuario>/',views.ListarAvanceHistorial.as_view(),name='listar_avance_historial'),
     path('listado_avance_pendiente/',views.ListarAvancePendiente.as_view(),name='listar_avance_pendiente'),
     path('listado_avance_realizado/',views.ListarAvanceRealizado.as_view(),name='listar_avance_realizado'),
 
     path('listado_avance_2/',views.ListarAvance2.as_view(),name='listar_avance_2'),
+    path('listado_avance_2_historial/<str:nombre_usuario>/',views.ListarAvance2Historial.as_view(),name='listar_avance_2_historial'),
     path('listado_avance_2_pendiente/',views.ListarAvance2Pendiente.as_view(),name='listar_avance_2_pendiente'),
     path('listado_avance_2_realizado/',views.ListarAvance2Realizado.as_view(),name='listar_avance_2_realizado'),
 
@@ -209,7 +220,8 @@ urlpatterns=[
     
 
    
-
+    path('registro_postulante/<int:pk>',views.RegistrarPostulante.as_view(), name = 'registro_postulante'),
+    path('registrar_postulante_funcion/',views.RegistrarPostulanteFuncion, name = 'registrar_postulante_funcion'),
     path('registro_avance/<int:pk>',views.RegistrarAvanceDocente.as_view(), name = 'registro_avance'),
     path('registro_avance_2/<int:pk>',views.RegistrarAvance2Docente.as_view(), name = 'registro_avance_2'),
       
@@ -222,7 +234,9 @@ urlpatterns=[
     path('detalle_reporte2/<int:pk>',views.DetalleReporte2.as_view(), name = 'detalle_reporte2'),
     path('detalle_reporte_segunda_instancia/<int:pk>',views.DetalleReporteSegundaInstancia.as_view(), name = 'detalle_reporte_segunda_instancia'),
     path('detalle_avance/<int:pk>',views.DetalleAvance.as_view(), name = 'detalle_avance'),
+    path('detalle_avance_historial/<int:pk>',views.DetalleAvanceHistorial.as_view(), name = 'detalle_avance_historial'),
     path('detalle_avance_2/<int:pk>',views.DetalleAvance2.as_view(), name = 'detalle_avance_2'),
+    path('detalle_avance_2_historial/<int:pk>',views.DetalleAvance2Historial.as_view(), name = 'detalle_avance_2_historial'),
     path('enviar-mensaje-por-defecto/',views.enviar_mensaje_por_defecto, name='enviar_mensaje_por_defecto'),
     
 ]

@@ -20,7 +20,7 @@
 </div>
 <div class="row">
     <div class="sb-nav-link-icon">
-        <h4><i class="far fa-id-card"></i> Lista de Maestrantes</h4>
+        <h4><i class="far fa-id-card"></i> HISTORIAL DE ASISTENCIA A INDUCCIÓN</h4>
     </div>
     <hr />
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -30,7 +30,11 @@
                     <tr>
                         <th class="header" scope="col">R.U.</th>
                         <th class="header" scope="col">Nombre</th>
-                        <th class="header" scope="col">Fecha&nbsp;de&nbsp;asistencia</th>
+                        <th class="header" scope="col">Fecha&nbsp;/&nbsp;hora&nbsp;programada</th>
+                        <th class="header" scope="col">Fecha&nbsp;/&nbsp;hora&nbsp;realizada</th>
+                        <th class="header" scope="col">Observaciones</th>
+                        <th class="header" scope="col">Enlace&nbsp;reunión </th>
+                        <th class="header" scope="col">Archivo&nbsp;de&nbsp;reunión&nbsp;presencial </th>
                     </tr>
                 </thead>
                 <tbody id="tableBody_users">
@@ -38,7 +42,25 @@
                     <tr>
                         <td>{{ usuario.maestrante.ru }}</td>
                         <td>{{ usuario.maestrante }}</td>
-                        <td>{{ usuario.fecha }}</td>
+                        <td>{{ usuario.fecha_asesoramiento }} / {{ usuario.hora_asesoramiento  }} hrs</td>
+                
+                        <td>{{ usuario.fecha_realizada  }} / {{ usuario.hora_realizada  }} hrs</td>
+                      <td>{{ usuario.obs    }}</td>
+                        <td>{% if usuario.enlace_reunion %}
+                            <a href="{{ usuario.enlace_reunion }}"  target="_blank">Enlace de la reunión</a>
+                        {% else %}
+                            <p>No hay enlace de reunión disponible.</p>
+                        {% endif %}</td>
+                        <td>
+                            {% if usuario.hoja_reunion %}
+                            <a href="{{ usuario.hoja_reunion.url }}" class="btn btn-outline-success"
+                                target="_blank">Ver documento</a>
+                            <a href="{{ usuario.hoja_reunion.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+                            {% else %}
+                                Sin archivo
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

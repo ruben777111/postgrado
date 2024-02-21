@@ -13,9 +13,9 @@
                     <tr>
                         <th class="header" scope="col">R.U.</th>
                         <th class="header" scope="col">MAESTRANTE</th>
-                        <th class="header" scope="col">TRIBUNAL 1</th>
-                        <th class="header" scope="col">TRIBUNAL 2</th>
-                        <th class="header" scope="col">TRIBUNAL 3</th>
+                        <th class="header" scope="col">TRIBUNAL&nbsp;INTERNO&nbsp;1&nbsp;DESIGNADO&nbsp;(Presidente&nbsp;de&nbsp;tribunal)</th>
+                        <th class="header" scope="col">TRIBUNAL&nbsp;INTERNO&nbsp;2&nbsp;DESIGNADO&nbsp;(Docente&nbsp;de&nbsp;area&nbsp;-&nbsp;Revisor)</th>
+     
                         <th class="header" scope="col">#</th>
                     </tr>
                 </thead>
@@ -42,15 +42,7 @@
                             </div>
                             {% endif %}
                         </td>
-                        <td>
-                            {% if usuario.tribunal_tesis_3 %}
-                            {{ usuario.tribunal_tesis_3 }}
-                            {% else %}
-                            <div class="colores-primario-msg">
-                                No asignado
-                            </div>
-                            {% endif %}
-                        </td>
+      
                         <td>
                             <button type="button"
                                 onclick="abrir_modal_edicion('{% url 'usuario:editar_tribunal_tesis' usuario.id_tribunal %}')"

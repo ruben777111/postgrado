@@ -14,6 +14,7 @@
                     <tr>
                         <th class="header" scope="col">R.U. </th>
                         <th class="header" scope="col">Nombre </th>
+                        <th class="header" scope="col">Programa </th>
                         <th class="header" scope="col">Primer&nbsp;avance</th>
                         <th class="header" scope="col">Segundo&nbsp;avance</th>
                         <th class="header" scope="col">Presentación&nbsp;borrador</th>
@@ -27,6 +28,7 @@
                         <th class="header" scope="col">Acto&nbsp;de&nbsp;sustentación</th>
                         <th class="header" scope="col">Hora&nbsp;de&nbsp;sustentación</th>
                         <th class="header" scope="col">Tesis&nbsp;mejorada&nbsp;para&nbsp;empaste</th>
+                        <th class="header" scope="col">Reporte&nbsp;general&nbsp;Tribunal&nbsp;interno&nbsp;(prorroga)</th>
 
                         <th class="header" scope="col"># </th>
                    
@@ -41,6 +43,7 @@
                     <tr>
                         <td class="header" scope="col">{{ usuario.user.ru }}</td>
                         <td>{{ usuario.user }}</td>
+                        <td>{{ usuario.user.programa }}</td>
                         <td>
                             {% if usuario.fecha_avance1 %}
                             {{ usuario.fecha_avance1}}
@@ -150,7 +153,16 @@
                                 No asignado
                             </div>
                             {% endif %}
-                        </td>                                       
+                        </td>  
+                        <td>
+                            {% if usuario.fecha_reporte_general_tribunal_interno %}
+                            {{ usuario.fecha_reporte_general_tribunal_interno}}
+                            {% else %}
+                            <div class="colores-primario-msg">
+                                No asignado
+                            </div>
+                            {% endif %}
+                        </td>                                         
                         <td>
                             
                             {% if user.is_staff %}
