@@ -7,21 +7,13 @@
           {% csrf_token %}
           <div class="card">  
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.ci_usuario }}<br>
-              <div class="col">DOCENTE GUÍA: {{object.maestrante.guia}}</div>
-              <div class="col">DOCENTE REVISOR: {{object.maestrante.revisor}}</div>
-              <hr>
+              <h5>Maestrante: {{ object.usuario }}</h5>
+         
+              TÍTULO DE LA TESIS: {{ object.tema_tesis }}<br>
+              <div class="col">DOCENTE GUÍA: {{object.guia}}</div>
+              <div class="col">DOCENTE REVISOR: {{object.revisor}}</div>
+             
               <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
-              Título de tesis
-              <input type="text"  class="form-control" name="titulo" placeholder="Título de tesis" required><br>              
-              Informe aval de docente guia
-              <input type="file" name="informe" class="form-control" accept="application/pdf" required><br>
-              Documento de tesis
-              <input type="file" name="tesis" class="form-control" accept="application/pdf" required ><br>
-
-
               <hr>      
               <input type="checkbox" name="borrador" required>Solicitud de pago de docente revisor adjunto reporte
                

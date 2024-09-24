@@ -1,0 +1,51 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form id="informe" method="POST" action="{% url 'usuario:reset_password_and_user' object.id %}">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-3">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-center">
+                    REESTABLECER USUARIO Y CONTRASEÑA
+
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="container">
+              <div class="row row-cols-1">
+                <div class="col">USUARIO: {{object}} </div>
+                <div class="col">C.I.: {{object.ci_usuario}} </div>
+                <div class="col">CORREO INSTITUCIONAL: {{object.correo_inst}} </div>
+                <div class="container"><br>
+                  Se reestablecerá el nombre de usuario y contraseña de <strong>{{object}}</strong> y se enviaran estos datos al correo  <strong>{{object.correo_inst}}</strong><br><br>
+                  <p><em>Nota: Si desea modificar el correo de destino, debe editar los datos del usuario antes de esta acción.</em></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+
+
+            <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="colores-botonaceptar">Confirmar</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'lib/js/actividad.js' %}"></script>
+{% endblock extrajs %}

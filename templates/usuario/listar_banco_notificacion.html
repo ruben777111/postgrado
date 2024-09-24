@@ -13,8 +13,10 @@
                     <tr>
                         <th class="header" scope="col">#</th>
                         <th class="header" scope="col">Nº Notificación</th>
-                        <th class="header" scope="col">Titulo&nbsp;de&nbsp;notificación</th>
+                        <th class="header" scope="col">Título&nbsp;de&nbsp;notificación</th>
                         <th class="header" scope="col">Contenido&nbsp;de&nbsp;notificación</th>
+                        <th class="header" scope="col">Dirigido a:</th>
+                        <th class="header" scope="col">Estado de notificación</th>
                         <th class="header" scope="col">Descripción</th>
                         
                     </tr>
@@ -23,12 +25,24 @@
                     {% for usuario in actividades %}
                     <tr>
                         <td><button onclick="abrir_modal_edicion('{% url 'usuario:editar_banco_notificacion' usuario.id_notificacion %}')"
-                            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
+                            class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Editar datos"><i class="fas fa-user-edit"></i></button></td>
                         <td>{{ usuario.numero_notificacion }}</td>
 
                         <td>{{ usuario.titulo }}</td>
                         <td>{{ usuario.contenido }}</td>
+                        <td>{{ usuario.rol }}</td>
+                        <td>
+
+                                
+                                {% if usuario.enviar %}
+                                <p class="text-primary">Activado</p>
+                                {% else %}
+                                <strong class="text-danger">Desactivado</strong>, No se enviará esta notificación a los usuarios.
+                                    
+                                {% endif %}
+                             
+                        </td>
                         <td>{{ usuario.descripcion }}</td>
                     </tr>
                     {% endfor %}

@@ -18,8 +18,11 @@
   <h5><i class="far fa-id-card"></i>
     {% for actividades in actividad %}
     {{ actividades.actividad }} <br><br>
-    {{ actividades.requisito }}
-
+    {{ actividades.requisito }}<br><br>
+    <div class="alert alert-primary" role="alert">
+      La fecha de presentación del Borrador de Tesis se establece a los <strong>{{ actividades.tiempo }}</strong>  dias calendario a partir de la fecha del registro de dictamen del acto de sustentación del tema. <br><br>
+     <p class="small">Código de actividad = {{ actividades.nro_requisito }}</p>
+    </div>
     {% endfor %}
   </h5>
 </div>
@@ -29,10 +32,14 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th class="header" scope="col">CI</th>
         <th class="header" scope="col">R.U.</th>
-        <th class="header" scope="col">Maestrante</th>
-        <th class="header" scope="col">Programa</th>
-        <th class="header" scope="col">Fecha&nbsp;limite&nbsp;entrega&nbsp;borrador</th>
+        <th class="header" scope="col">MAESTRANTE</th>    
+        <th class="header" scope="col">PROGRAMA</th>
+        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN</th>
+        <th class="header" scope="col">PROGRAMAR FECHA PARA PRORROGA</th>
+        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DE BORRADOR PRORROGA</th> 
         <th class="header" scope="col">#</th>
 
       </tr>
@@ -40,15 +47,26 @@
     <tbody id="tableBody_users">
       {% for evi in maestrantesevi %}
       <tr>
-        <td> {{ evi.ru }} </td>
-        <td>{{ evi.maestrante }}</td>
+      <td>                            
+          {% if evi.usuario.ci_usuario %}
+          {{ evi.usuario.ci_usuario}}
+          {% else %}
+          No asignado
+          {% endif %} 
+      </td>
+        <td>                           
+          {% if evi.usuario.ru %}
+          {{ evi.usuario.ru}}
+          {% else %}
+          No asignado
+          {% endif %}  
+      </td>
+        <td>{{ evi.usuario }}</td>
         <td>{{ evi.programa }}</td>
+        <td>{{ evi.version }}</td>
         <td>
-          {% if evi.cronograma2.fecha_borrador_prorroga %}
-
-          <div class="container" style="color: blue;"> {{ evi.cronograma2.fecha_borrador_prorroga }} - Prorroga</div>
-
-          {% elif today > evi.cronograma2.fecha_borrador %}
+   
+          {% if today > evi.cronograma2.fecha_borrador %}
           <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador }} - Presentación de Borrador de
             tesis caducada
           </div>
@@ -59,13 +77,115 @@
 
           {% endif %}
         </td>
+        <td>
+          {% if today > evi.cronograma2.fecha_borrador and evi.cronograma2.fecha_borrador_prorroga == None %}
+          <button onclick="abrir_modal_edicion('{% url 'usuario:registrar_prorroga_borrador' evi.id_maestrante %}')"
+          class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+            class="fas fa-calendar-check"></i></button>
+          {% elif evi.cronograma2.fecha_borrador_prorroga %}
+          Prorroga habilitada
+          {% endif %}
+        </td>
+        <td>
+          {% if today > evi.cronograma2.fecha_borrador and not evi.cronograma2.fecha_borrador_prorroga %}
+          Se requiere asignar fecha para presentación de borrador prorroga
+          {% endif %}
+          {% if evi.cronograma2.fecha_borrador_prorroga %}
 
+          {% if today > evi.cronograma2.fecha_borrador_prorroga %}
+          <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador_prorroga }} - Presentación de Borrador prorroga
+            de tesis caducada
+          </div>
+
+
+          {% else %}
+          <div class="container" style="color:blue;">{{ evi.cronograma2.fecha_borrador_prorroga }} prorroga</div>
+
+          {% endif %}
+
+          {% endif %}
+          
+        </td>    
         <td>
 
+  
 
+
+
+          {% if evi.tipo_maestrante == "2" %}
+          {% if evi.bloqueo_maestrante  %}
+          Programa de maestrante bloqueado
+          {% else %}          
+          {% if evi.vigencia_matricula_antiguo <   today %}
+          Vigencia de matrícula caducada
+
+          {% elif evi.vigencia_matricula_antiguo_total <   today %}
+          <p class="text-danger">Vigencia de programa caducada</p>
+          {% else %}
+          
+          {% if user.tipo_usuario == 3 %}
+          
+          {% if evi.tema_borrador_tesis %}
+          Título del borrador de tesis asignado
+          {% else %}
+          <button onclick="abrir_modal_edicion('{% url 'usuario:actividad_11_compartido'  evi.id_maestrante %}')"
+          class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+          title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+          {% endif %}
+            
+                  
+          {% endif %}
+            
+          {% if user.tipo_usuario == 5 %}
+          {% if evi.tema_borrador_tesis %}
           <button onclick="abrir_modal_ver('{% url 'usuario:actividad_11'  evi.id_maestrante %}')"
-            class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
-            title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+          class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+          title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+          {% else %}
+          No se asignó Título del borrador de tesis, actividad en espera a Tecnico de Postgrado/Coordinación de investigación. 
+          {% endif %}
+                      
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% if evi.tipo_maestrante == "1" %}
+
+          
+          {% if evi.bloqueo_maestrante  %}
+          Programa de maestrante bloqueado
+          {% else %}
+          {% if evi.vigencia_matricula_regular_total <   today %}
+          <p class="text-danger">Vigencia de programa caducada</p>
+          {% else %}
+          
+          {% if user.tipo_usuario == 3 %}
+          
+          {% if evi.tema_borrador_tesis %}
+          Título del borrador de tesis asignado
+          {% else %}
+          <button onclick="abrir_modal_edicion('{% url 'usuario:actividad_11_compartido'  evi.id_maestrante %}')"
+          class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+          title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+          {% endif %}
+            
+                  
+          {% endif %}
+            
+          {% if user.tipo_usuario == 5 %}
+          {% if evi.tema_borrador_tesis %}
+          <button onclick="abrir_modal_ver('{% url 'usuario:actividad_11'  evi.id_maestrante %}')"
+          class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+          title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+          {% else %}
+          No se asignó Título del borrador de tesis, actividad en espera a Tecnico de Postgrado/Coordinación de investigación. 
+          {% endif %}
+                      
+          {% endif %}
+          {% endif %}           
+          {% endif %} 
+          {% endif %}
+        
 
         </td>
       </tr>
@@ -77,7 +197,7 @@
 {% endif %}
 {% block extrajs %}
 
-
+<script src="{% static 'lib/js/data.js' %}"></script>
 <script src="{% static 'lib/js/main.js' %}"></script>
 
 

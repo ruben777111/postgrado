@@ -31,9 +31,13 @@
       Programar fecha para la presentación del segundo avance
     </div>
     <div class="card-body">
+      <div class="row g-3">
+      <div class="col-8">
       <input type="date" name="fecha" class="form-control" required>
-      <button type="submit"  class="btn btn-primary mb-1">Aceptar</button>
     </div>
+      <div class="col-3">
+      <button type="submit"  class="btn btn-primary mb-3">Aceptar</button>
+    </div></div></div>
   </div>
   <!-- <input type="date" value="2024-07-23" min="2023-08-21" max="2023-08-25">-->
   <hr />
@@ -44,53 +48,129 @@
       <thead>
         <tr>
           <th class="header" scope="col"></th>
-          <th class="header" scope="col">Seleccionar&nbsp;Maestrante</th>
+          <th class="header" scope="col">SELECCIONAR&nbsp;MAESTRANTE</th>
+          <th class="header" scope="col">CI</th>
           <th class="header" scope="col">R.U.</th>
-          <th class="header" scope="col">Programa</th>
+          <th class="header" scope="col">PROGRAMA</th>
+          <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
           <th class="header" scope="col">DOCENTE GUÍA</th>
-          <th class="header" scope="col">Limite de presentación del borrador de tesis</th>
-          <th class="header" scope="col"></th>
+          <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DE BORRADOR</th>
+          <th class="header" scope="col">PROGRAMAR FECHA PARA PRORROGA</th>
+          <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DE BORRADOR PRORROGA</th>
+          
+
         </tr>
       </thead>
       <tbody id="tableBody_users">
         {% for evi in maestrantesevi %}
         <tr>
           <td>
-            {% if today <= evi.cronograma2.fecha_borrador or evi.cronograma2.fecha_borrador_prorroga %} <input
-              type="checkbox" name="checks[]" value="{{ evi.id_maestrante }}">
-              {% endif %}
-          </td>
 
-          <td>{{ evi.maestrante }}</td>
+
+
+              {% if evi.tipo_maestrante == "2" %}
+              {% if evi.bloqueo_maestrante  %}
+              Programa de maestrante bloqueado
+              {% else %}          
+              {% if evi.vigencia_matricula_antiguo <   today %}
+              Vigencia de matrícula caducada
+    
+              {% elif evi.vigencia_matricula_antiguo_total <   today %}
+              <p class="text-danger">Vigencia de programa caducada</p>
+              {% else %}
+              
+              {% if today <= evi.cronograma2.fecha_borrador or evi.cronograma2.fecha_borrador_prorroga %} <input
+              type="checkbox" name="checks[]" class="checkbox-element" value="{{ evi.id_maestrante }}">
+            {% else %}
+            Se requiere habilitar prorroga
+              {% endif %}
+
+              {% endif %}
+              {% endif %}
+              {% endif %}
+              {% if evi.tipo_maestrante == "1" %}
+    
+              
+              {% if evi.bloqueo_maestrante  %}
+              Programa de maestrante bloqueado
+              {% else %}
+              {% if evi.vigencia_matricula_regular_total <   today %}
+              <p class="text-danger">Vigencia de programa caducada</p>
+              {% else %}
+              
+              {% if today <= evi.cronograma2.fecha_borrador or evi.cronograma2.fecha_borrador_prorroga %} <input
+              type="checkbox" name="checks[]" class="checkbox-element" value="{{ evi.id_maestrante }}">
+            {% else %}
+            Se requiere habilitar prorroga
+              {% endif %}
+
+
+              {% endif %}           
+              {% endif %} 
+              {% endif %}
+    
+
+
+          </td>
+          <td>{{ evi.usuario }}</td>
+          <td>                            
+            {% if evi.usuario.ci_usuario %}
+            {{ evi.usuario.ci_usuario}}
+            {% else %}
+            No asignado
+            {% endif %} 
+        </td>
+          <td>                           
+            {% if evi.usuario.ru %}
+            {{ evi.usuario.ru}}
+            {% else %}
+            No asignado
+            {% endif %}  
+        </td>
+
           <td>{{ evi.programa }}</td>
-          <td> {{ evi.ru }} </td>
+          <td>{{ evi.version }}</td>
           <td>{{ evi.guia }}</td>
           <td>
+      
+            {% if today > evi.cronograma2.fecha_borrador %}
+            <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador }} - Presentación de Borrador
+              de tesis caducada
+            </div>
+            {% else %}
+            {{ evi.cronograma2.fecha_borrador }}
+            {% endif %}
+
+          </td>
+
+          <td>
+            {% if today > evi.cronograma2.fecha_borrador and evi.cronograma2.fecha_borrador_prorroga == None %}
+            <button onclick="abrir_modal_edicion('{% url 'usuario:registrar_prorroga_borrador' evi.id_maestrante %}')"
+            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+              class="fas fa-calendar-check"></i></button>
+            {% elif evi.cronograma2.fecha_borrador_prorroga %}
+            Prorroga habilitada
+            {% endif %}
+          </td>
+          <td>
+            {% if today > evi.cronograma2.fecha_borrador and not evi.cronograma2.fecha_borrador_prorroga %}
+            Se requiere asignar fecha para presentación de borrador prorroga
+            {% endif %}
             {% if evi.cronograma2.fecha_borrador_prorroga %}
 
-            <div class="container" style="color: blue;"> {{ evi.cronograma2.fecha_borrador_prorroga }} - Prorroga</div>
-
-            {% elif today > evi.cronograma2.fecha_borrador %}
-            <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador }} - Presentación de Borrador
+            {% if today > evi.cronograma2.fecha_borrador_prorroga %}
+            <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador_prorroga }} - Presentación de Borrador prorroga
               de tesis caducada
             </div>
 
 
             {% else %}
-            {{ evi.cronograma2.fecha_borrador }}
+            <div class="container" style="color:blue;">{{ evi.cronograma2.fecha_borrador_prorroga }} prorroga</div>
 
             {% endif %}
 
-          </td>
-          <td>
-            {% if today > evi.cronograma2.fecha_borrador and evi.cronograma2.fecha_borrador_prorroga == None %}
-            <a href="#" onclick="prorroga({{ evi.id_maestrante }})" class="btn btn-primary"><i class="fas fa-check"
-                data-bs-toggle="tooltip" data-bs-placement="top" title="Habilitar maestrante para prorroga"></i></a>
             {% endif %}
-
-
-
-
+            
           </td>
         </tr>
         {% endfor %}
@@ -109,7 +189,7 @@
   });
   </script>
 
-
+<script src="{% static 'lib/js/data.js' %}"></script>
 <script src="{% static 'lib/js/main.js' %}"></script>
 
 

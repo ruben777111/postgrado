@@ -1,65 +1,45 @@
 {% load static %}
-<div class="modal-dialog " role="document">
+<div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Editar información de: {{ object.user.docente}}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card border-primary" style="width: 100%;">
+                <form  id="informe" action="{% url 'usuario:editar_docente' object.id_docente %}" method="POST">
+                    <div class="card-body ">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col col-lg-3">
+                                    <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid"
+                                        alt="Responsive image">
+                                </div>
+                                <div class="col">
+                                    <h5 class="card-title text-center">
+                                        EDITAR INFORMACIÓN DEL DOCENTE
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row row-cols-1">
+                            <div class="col">DOCENTE: {{ object.user}}</div>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                    <div class="modal-body">
+                     
+                        {{ form.as_p }} <br>
+            
+                     
+                        
+                    <div class="modal-footer">
+                        <button type="button" class="colores-botonaceptar" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="colores-botoncerrar">Confirmar</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form  action="{% url 'usuario:editar_docente' object.id_docente %}" method="POST">
- 
-        
-            {% csrf_token %}
-            <div class="modal-body">
-                <div id="erroresEdicion">                
-                </div>
- {{ form.tipo_usuario }}<br>
-       {{ form.nombre_usuario.label }}
-       {{ form.nombre_usuario }} <br>
-
-       {{ form.paterno.label }}
-       {{ form.paterno }}<br>
-
-       {{ form.materno.label }}
-       {{ form.materno }}<br>
-
-
-
-       {{ form.ci_usuario.label }}
-       {{ form.ci_usuario }}<br>
-
-       {{ form.departamento.label }}
-       {{ form.departamento }} <br>
-
-
-
-       {{ form.cel_usuario.label }}
-       {{ form.cel_usuario }}<br>
-
-       {{ form.cel_usuario2.label }}
-       {{ form.cel_usuario2 }}<br>
-
-       {{ form.correo.label }}
-       {{ form.correo }}<br>
-
-       {{ form.correo_inst.label }}
-       {{ form.correo_inst }}<br>
-
-
-       {{ form.docente_interno.label }}
-       {{ form.docente_interno }}<br>
-
-       {{ form.docente_externo.label }}
-       {{ form.docente_externo }}<br>
-
-       {{ form.especialidad_docente.label }}
-       {{ form.especialidad_docente }}<br>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger  btn-circle btn-sm" data-bs-dismiss="modal">Cerrar</button>
-                <button  type="submit" class="colores-botoncerrar" >Confirmar</button>
-                
-
-            </div>
-        </form>
     </div>
 </div>
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
+
+{% endblock extrajs %}

@@ -7,9 +7,8 @@
           {% csrf_token %}
           <div class="card">  
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.user.ci_usuario }}
+              <h5>Maestrante: {{ object.usuario }}</h5>
+
               <hr>
               <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
               Tema de perfil de tesis:

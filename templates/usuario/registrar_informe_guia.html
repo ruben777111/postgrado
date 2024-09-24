@@ -13,7 +13,7 @@
                 </div>
                 <div class="col">
                   <h5 class="card-title text-center">
-                    FORMULARIO PARA INFORME FINAL DE DOCENTE GUÍA Y APROBACIÓN PARA DEFENSA DE TESIS <br> R-0997 V.0
+                    FORMULARIO PARA INFORME FINAL DE DOCENTE GUÍA Y APROBACIÓN PARA DEFENSA DE TESIS <br> R-0997
                   </h5>
                 </div>
               </div>
@@ -28,7 +28,7 @@
               <div class="col">MAESTRANTE: {{ usuario.user }}</div>
               <div class="col">DOCENTE GUÍA: {{usuario.user.guia}}</div>
               <div class="col">DOCENTE REVISOR: {{usuario.user.revisor}}</div>
-              <div class="col">TÍTULO DE LA TESIS: {{usuario.user.tema_tesis}}</div>
+              <div class="col">TÍTULO DE LA TESIS: {{usuario.user.tema_borrador_tesis}}</div>
               {% endfor %}
             </div>
           </div>
@@ -43,10 +43,8 @@
                       en el informe del tribunal revisor</th>
                     <th scope="col" style='font-size: 12px; text-align:center;'>¿ SE INCORPORARON LAS OPTIMIZACIONES
                       RESPECTIVAS TOMANDO EN CUENTA LA OBSERVACIÓN ?</th>
-                    <th scope="col" style="font-size: 12px; text-align:center;">PAGINA(S). EN LAS QUE SE EVIDENCIA LA
-                      OPTIMIZACIÓN DE LA TESIS TOMANDO EN CUENTA LA OBSERVACIÓN</th>
-                    <th scope="col" style="font-size: 12px; text-align:center;">FUNTAMENTACIÓN llenar esta casilla en
-                      caso de no haber tomado en cuenta el número </th>
+                    <th scope="col" style="font-size: 12px; text-align:center;">PAGINA(S). EN LAS QUE SE EVIDENCIA LA OPTIMIZACIÓN DE LA TESIS EN CASO DE HABER TOMANDO EN CUENTA LA OBSERVACIÓN</th>
+                    <th scope="col" style="font-size: 12px; text-align:center;">FUNDAMENTACIÓN, llenar esta casilla en caso de no haber tomado en cuenta la observación</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -80,12 +78,20 @@
   <hr>
               Subir archivo de tesis mejorada: <br>
               
-              <input type="file" name="tesismejorada" id="tesismejorada" class="form-control" accept="application/pdf" required>
+              <input type="file" name="tesismejorada" id="tesismejorada" class="form-control" accept="application/pdf" >
+              <hr>
+              <div class="text-success"><strong>Nota:</strong> En caso no logre subir el archivo de la tesis mejorada, favor comunicarse enviando un correo a <strong>investigacion@usalesiana.edu.bo</strong> </div>    
+              
             </div>
+          
+          
           </div>
+          
           <div class="modal-footer">
+           
+          
             <input type="checkbox" required>
-            <div class="text-primary"> - Marque la casilla para confirmar el registro del informe.</div>
+            <p><div class="text-primary"> - Marque la casilla para confirmar el registro del informe.</div></p>
 
 
             <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>

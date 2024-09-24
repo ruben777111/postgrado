@@ -3,113 +3,418 @@
 {% block content %}
 <div class="card border-light mb-3" style="max-width: 100%;">
   <div class="card-body">
-    <h5><i class="far fa-id-card"></i> FORMULARIO DE REGISTRO DE MAESTRANTE</h5>
-    <hr />
+
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-        <form id="informe" method="POST">
-          {% if messages %}
-          <div class="alert alert-danger">
-            <ul class="errorlist">
-              {% for message in messages %}
-                <li>{{ message }}</li>
-              {% endfor %}
-            </ul>
+        <h5> REGISTRO DE MAESTRANTE</h5> <br>
+        <div class="card" id="obtener_datos_usuario">
+          <div class="card-header" style="display: flex; justify-content: space-between;">
+            <h5>OBTENER DATOS DEL USUARIO</h5>
+            <a class="colores-segundario" href="{% url 'usuario:registrar_nuevo_maestrante'  %}">FORMULARIO DE REGISTRO
+              DE MAESTRANTE</a>
+
           </div>
-        {% endif %}
-          <div class="card colores-formulario">
-            {% csrf_token %}
+          {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+          <div id="info"></div>
 
-            {% if form.errors %}
-            {% for field in form %}
-            {% for error in field.errors %}
-            <div class="alert alert-danger">
-              {{field.errors}}
-              <strong>{{ error|escape }}</strong>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-4">
+                <input type="number" id="usuarioId" class="form-control" placeholder="Ingrese el CI del usuario"
+                  required>
+              </div>
+              <div class="col-3">
+                <button id="buscarMaestrante" class="btn btn-primary mb-3">Buscar Maestrante</button>
+              </div>
+
+              <div class="card-body">
+                <div id="datosUsuario"></div>
+
+                <button id="habilitar_programa" class="btn btn-primary mb-3">INSCRIBIR A PROGRAMA</button>
+              </div>
             </div>
-            {% endfor %}
-            {% endfor %}
+          </div>
+        </div>
+        {% for maestrante in maestrantes %}
+        <li>Programa: {{ maestrante.nombre_programa }} {{ maestrante.version }}</li>
+
+        {% endfor %}
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <form id="informe" method="POST">
+
+            <h5> FORMULARIO DE REGISTRO DE MAESTRANTE</h5>
+            {% if messages %}
+            <div class="alert alert-danger">
+              <ul class="errorlist">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+            </div>
             {% endif %}
+            <div class="card colores-formulario">
+              {% csrf_token %}
 
-            {{ form.tipo_usuario }} <br>
-            {{ form.nombre_usuario.label }}
-            {{ form.nombre_usuario }} <br>
+              {% if form.errors %}
+              {% for field in form %}
+              {% for error in field.errors %}
+              <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+              </div>
+              {% endfor %}
+              {% endfor %}
+              {% endif %}
 
-            {{ form.paterno.label }}
-            {{ form.paterno }}<br>
-
-            {{ form.materno.label }}
-            {{ form.materno }}<br>
-
-            {{ form.ru.label }}
-            {{ form.ru }}<br>
-
-            {{ form.ci_usuario.label }}
-            {{ form.ci_usuario }}<br>
-
-            {{ form.departamento.label }}
-            {{ form.departamento }} <br>
-
-            {{ form.sede.label }}
-            {{ form.sede }} <br>
-
-
-            {{ form.cel_usuario.label }}
-            {{ form.cel_usuario }}<br>
-
-            {{ form.cel_usuario2.label }}
-            {{ form.cel_usuario2 }}<br>
-
-            {{ form.correo.label }}
-            {{ form.correo }}<br>
-
-            {{ form.correo_inst.label }}
-            {{ form.correo_inst }}<br>
-
-
-            {{ form.gestion.label }}
-            {{ form.gestion }}<br>
-
-            {{ form.programa.label }}
-            {{ form.programa }}<br>
-    
-            <input type="radio" name="gender" id="tipo-1" required> PROGRAMA REGULAR EN CURSO <br>
-            <div class="col-8">{{ form.programa_regular }}  {{ form.version }} <br> </div>
-
-            <input type="radio" name="gender" id="tipo-2"> REINCORPORACIÓN A NUEVA VERSIÓN DE PROGRAMA <br>
-            <div class="col-8">{{ form.reincorporacion }} {{ form.nueva_version }} </div><br>
-
-            <input type="radio" name="gender" id="tipo-3"> REINCORPORACIÓN CON VIGENCIA DE MATRICULA <br>
-            <div class="col-8"> {{ form.vigencia_matricula }} {{ form.version_cursada }} </div><br>
-            <div class="col-8"> {{ form.vigencia_inicio }} </div><br>
-            <div class="col-8"> {{ form.vigencia_final }} </div><br>
-
-            {{ form.username.label }}
-            {{ form.username }}<br>
-
-            {{ form.password1.label }}
-            {{ form.password1 }}<br>
-
-            {{ form.password2.label }}
-            {{ form.password2 }} <br>
+              {{ form.as_p }}
+            </div>
+            <div id="mensaje-sias">
+              
+              <div class="alert alert-primary" role="alert">
+                Recuerde, el NOMBRE DE USUARIO y CONTRASEÑA se enviarán al correo institucional registrado en este formulario.
+              </div>
+            </div>
             <div class="modal-footer">
               <button type="submit" class="colores-botoncerrar">Registrar</button>
             </div>
-          </div>
-
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<form>
 
-
-
-</form>
 {% block extrajs %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static 'lib/js/formulario.js' %}"></script>
 
+<script>
+// Verifica si el elemento existe antes de acceder a sus propiedades
+const habilitarPrograma = document.getElementById("habilitar_programa");
+
+if (habilitarPrograma) {
+  habilitarPrograma.style.display = 'block';
+} else {
+  console.warn("El elemento 'habilitar_programa' no se encontró.");
+}
+
+
+
+  function mostrarDatosUsuario(data, tipo) {
+    if (tipo === 'maestrante') {
+      if (!Object.keys(data).length) {
+        const maestranteInfo = document.getElementById('datosUsuario');
+        maestranteInfo.innerHTML = 'No se encontraron datos para el maestrante con el ID especificado.';
+      } else {
+        const maestranteInfo = document.getElementById('datosUsuario');
+        maestranteInfo.innerHTML = `
+        <div class="table-responsive">
+        <table class="table table-sm">
+            <thead>    
+              <tr>           
+                <th scope="row">DATOS GENERALES</th>
+                <th scope="row">Información obtenida del Sistema de Seguimiento de Tesis de Maestría (SSTM)</th>     
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td ">C.I.</td>
+                <td>${data.ci_usuario}</td>     
+              </tr>
+              <tr>
+                <td >NOMBRE</td>
+                <td>   
+              ${data.nombre_usuario}
+                </td>   
+              </tr>
+              <tr>
+                <td >APELLIDO PATERNO</td>
+                <td>   
+              ${data.paterno}
+                </td>   
+              </tr>
+              <tr>
+                <td >APELLIDO MATERNO</td>
+                <td>     
+              ${data.materno ? `${data.materno}` : ''} 
+                </td>   
+              </tr>
+              <tr>
+                <td >R.U.</td>
+                <td>        
+              ${data.ru ? `${data.ru}` : 'El usuario no tiene R.U. '} 
+                </td>   
+              </tr>
+              <tr>
+                <td >CORREO INSTITUCIONAL</td>
+                <td>        
+              ${data.correo_inst}
+                </td>   
+              </tr>    
+              <tr>
+                <td >NUMERO DE CELULAR</td>
+                <td>   
+              ${data.cel_usuario}
+                </td>   
+              </tr>    
+              <tr>
+                <td >FECHA DE REGISTRO EN SSTM</td>
+                <td>   
+                  ${data.fecha_registro}
+                </td>      
+              </tr>
+              <tr>     
+                <th colspan="2" >ROLES DEL USUARIO</th>     
+              </tr>   
+                  ${data.rol_docente ? '<tr><td >ROL DOCENTE</td><td> Activado</td></tr>' : ' '} 
+                  ${data.rol_maestrante ? '<tr><td >ROL MAESTRANTE</td><td> Activado</td></tr>' : ' '} 
+                  ${data.rol_tecnico_investigacion ? '<tr><td >ROL TECNICO - COORDINACIÓN</td><td> Activado</td></tr>' : ' '}
+                  ${data.rol_postgrado ? '<tr><td >ROL POSTGRADO</td><td> Activado</td></tr>' : ' '}   
+            </tbody>
+          </table>
+          </div>
+          `;
+        const programasMaestrantes = data.maestrantes;
+        const programasMaestrantesHTML = programasMaestrantes.map(programa => {
+          return `<li>${programa.programa.nombre}</li>`;
+        }).join('');
+        maestranteInfo.innerHTML += `
+            <h6>EL MAESTRANTE SE ENCUENTRA CURSANDO LOS SIGUIENTES PROGRAMAS:</h6>
+            <ul>              
+              ${programasMaestrantesHTML ? `${programasMaestrantesHTML}` : 'El usuario no tiene asignado ningun programa. '} 
+              </ul>
+            `;
+      }
+    }
+  }
+  const element = document.getElementById("some-element-id");
+  const mensajesias = document.getElementById('mensaje-sias');
+  mensajesias.style.display = "none";
+if (element) {
+  element.style.display = "block";
+} else {
+  console.warn("El elemento no se encontró. Asegúrate de que esté presente en el DOM.");
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const buscarMaestranteBtn = document.getElementById('buscarMaestrante');
+
+  if (buscarMaestranteBtn) {
+    buscarMaestranteBtn.addEventListener('click', function() {
+      const usuarioId = document.getElementById('usuarioId').value;
+
+      fetch(`/usuario/obtener_usuario/${usuarioId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error al obtener datos del usuario: ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => handleUserData(data))
+        .catch(error => {
+          console.error("Error en la primera búsqueda:", error.message);
+          handleSecondFetch(usuarioId);
+        });
+    });
+  }
+
+  function handleUserData(data) {
+    if (data && data.ci_usuario) {
+      console.log("Usuario encontrado:", data);
+      const idCiUsuario = document.getElementById('id_ci_usuario');
+      const idNombreUsuario = document.getElementById('id_nombre_usuario');
+      const idPaterno = document.getElementById('id_paterno');
+      const idMaterno = document.getElementById('id_materno');
+      const idCelUsuario = document.getElementById('id_cel_usuario');
+      const idRu = document.getElementById('id_ru');
+      const idCorreoInst = document.getElementById('id_correo_inst');
+      const habilitarPrograma = document.getElementById('habilitar_programa');
+
+      if (idCelUsuario) {
+        idCelUsuario.value = data.cel_usuario;
+        idCelUsuario.readOnly = true;
+      }
+
+      if (idCiUsuario) {
+        idCiUsuario.value = data.ci_usuario;
+        idCiUsuario.readOnly = true;
+      }
+
+      if (idNombreUsuario) {
+        idNombreUsuario.value = data.nombre_usuario;
+        idNombreUsuario.readOnly = true;
+      }
+
+      if (idPaterno) {
+        idPaterno.value = data.paterno;
+        idPaterno.readOnly = true;
+      }
+
+      if (idMaterno) {
+        idMaterno.value = data.materno;
+        idMaterno.readOnly = true;
+      }
+
+      if (idRu) {
+        idRu.value = data.ru;
+        idRu.readOnly = true;
+      }
+
+      if (idCorreoInst) {
+        if (data.correo_inst === null || data.correo_inst === 'null' || data.correo_inst === undefined || data.correo_inst === 'undefined') {
+          idCorreoInst.value = '';
+          idCorreoInst.readOnly = false;
+        } else {
+          idCorreoInst.value = data.correo_inst;
+          idCorreoInst.readOnly = true;
+        }
+      }
+
+      if (habilitarPrograma) {
+        habilitarPrograma.style.display = 'block';
+      } else {
+        console.warn("El elemento 'habilitar_programa' no se encontró.");
+      }
+
+      mostrarDatosUsuario(data, 'maestrante');
+    } else {
+      throw new Error("No se encontró información del usuario.");
+    }
+  }
+
+  function handleSecondFetch(usuarioId) {
+    fetch(`/usuario/obtener_informacion/${usuarioId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error al obtener datos del servidor externo: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => handleSiasData(data))
+      .catch(finalError => handleError(finalError, 'segunda búsqueda'));
+  }
+
+  function handleSiasData(data) {
+    if (data && data.length > 0 && data[0].dato && data[0].dato.length > 0) {
+      console.log("Usuario encontrado en la segunda búsqueda:", data[0].dato);
+
+      const habilitarPrograma = document.getElementById('habilitar_programa');
+      var datosUsuarioDiv = document.getElementById('datosUsuario');
+      document.getElementById('id_ci_usuario').value = `${data[0].dato[0].ci}`;
+      document.getElementById('id_ci_usuario').readOnly = true;
+
+      document.getElementById('id_nombre_usuario').value = `${data[0].dato[0].nombres}`;
+      document.getElementById('id_nombre_usuario').readOnly = true;
+
+      document.getElementById('id_paterno').value = `${data[0].dato[0].paterno}`;
+      document.getElementById('id_paterno').readOnly = true;
+
+      document.getElementById('id_materno').value = `${data[0].dato[0].materno}`;
+      document.getElementById('id_materno').readOnly = true;
+
+      document.getElementById('id_ru').value = `${data[0].dato[0].id}`;
+      document.getElementById('id_ru').readOnly = true;
+
+      document.getElementById('id_correo_inst').value = data[0].dato[0].correo || '';
+
+      datosUsuarioDiv.innerHTML = `
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="row">DATOS GENERALES</th>
+                <th scope="row">Información obtenida del SIAS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>C.I.</td>
+                <td>${data[0].dato[0].ci}</td>
+              </tr>
+              <tr>
+                <td>NOMBRE</td>
+                <td>${data[0].dato[0].nombres}</td>
+              </tr>
+              <tr>
+                <td>APELLIDO PATERNO</td>
+                <td>${data[0].dato[0].paterno}</td>
+              </tr>
+              <tr>
+                <td>APELLIDO MATERNO</td>
+                <td>${data[0].dato[0].materno}</td>
+              </tr>
+              <tr>
+                <td>R.U.</td>
+                <td>${data[0].dato[0].id}</td>
+              </tr>
+              <tr>
+                <td>CORREO INSTITUCIONAL</td>
+                <td>${data[0].dato[0].correo ? data[0].dato[0].correo : 'El usuario no cuenta con correo institucional'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      if (habilitarPrograma) {
+        habilitarPrograma.style.display = 'block';
+      } else {
+        console.warn("El elemento 'habilitar_programa' no se encontró.");
+      }
+      const mensajesias = document.getElementById('mensaje-sias');
+      mensajesias.style.display = "block";
+    } else {
+      throw new Error("No se encontró información en la segunda búsqueda.");
+    }
+  }
+
+  function handleError(error, context) {
+    let errorMessage = `No se pudo conectar con el servidor de SIAS. Verifique su conexión a internet y vuelva a intentarlo o consulte con soporte técnico.`;
+
+    // Verificar si es un problema de conexión
+    if (error.message.includes('Failed to fetch')) {
+      errorMessage = `No se pudo conectar con el servidor de SIAS. Verifique su conexión a internet y vuelva a intentarlo.`;
+    } else if (error.message.includes('No se encontró información')) {
+      errorMessage = `El usuario no se encuentra registrado en SIAS.\n Verifique que el C.I. ingresado sea el correcto, caso contrario registrar al usuario mediante el FORMULARIO DE REGISTRO DEL MAESTRANTE.`;
+    }
+
+    console.error(`Error en la ${context}:`, error.message);
+    const maestranteInfo = document.getElementById('datosUsuario');
+    maestranteInfo.innerHTML = ' ';
+    const habilitarPrograma = document.getElementById('habilitar_programa');
+    habilitarPrograma.style.display = 'none';
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: errorMessage,
+      cancelButtonText: 'Ok',
+    });
+  }
+});
+
+  
+
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("informe").style.display = "none";
+
+    document.getElementById("habilitar_programa").style.display = "none";
+
+    document.getElementById("habilitar_programa").addEventListener("click", function () {
+
+      document.getElementById('informe').style.display = 'block';
+      document.getElementById("obtener_datos_usuario").style.display = "none";
+
+
+    });
+  });
+
+</script>
 {% endblock extrajs %}
 
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.shortcuts import redirect
 
 @login_required
 def index(request):

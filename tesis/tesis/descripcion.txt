@@ -1,0 +1,98 @@
+programa regular en curso
+ 1ra instancia
+ 2da instancia
+ instancia de recuperacion
+programa
+version 
+fecha de derivacion
+10 meses
+prorroga 3 meses
+
+
+reincorporacion a nueva version de programa
+programa
+nueva version 
+fecha de derivacion
+10 meses
+prorroga 3 meses
+
+
+reincorporacion con vigencia de matricula fecha desde--fecha hasta
+programa
+version cursada
+fecha de derivacion
+6 meses
+prorroga 3 meses
+
+
+
+-----------------
+paso 2  perfil de tesis
+nota de solicitud de acto de sustentacion de tema
+
+
+
+
+
+
+--------------------------
+Otros documentos de respaldo (perfil)
+fecha recibido de postgrado
+
+
+
+--------------------------
+Doy mi aprobación para programar segundo avance (solo en caso de contar con un primer avance satisfactorio)
+
+no doy aprobacion para programar segundo avance (falta consolidar el primer avance)
+
+
+---------------
+Fecha de recepcion del perfil mejorado (registrada en Postgrado)
+
+
+Otros documentos de respaldo (perfil, aval del docente guía, otros)
+Perfil de tesis mejorado con aval del docente guía
+
+-----------------
+Borrador de tesis
+*fecha de recepcion de borrador de tesis(registrada en investigacion)
+*borrador de tesis con aval de docente guia
+(archivo)*solicitud de nombramiento de docente revisor
+Coordinacion de investigacion solicita
+(archivo)*Otros documentos de respaldo (borrador de tesis,aval del docente guía, otros)
+*Titulo del borrador de tesis
+
+
+-----------------
+Designar docente revisor
+Docente revisor
+(archivo)* nota nombramiento de docente revisor
+*fecha de notificacion del nombramiento (15 dias habiles) (al docente guia)
+(casilla)*aceptacion del nombramiento por el docente revisor
+ 
+
+-----------------------------------------
+recomendaciones
+cantidad de obs
+
+
+-----------------
+proceso 107
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

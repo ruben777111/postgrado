@@ -7,10 +7,9 @@
           {% csrf_token %}
           <div class="card">  
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.ci_usuario }}<br>
-              DOCENTE GUIA: {{ object.maestrante.guia }}<br>
+              <h5>Maestrante: {{ object.usuario }}</h5>
+                    
+              DOCENTE GUIA: {{ object.usuario.guia }}<br>
               TITULO DE LA TESIS: {{ object.tema_tesis }}<br>
                 
             
@@ -27,7 +26,7 @@
               
               <div><input type="checkbox" name="revision"> Artículos revisión </div> <br>
               <div><input type="checkbox" name="original"> Artículos original </div> <br>
-              <div><input type="checkbox" name="ambos"> Artículos revisión y original </div> <br>
+             
             </div>
             <div class="modal-footer">
               <input type="checkbox" required>

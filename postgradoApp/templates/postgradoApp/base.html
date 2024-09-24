@@ -31,44 +31,105 @@
     </div>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <img src="{% static 'lib/img/logo3.png' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-        <!-- Sidebar Toggle-->
+         
+            <img src="{% static 'lib/img/logo3.png' %}" alt="User Avatar" class="img-responsive">
+        
+	<!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-            class="fas fa-bars"></i></button>
-        <div class="me-lg-4" >
+                class="fas fa-bars"></i></button>
+        <div class="me-lg-4">
 
-        <!-- Navbar Search-->
-        {% if user.notificacion %}
-        <button id="miBoton" type="button" onclick="abrir_modal_ver('{% url 'notify'  %}')" class="button"
-            >
-            <i class=" fas fa-bell fa-2x neon" ></i>{{notify}} </button>
-        {% elif notify %}
-        <button id="miBoton" type="button" onclick="abrir_modal_ver('{% url 'notify'  %}')" class="buttoncero">
-            {{notify}}<i class=" fas fa-bell fa-2x" ></i></button>
-        {% else %}
+               {% if user.notificacion %}
 
-        <button id="miBoton" type="button" onclick="abrir_modal_ver('{% url 'notify'  %}')" class="buttoncero">
-            {{notify}}<i class=" fas fa-bell fa-2x" ></i></button>
-        {% endif %} </div>
+            <div class="notification-button" onclick="abrir_modal_ver('{% url 'notify'  %}')">
+                <div class="icon">
+                    <i class="fas fa-bell"></i>
+                </div>               
+                    
+                    {% if notify > 99  %}  
+                    <div class="notification-count99">99+</div>
+                    {% else %}
+                    <div class="notification-count">{{notify}}</div>                    
+                    {% endif %}     
+            </div>
+
+            {% elif notify %}
+            <div class="notification-button" onclick="abrir_modal_ver('{% url 'notify'  %}')">
+                <div class="icon">
+                    <i class="fas fa-bell"></i>
+                </div>               
+                    
+                    {% if notify > 99  %}  
+                    <div class="notification-count99">99+</div>
+                    {% else %}
+                    <div class="notification-count">{{notify}}</div>                    
+                    {% endif %}     
+            </div>
+            {% else %}
+
+            <div class="notification-button" onclick="abrir_modal_ver('{% url 'notify'  %}')">
+                <div class="icon">
+                    <i class="fas fa-bell"></i>
+                </div>               
+                    
+                    {% if notify > 99  %}  
+                    <div class="notification-count99">99+</div>
+                    {% else %}
+                    <div class="notification-count">{{notify}}</div>                    
+                    {% endif %}     
+            </div>
+            {% endif %}
+ </div>
 
         <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0 " style="color:#fffffed6" ;>
 
-           
 
-            {{user.nombre_usuario}} {{user.paterno}} {{user.materno}}
-         
+            {{user}} -
+            {% if user.tipo_usuario == 1 %}
+            [ Maestrante ]
+            {% elif user.tipo_usuario == 2 %}
+            [ Docente ]
+            {% elif user.tipo_usuario == 3 %}
+            [ Técnico / Coordinación ]
+            {% elif user.tipo_usuario == 5 %}
+            [ Postgrado ]
+            {% elif user.is_superuser%}
+            [ Super administrador ]
+            {% endif %}
         </div>
         <!-- Navbar-->
 
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+
             <li class="nav-item dropdown">
+
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fas fa-user-alt "></i></a>
+
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="{% url 'usuario:password' %}">Cambiar contraseña</a></li>
                     <li><a class="dropdown-item" href="{% url 'usuario:informacion_general'  %}">Información general
                         </a>
                     </li>
+
+                    {% if user.rol_maestrante %}
+                    <li><a class="dropdown-item" href="{% url 'usuario:rol_maestrante' user.username %}">Vista
+                            Maestrante</a></li>
+                    {% endif %}
+                    {% if user.rol_docente %}
+                    <li><a class="dropdown-item" href="{% url 'usuario:rol_docente' user.username %}">Vista Docente</a>
+                    </li>
+                    {% endif %}
+                    {% if user.rol_tecnico_investigacion %}
+                    <li><a class="dropdown-item"
+                            href="{% url 'usuario:rol_tecnico_investigacion' user.username %}">Vista Técnico /
+                            Coordinación</a></li>
+                    {% endif %}
+                    {% if user.rol_postgrado %}
+                    <li><a class="dropdown-item" href="{% url 'usuario:rol_postgrado' user.username %}">Vista
+                            Postgrado</a></li>
+                    {% endif %}
+
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
@@ -83,7 +144,8 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading text-Light ">MENU PRINCIPAL</div>
+
+
 
 
 
@@ -91,41 +153,95 @@
 
 
 
-
-                        <a class="nav-link" href="{% url 'usuario:cronograma_maestrante'  %}">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                            Cronograma
+                        <div class="sb-sidenav-menu-heading text-Light ">ACTIVIDADES DE DOCENTE GUÍA</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapseLayoutsguia" aria-expanded="false"
+                            aria-controls="collapseLayoutsguia">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
+                            Formularios del docente Guía
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
 
-                        <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Ver informe de primer avance
-                        </a>
-                        <a class="nav-link" href="{% url 'usuario:listar_avance_2'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Ver informe de segundo avance
-                        </a>
-                        <a class="nav-link" href="{% url 'usuario:listar_informe_revisor_guia'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Ver informe de docente revisor
-                        </a>
-                        <a class="nav-link" href="{% url 'usuario:listar_informe_guia'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Ver informe sobre correcciones de docente guía
+                        <div class="collapse" id="collapseLayoutsguia" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+
+                                <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Informe de primer avance
+                                </a>
+                                <a class="nav-link" href="{% url 'usuario:listar_avance_2'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Informe de segundo avance
+                                </a>
+                                <a class="nav-link" href="{% url 'usuario:listar_informe_guia'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Informe sobre correcciones de docente guía
+                                </a>
+
+                            </nav>
+                        </div>
+                        <div class="sb-sidenav-menu-heading text-Light ">ACTIVIDADES DE DOCENTE REVISOR</div>
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapseLayoutsrevisor" aria-expanded="false"
+                            aria-controls="collapseLayoutsrevisor">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
+                            Formularios del docente Revisor
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
 
-                        <a class="nav-link" href="{% url 'usuario:listar_reporte_general'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Ver reporte general de revisor 
+                        <div class="collapse" id="collapseLayoutsrevisor" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+
+
+                                <a class="nav-link" href="{% url 'usuario:listar_informe_revisor'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Informe de docente revisor
+                                </a>
+
+
+                                <a class="nav-link" href="{% url 'usuario:listar_reporte_general'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Reporte general de revisor
+                                </a>
+                                <a class="nav-link" href="{% url 'usuario:listado_segundo_reporte_general'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
+                                    Segundo reporte general de revisor
+                                </a>
+
+                            </nav>
+                        </div>
+                        <div class="sb-sidenav-menu-heading text-Light ">ACTIVIDAD TRIBUNAL INTERNO</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapseLayoutstribunal" aria-expanded="false"
+                            aria-controls="collapseLayoutstribunal">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
+                            Reporte tribunal interno
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        
-                        <a class="nav-link" href="{% url 'usuario:listar_reporte_general_tribunal_interno'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Ver reporte general de tribunal interno
-                        </a>
+
+                        <div class="collapse" id="collapseLayoutstribunal" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+
+                                <a class="nav-link" href="{% url 'usuario:listar_reporte_general_tribunal_interno'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Reporte general de tribunal interno
+                                </a>
+                            </nav>
+                        </div>
+                        <div class="sb-sidenav-menu-heading text-Light ">MENÚ</div>
                         <a class="nav-link" href="{% url 'lista_notificacion'  %}">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            <div class="sb-nav-link-icon"> <i class="fas fa-bell"></i></div>
                             Notificaciones
+                        </a>
+
+
+                        <a class="nav-link" href="{% url 'usuario:cronograma_maestrante_individual'  %}">
+                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            Cronogramas
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_docente'  %}">
                             <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
@@ -138,50 +254,57 @@
                         <!-- 2 Docente  -->
                         {% if user.tipo_usuario == 2 %}
                         <a class="nav-link" href="{% url 'lista_notificacion'  %}">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            <div class="sb-nav-link-icon"> <i class="fas fa-bell"></i></div>
                             Notificaciones
                         </a>
                         <div class="sb-sidenav-menu-heading text-Light ">Docente Guía</div>
 
                         <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                             Emitir informe de primer avance
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_avance_2'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                             Emitir informe de segundo avance
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_informe_revisor_guia'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                             Ver informe de docente revisor
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_informe_guia'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Emitir informe sobre correcciones 
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                            Emitir informe sobre correcciones
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_reporte_general_guia'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Ver reporte general de revisor 
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                            Ver reporte general de revisor
                         </a>
-
+                        <a class="nav-link" href="{% url 'usuario:listado_segundo_reporte_general_guia'  %}">
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
+                            Ver segundo reporte general
+                        </a>
 
                         <div class="sb-sidenav-menu-heading text-Light ">Docente Revisor</div>
                         <a class="nav-link" href="{% url 'usuario:listar_informe_revisor'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
                             Emitir informe de revisor
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listado_informe_guia_revisor'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                             Ver informe de docente guía
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listar_reporte_general'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                            Emitir reporte general 
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                            Emitir reporte general
+                        </a>
+                        <a class="nav-link" href="{% url 'usuario:listado_segundo_reporte_general'  %}">
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
+                            Emitir segundo reporte general
                         </a>
                         <div class="sb-sidenav-menu-heading text-Light ">Tribunal interno</div>
 
                         <a class="nav-link" href="{% url 'usuario:listar_reporte_general_tribunal_interno'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                            <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                             Reporte general de tribunal interno
                         </a>
 
@@ -189,14 +312,14 @@
                         {% endif %}
                         <!-- -----------------------  -->
                         <!-- 3 4 5 tecnico de investigacion/ coordinadora de investigacion /postgrado -->
-                        {% if user.is_staff %}
+                        {% if user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
 
 
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayouts111" aria-expanded="false"
                             aria-controls="collapseLayouts111">
                             <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
-                            Datos de Maestrantes 
+                            Datos de Maestrantes
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
 
@@ -204,25 +327,28 @@
                             data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="{% url 'usuario:registrar_maestrante'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
-                                    Registro nuevo maestrante 
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
+                                    Registro nuevo maestrante
                                 </a>
 
 
                                 <a class="nav-link" href="{% url 'usuario:listar_maestrante'  %}">
-                                    <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
                                     Maestrantes en sistema (estado del maestrante)
-                                </a>         
-                                {% if user.tipo_usuario == 5 %}
+                                </a>
 
-                                    <a class="nav-link" href="{% url 'usuario:listar_postulante'  %}">
-                                        <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
-                                        Maestrantes postulantes 
-                                    </a>
-                                {% endif %}
-                                
+
+                                <a class="nav-link" href="{% url 'usuario:listar_postulante'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Maestrantes postulantes
+                                </a>
+                                <a class="nav-link" href="{% url 'usuario:listado_maestrante_matricula'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Vigencia de matrícula del programa del maestrante
+                                </a>
+
                                 <a class="nav-link" href="{% url 'usuario:listado_maestrante_tesis_concluido'  %}">
-                                    <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
                                     Listar Maestrantes Tesis concluido
                                 </a>
                             </nav>
@@ -240,15 +366,17 @@
                             data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="{% url 'usuario:registrar_docente'  %}">
-                                    <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
-                                    Registro nuevo Docente  
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
+                                    Registro nuevo Docente
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_docente'  %}">
-                                    <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
-                                    Lista de Docentes en sistema 
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
+                                    Lista de Docentes en sistema
                                 </a>
                             </nav>
                         </div>
+
+
                         <a class="nav-link" href="{% url 'usuario:seguimiento_tesis'  %}">
                             <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
                             Gestión a tesis
@@ -264,61 +392,61 @@
                             data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="{% url 'usuario:listar_designar'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
-                                    Docente Guia - Revisor
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Docente Provisional - Guía - Revisor
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_tribunal_perfil'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                                     Tribunal defensa perfil
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_tribunal_tesis'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                                     Tribunal defensa tesis
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_tema_tesis'  %}">
-                                    <div class="sb-nav-link-icon"> <i class="fas fa-pen-square"></i></div>
-                                    Tema de Tesis
+                                    <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
+                                    Títulos y Temas de Tesis en sus diferentes etapas
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_asistencia'  %}">
-                                    <div class="sb-nav-link-icon"> <i class="fas fa-pen-square"></i></div>
+                                    <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
                                     Historial de asistencia a inducción
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_sustentacion_perfil_historial'  %}">
-                                    <div class="sb-nav-link-icon"> <i class="fas fa-pen-square"></i></div>
+                                    <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
                                     Historial de sustentación perfil
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_sustentacion_tesis_historial'  %}">
-                                    <div class="sb-nav-link-icon"> <i class="fas fa-pen-square"></i></div>
+                                    <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
                                     Historial de Defensa de tesis
                                 </a>
-                                
+
                             </nav>
                         </div>
-        
-                    
+
+
                         {% if user.tipo_usuario == 3 %}
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                        data-bs-target="#collapseLayouts11" aria-expanded="false" aria-controls="collapseLayouts11">
-                        <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                        Cronogramas
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseLayouts11" aria-labelledby="headingOne"
-                        data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="{% url 'usuario:cronograma'  %}">
-                                <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                                Cronograma hasta procedencia de tema
-                            </a>
-                            <a class="nav-link" href="{% url 'usuario:cronograma2'  %}">
-                                <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                                Cronograma de maestrantes en curso 
-                            </a>
+                            data-bs-target="#collapseLayouts11" aria-expanded="false" aria-controls="collapseLayouts11">
+                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            Cronogramas
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts11" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'usuario:cronograma'  %}">
+                                    <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
+                                    Cronograma hasta procedencia de tema
+                                </a>
+                                <a class="nav-link" href="{% url 'usuario:cronograma2'  %}">
+                                    <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
+                                    Cronograma de maestrantes en curso
+                                </a>
 
-                        </nav>
-                    </div>
+                            </nav>
+                        </div>
                         {% endif %}
-  
+
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayouts15" aria-expanded="false" aria-controls="collapseLayouts15">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-video"></i></div>
@@ -328,109 +456,180 @@
                         <div class="collapse" id="collapseLayouts15" aria-labelledby="headingOne"
                             data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                
+
                                 {% if user.tipo_usuario == 3 %}
-                                    
-                                   <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-file-upload  "></i></div>
+
+                                <a class="nav-link" href="{% url 'usuario:listar_avance'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode  "></i></div>
                                     Formulario de primer avance
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:listar_avance_2'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-file-upload  "></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode  "></i></div>
                                     Formulario de segundo avance
                                 </a>
-                                <a class="nav-link" href="{% url 'usuario:listar_informe_guia'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-film "></i></div>
-                                    Formulario de informe docente guía
-                                </a>            
                                 <a class="nav-link" href="{% url 'usuario:listar_informe_revisor'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                                     Formulario de informe docente revisor
-                                </a>                 
+                                </a>
+                                <a class="nav-link" href="{% url 'usuario:listar_informe_guia'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
+                                    Formulario de informe docente guía
+                                </a>
+
                                 {% endif %}
-                                    
+
 
                                 <a class="nav-link" href="{% url 'usuario:listar_reporte_general'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-film "></i></div>
-                                    Formulario de reporte
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
+                                    Formulario de reporte general
                                 </a>
-                                
+                                <a class="nav-link" href="{% url 'usuario:listado_segundo_reporte_general'  %}">
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode"></i></div>
+                                    Formulario de segundo reporte general
+                                </a>
                                 {% if user.tipo_usuario == 3 %}
                                 <a class="nav-link" href="{% url 'usuario:listar_reporte_general_tribunal_interno'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-users  text-Light "></i></div>
+                                    <div class="sb-nav-link-icon"><i class="fab fa-centercode "></i></div>
                                     Reporte general de tribunal interno
                                 </a>
                                 {% endif %}
-                                    
-                                
 
 
-                           
+
+
+
                             </nav>
                         </div>
 
                         <a class="nav-link" href="{% url 'lista_notificacion'  %}">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            <div class="sb-nav-link-icon"> <i class="fas fa-bell"></i></div>
                             Notificaciones
                         </a>
                         {% if user.tipo_usuario == 3 %}
                         <div class="sb-sidenav-menu-heading text-Light ">AJUSTES</div>
                         <!-- ------------------------------------------- -->
+
+
+
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                            data-bs-target="#collapseLayoutsusuario" aria-expanded="false"
+                            aria-controls="collapseLayoutsusuario">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-video"></i></div>
+                            Plantel administrativo y Usuarios 
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayoutsusuario" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'usuario:registrar_administradores'  %}">
+                                    <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
+                                    Agregar administrador
+                                </a>
+                                <a class="nav-link" href="{% url 'usuario:listar_administradores'  %}">
+                                    <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
+                                    Plantel administrativo
+                                </a>
+                                <a class="nav-link" href="{% url 'usuario:listar_usuarios'  %}">
+                                    <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
+                                    Usuarios en sistema
+                                </a>
+
+
+                                
+                            </nav>
+                        </div>
+
+
                         <a class="nav-link" href="{% url 'usuario:listado_evidencia'  %}">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                            Requierimientos / Evidencias
+                            <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
+                            Ajustes de actividades y Requisitos
                         </a>
 
                         <a class="nav-link" href="{% url 'usuario:listar_programa'  %}">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
+                            <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
                             Programas
                         </a>
                         <a class="nav-link" href="{% url 'usuario:listado_banco_notificacion'  %}">
-                            <div class="sb-nav-link-icon"> <i class="fas fa-calendar-alt"></i></div>
-                            Notificaciones/ajustes
+                            <div class="sb-nav-link-icon"> <i class="fas fa-bell"></i></div>
+                            Ajustes de Notificaciones
                         </a>
                         {% endif %}
                         {% endif %}
-                        
+
 
                         <!------------ Usuarios Administradores ---------------->
-                        {% if user.tipo_usuario == None %}
-                        <a class="nav-link" href="{% url 'usuario:registrar_administradores'  %}">
-                            <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
-                            Agregar administrador
-                        </a>
-                        <a class="nav-link" href="{% url 'usuario:listar_administradores'  %}">
-                            <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
-                            Plantel administrativo
-                        </a>
+                        
+                        
+                        {% if  user.is_superuser  %}
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                        data-bs-target="#collapseLayoutsusuario" aria-expanded="false"
+                        aria-controls="collapseLayoutsusuario">
+                        <div class="sb-nav-link-icon"><i class="fas fa-file-video"></i></div>
+                        Plantel administrativo y Usuarios 
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayoutsusuario" aria-labelledby="headingOne"
+                        data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'usuario:registrar_administradores'  %}">
+                                <div class="sb-nav-link-icon"><i class=" fas fa-file-signature "></i></div>
+                                Agregar administrador
+                            </a>
+                            <a class="nav-link" href="{% url 'usuario:listar_administradores'  %}">
+                                <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
+                                Plantel administrativo
+                            </a>
+                            <a class="nav-link" href="{% url 'usuario:listar_usuarios'  %}">
+                                <div class="sb-nav-link-icon"><i class="far fa-address-card"></i></div>
+                                Usuarios en sistema
+                            </a>
+
+
+                            
+                        </nav>
+                    </div>
                         {% endif %}
+                            
+
+                       
+
 
                         <!---------------------------->
+                        
+                        {% if user.tipo_usuario == 1 or user.tipo_usuario == 2 or user.tipo_usuario == 3 or user.tipo_usuario == 4 or user.tipo_usuario == 5%}
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseLayouts8" aria-expanded="false" aria-controls="collapseLayouts8">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-video"></i></div>
-                            Multimedia
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLayouts8" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{% url 'documento:listar_documento'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-file-upload  "></i></div>
-                                    Documentos de apoyo
-                                </a>
-                                <a class="nav-link" href="{% url 'video:listar_video'  %}">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-film "></i></div>
-                                    Videos de apoyo
-                                </a>
-                            </nav>
-                        </div>
-                       
+                        data-bs-target="#collapseLayouts8" aria-expanded="false" aria-controls="collapseLayouts8">
+                        <div class="sb-nav-link-icon"><i class="fas fa-file-video"></i></div>
+                        Multimedia
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts8" aria-labelledby="headingOne"
+                        data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'documento:listar_documento'  %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-upload  "></i></div>
+                                Documentos de apoyo
+                            </a>
+                            <a class="nav-link" href="{% url 'video:listar_video'  %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-film "></i></div>
+                                Videos de apoyo
+                            </a>
+                        </nav>
+                    </div>
+                        {% endif %}
+                            
+                   
+
             </nav>
+
         </div>
 
 
         <!-- Modal -->
+        
+        {% if not user.is_superuser %}
+
+        {% if not user.cambio_password %}
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -452,6 +651,13 @@
                 </div>
             </div>
         </div>
+        {% endif %}
+            
+        {% endif %}
+            
+        
+
+
         <div class="modal fade" id="edicion" role="dialog">
         </div>
         <div class="modal fade" id="eliminar" role="dialog">
@@ -463,9 +669,95 @@
                 <article>
                     {% block content%}
                     {% endblock %}
+
                 </article>
 
             </div>
+
+            {% if user.tipo_usuario == 1 %}
+
+
+            
+
+
+            {% now "Y-m-d" as fecha_actual %}
+
+            {% for maestrante in request.user.maestrantes_usuario.all %}
+
+            {% if maestrante.tipo_maestrante == "1" %}
+
+
+            {% if maestrante.bloqueo_maestrante %}
+            <div class="bloque-flotante">
+
+                <h5>El programa de maestria {{ maestrante.programa }} {{ maestrante.version }} se encuentra bloqueado, favor de comunicarse con Postgrado
+                </h5>
+
+            </div>
+            {% endif %}
+    
+
+
+            {% if maestrante.vigencia_matricula_regular_total and maestrante.tesis_terminado == False %}
+
+
+
+            {% with maestrante.vigencia_matricula_regular_total|date:"Y-m-d" as fecha_vigencia %}
+
+            {% if fecha_actual > fecha_vigencia %}
+
+            <div class="bloque-flotante">
+
+                <h5>La vigencia del programa {{ maestrante.programa }} {{ maestrante.version }} ha expirado, favor de comunicarse con Postgrado
+                </h5>
+
+            </div>
+            {% endif %}
+            {% endwith %}
+            {% endif %}
+
+            {% elif maestrante.tipo_maestrante == "2" %}
+
+            {% if maestrante.vigencia_matricula_antiguo_total and maestrante.tesis_terminado == False %}
+            {% with maestrante.vigencia_matricula_antiguo_total|date:"Y-m-d" as fecha_vigencia %}
+
+            {% if fecha_actual > fecha_vigencia %}
+
+            <div class="bloque-flotante">
+
+                <h5>La vigencia del programa {{ maestrante.programa }} {{ maestrante.version }} ha expirado, favor de comunicarse con Postgrado
+                </h5>
+
+            </div>
+            {% endif %}
+            {% endwith %}
+            {% endif %}
+
+
+            {% if maestrante.vigencia_matricula_antiguo and maestrante.tesis_terminado == False %}
+            {% with maestrante.vigencia_matricula_antiguo|date:"Y-m-d" as fecha_vigencia_2 %}
+
+            {% if fecha_actual > fecha_vigencia_2 %}
+
+            <div class="bloque-flotante h6" >
+
+                La vigencia de matrícula del programa {{ maestrante.programa }} {{ maestrante.version }} ha expirado, favor de comunicarse con Postgrado
+                
+
+            </div>
+            {% endif %}
+            {% endwith %}
+            {% endif %}
+
+
+            {% endif %}
+
+
+
+            {% endfor %}
+            {% endif %}
+
+
         </div>
     </div>
 
@@ -477,6 +769,8 @@
     {% block scripts %}
 
     {% endblock %}
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
         crossorigin="anonymous"></script>
@@ -503,12 +797,12 @@
 
     {% endif %}
 
-   
+
     <script type="text/javascript">
         var $ = jQuery.noConflict();
         function abrir_modal_ver(url) {
             $('#edicion').load(url, function () {
-            
+
                 $(this).modal('show');
             });
         }
@@ -517,36 +811,41 @@
                 $(this).modal('show');
             });
         }
-
+        function abrir_modal_eliminar(url) {
+            $('#edicion').load(url, function () {
+                $(this).modal('show');
+            });
+        }
     </script>
-    <script type="text/javascript">
-        window.addEventListener("load", function () {
-            var loadingContainer = document.getElementById("loading-container");
-            loadingContainer.style.display = "none";
-        });
-
-
-    </script>
-
     <script>
         const roomName = JSON.parse(document.getElementById('jso-username').textContent);
         const userName = JSON.parse(document.getElementById('jso-username').textContent);
-        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/' + roomName + '/');
+        const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/' + roomName + '/');
         chatSocket.onclose = function (e) {
             console.log('onclose')
         }
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const iconElement = document.createElement('i');
-            iconElement.className = 'fas fa-bell fa-2x';            
+            iconElement.className = 'fas fa-bell fa-2x';
             var boton = document.getElementById('miBoton');
-            if (data.message) {                
+            if (data.message) {
                 boton.classList.add('neon');
                 boton.innerText = '';
-                boton.appendChild(iconElement); 
+                boton.appendChild(iconElement);
             }
         };
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    
+        var loadingContainer = document.getElementById('loading-container');
+        if (loadingContainer) {
+            loadingContainer.style.display = 'none';
+        }
+    });
+</script>
+
     {% block extrajs %}
 
     {% endblock extrajs %}

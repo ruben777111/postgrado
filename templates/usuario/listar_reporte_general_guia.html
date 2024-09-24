@@ -1,0 +1,192 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="sb-nav-link-icon">
+    <h5>FORMULARIO DE REPORTE GENERAL</h5>
+    <hr />
+</div>
+{% if user.tipo_usuario == 2 or user.tipo_usuario == 3 or user.tipo_usuario == 5  %}
+<ul class="nav nav-pills justify-content-end">
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listado_reporte_general_pendiente'  %}">Pendientes</a>
+    </li>
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listado_reporte_general_realizado'  %}">Realizados </a>
+    </li>
+    <li class="nav-item">
+      <a class="colores-primario ext" href="{% url 'usuario:listar_reporte_general'  %}">Todos </a>
+    </li>
+  </ul>
+{% endif %}
+<br>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive">
+            <table name="f1" id="data" class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        {% if user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        <th class="header" scope="col">CI</th>
+                        <th class="header" scope="col">R.U.</th>
+                        {% endif %}                        
+                        <th class="header" scope="col">MAESTRANTE</th>
+                        <th class="header" scope="col">PROGRAMA</th>
+                        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+                        <th class="header" scope="col">DOCENTE GUÍA</th>
+                        <th class="header" scope="col">DOCENTE REVISOR</th>
+                        
+                        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN</th>
+                        <th class="header" scope="col">FECHA PRESENTADA</th>
+                        <th class="header" scope="col">DOCUMENTO DE TESIS</th>
+                        <th class="header" scope="col">REPORTE GENERAL</th>
+                      
+                       
+                    </tr>
+                </thead>
+                <tbody id="tableBody_users">
+                    {% for usuario in actividades %}
+                    <tr>
+                        {% if user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+
+                        <td>                            
+                            {% if usuario.user.usuario.ci_usuario %}
+                            {{ usuario.user.usuario.ci_usuario}}
+                            {% else %}
+                            No asignado
+                            {% endif %} 
+                        </td>
+                        <td>                           
+                            {% if usuario.user.usuario.ru %}
+                            {{ usuario.user.usuario.ru}}
+                            {% else %}
+                            No asignado
+                            {% endif %}  
+                        </td>
+                        {% endif %}
+                        <td>{{ usuario.user }}</td>
+                        <td>{{ usuario.user.programa }}</td>
+                        <td>{{ usuario.user.version }}</td>
+                        <td>{{ usuario.user.guia }}</td>
+                        <td>{{ usuario.user.revisor }}</td>
+
+                        <td>                            
+                            {{usuario.user.cronograma2.fecha_reporte_general}}                       
+                                                     
+                        </td>
+                        <td>
+                            
+                            {% if usuario.user.reportegeneral.fecha_registro %}
+                            {{usuario.user.reportegeneral.fecha_registro}}
+                            {% else %}
+                            Sin fecha
+                            {% endif %}
+                                
+                            
+                        </td>
+                        <td>
+
+                            {% if usuario.user.tesis_mejorado %}
+                            <a href="{{ usuario.user.tesis_mejorado.url }}" class="btn btn-outline-primary"
+                                target="_blank">Ver</a>
+                            <a href="{{ usuario.user.tesis_mejorado.url }}" download
+                                class="btn btn-outline-success">Descargar</a>
+
+                            {% else %}
+                            <span class="text-muted">Sin&nbsp;archivo</span>
+                            {% endif %}
+
+
+                        </td>
+                        <td>
+
+                            {% if usuario.aceptar_revisor and user.tipo_usuario == 2 %}
+
+                            <div class="colores-primario-msg">
+                                <button type="button"
+                                    onclick="abrir_modal_ver('{% url 'usuario:detalle_reporte' usuario.id_reportegeneral %}')"
+                                    class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
+                                Ver reporte 
+                            </div>
+                            {% else %}
+
+                                Reporte general no emitido
+                     
+                            {% endif %}
+                        </td>
+
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="reg1" role="dialog">
+
+</div>
+<div class="modal fade" id="reg2" role="dialog">
+
+</div>
+<div class="modal fade" id="reg3" role="dialog">
+
+</div>
+<div class="modal fade" id="det1" role="dialog">
+
+</div>
+<div class="modal fade" id="det2" role="dialog">
+
+</div>
+
+<div class="modal fade" id="det3" role="dialog">
+
+</div>
+
+
+{% block extrajs %}
+<script src="{% static 'lib/js/check.js' %}"></script>
+<script src="{% static 'lib/js/fecha.js' %}"></script>
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_registrar(url) {
+        $('#reg1').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+    function abrir_modal_registrar2(url) {
+        $('#reg2').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_registrar3(url) {
+        $('#reg3').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_ver(url) {
+        $('#det1').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+    function abrir_modal_ver2(url) {
+        $('#det2').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_ver3(url) {
+        $('#det3').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

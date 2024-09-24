@@ -1,0 +1,41 @@
+<div class="modal-dialog " role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">¿ Desea eliminar los datos de: {{ object.nombre_usuario }}&nbsp;{{ object.paterno }}&nbsp;{{ object.materno }}  ?</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        {% if object.tipo_usuario == Null %}
+        <form  action="{% url 'usuario:eliminar_usuario' object.id %}" method="POST" enctype="multipart/form-data">
+        {% endif %}  
+        {% if object.tipo_usuario == 1 %}
+        <form  action="{% url 'usuario:eliminar_maestrante' object.id %}" method="POST" enctype="multipart/form-data">
+        {% endif %}  
+        {% if object.tipo_usuario == 2 %}
+        <form  action="{% url 'usuario:eliminar_docente' object.id %}" method="POST" enctype="multipart/form-data">
+        {% endif %} 
+        {% if object.tipo_usuario == 3 %}
+        <form  action="{% url 'usuario:eliminar_tecnico' object.id %}" method="POST" enctype="multipart/form-data">
+        {% endif %}  
+        {% if object.tipo_usuario == 4 %}
+        <form  action="{% url 'usuario:eliminar_investigacion' object.id %}" method="POST" enctype="multipart/form-data">
+        {% endif %}  
+        {% if object.tipo_usuario == 5 %}
+        <form  action="{% url 'usuario:eliminar_postgrado' object.id %}" method="POST" enctype="multipart/form-data">
+        {% endif %}  
+            {% csrf_token %}
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger  btn-circle btn-sm" data-bs-dismiss="modal">Cancelar</button>
+             
+                <button type="submit" class="btn btn-success  btn-circle btn-sm btnEliminacion" >Confirmar</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+     
+
+         
+
+

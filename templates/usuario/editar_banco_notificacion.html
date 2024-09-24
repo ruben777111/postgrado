@@ -3,7 +3,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <div class="card border-primary" style="width: 100%;">
-                <form action="{% url 'usuario:editar_banco_notificacion' object.id_notificacion %}" method="POST">
+                <form  id="informe" action="{% url 'usuario:editar_banco_notificacion' object.id_notificacion %}" method="POST">
                     <div class="card-body ">
                         <div class="container">
                             <div class="row">
@@ -36,3 +36,7 @@
         </div>
     </div>
 </div>
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
+
+{% endblock extrajs %}

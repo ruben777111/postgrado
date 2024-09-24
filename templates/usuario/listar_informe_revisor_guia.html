@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i> FORMULARIO DE INFORME DE DOCENTE REVISOR DE TESIS DE MAESTRIA (R-0996) </h5>
+    <h5> FORMULARIO DE INFORME DE DOCENTE REVISOR DE TESIS DE MAESTRÍA R-0996 </h5>
     <hr />
 </div>
 
@@ -13,21 +13,27 @@
             <table name="f1" id="data" class="table table-striped table-responsive">
                 <thead>
                     <tr>
-                        <th class="header" scope="col">R.U.</th>
+                   
                         <th class="header" scope="col">MAESTRANTE</th>
+                        <th class="header" scope="col">PROGRAMA</th>
+                        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+                        <th class="header" scope="col">DOCENTE GUÍA</th>
                         <th class="header" scope="col">DOCENTE REVISOR</th>
-                        <th class="header" scope="col">TEMA&nbsp;DE&nbsp;TESIS</th>
-                        <th class="header" scope="col">FECHA&nbsp;LIMITE&nbsp;DE&nbsp;PRESENTACIÓN&nbsp;DEL&nbsp;FORMULARIO</th>
+                        
+                        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DEL FORMULARIO</th>
                         <th class="header" scope="col">#</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody_users">
                     {% for usuario in actividades %}
                     <tr>
-                        <td>{{ usuario.user.ru }}</td>
+               
                         <td>{{ usuario.user }}</td>
+                        <td>{{ usuario.user.programa }}</td>
+                        <td>{{ usuario.user.version }}</td>
+                        <td>{{ usuario.user.guia }}</td>
                         <td>{{ usuario.user.revisor }}</td>
-                        <td>{{ usuario.user.tema_tesis }}</td>
+                      
                         <td>{{ usuario.user.cronograma2.fecha_formulario_revisor }}</td>
                         <td>
                     

@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-9q=yimpg2(x&t#%f)3c$z^8&or#fp*kq@%98t^-)9g+1u1s9p(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 #PORT = '80'
-#ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.0.15']
+ALLOWED_HOSTS = []
+
 #MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'usuario',
     'postgradoApp',     
     'channels',
@@ -46,12 +47,12 @@ INSTALLED_APPS = [
     'daphne',
     'documento',
     'notify',
-    'notipostgrado',
-    "notification",
+    
     'video',
 ]
 
 MIDDLEWARE = [
+  
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,9 +60,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    
    
 ]
-
+CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'sispostgrado.urls'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
@@ -72,11 +77,13 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -183,3 +190,4 @@ SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = 'pedroperespereira2023@hotmail.com'
 
 #PASSWORD_RESET_TIMEOUT = 100
+#SESSION_COOKIE_AGE = 190 

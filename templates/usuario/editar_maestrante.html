@@ -3,7 +3,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <div class="card border-primary" style="width: 100%;">
-                <form  action="{% url 'usuario:editar_maestrante' object.id_maestrante %}" method="POST">
+                <form  id="informe" id="informe" action="{% url 'usuario:editar_maestrante' object.id_maestrante %}" method="POST">
                     <div class="card-body ">
                         <div class="container">
                             <div class="row">
@@ -20,63 +20,16 @@
                         </div>
                         <hr>
                         <div class="row row-cols-1">
-                            <div class="col">MAESTRANTE: {{ object.maestrante}}</div>
+                            <div class="col">MAESTRANTE: {{ object.usuario}}</div>
                         </div>
                     </div>
                     {% csrf_token %}
                     <div class="modal-body">
-                        {{ form.tipo_usuario }} <br>
-                        {{ form.nombre_usuario.label }}
-                        {{ form.nombre_usuario }} <br>
+                     
+                        {{ form.as_p }} <br>
             
-                        {{ form.paterno.label }}
-                        {{ form.paterno }}<br>
-            
-                        {{ form.materno.label }}
-                        {{ form.materno }}<br>
-            
-                        {{ form.ru.label }}
-                        {{ form.ru }}<br>
-            
-                        {{ form.ci_usuario.label }}
-                        {{ form.ci_usuario }}<br>
-            
-                        {{ form.departamento.label }}
-                        {{ form.departamento }} <br>
-            
-                        {{ form.sede.label }}
-                        {{ form.sede }} <br>
-            
-            
-                        {{ form.cel_usuario.label }}
-                        {{ form.cel_usuario }}<br>
-            
-                        {{ form.cel_usuario2.label }}
-                        {{ form.cel_usuario2 }}<br>
-            
-                        {{ form.correo.label }}
-                        {{ form.correo }}<br>
-            
-                        {{ form.correo_inst.label }}
-                        {{ form.correo_inst }}<br>
-            
-            
-                        {{ form.gestion.label }}
-                        {{ form.gestion }}<br>
-            
-                        {{ form.programa.label }}
-                        {{ form.programa }}<br>
-                        <input type="radio" name="gender" id="tipo-1" required> PROGRAMA REGULAR EN CURSO <br>
-                        <div class="col-8">{{ form.programa_regular }}  {{ form.version }} <br> </div>
-            
-                        <input type="radio" name="gender" id="tipo-2"> REINCORPORACIÓN A NUEVA VERSIÓN DE PROGRAMA <br>
-                        <div class="col-8">{{ form.reincorporacion }} {{ form.nueva_version }} </div><br>
-            
-                        <input type="radio" name="gender" id="tipo-3"> REINCORPORACIÓN CON VIGENCIA DE MATRICULA <br>
-                        <div class="col-8"> {{ form.vigencia_matricula }} {{ form.version_cursada }} </div><br>
-                        <div class="col-8"> {{ form.vigencia_inicio }} </div><br>
-                        <div class="col-8"> {{ form.vigencia_final }} </div><br>
-                    </div>
+                     
+                        
                     <div class="modal-footer">
                         <button type="button" class="colores-botonaceptar" data-bs-dismiss="modal">Cerrar</button>
                         <button type="submit" class="colores-botoncerrar">Confirmar</button>
@@ -86,3 +39,7 @@
         </div>
     </div>
 </div>
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
+
+{% endblock extrajs %}

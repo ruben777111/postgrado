@@ -1,22 +1,50 @@
 {% load static %}
-<div class="modal-dialog " role="document">
+
+{% if user.tipo_usuario == 3 or user.tipo_usuario == 4 or user.is_superuser %}
+    
+
+    
+<div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Editar información de: {{ object.user}}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card border-primary" style="width: 100%;">
+                <form id="informe"  action="{% url 'usuario:editar_administrador' object.id %}" method="POST">
+                    <div class="card-body ">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col col-lg-3">
+                                    <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid"
+                                        alt="Responsive image">
+                                </div>
+                                <div class="col">
+                                    <h5 class="card-title text-center">
+                                        EDITAR INFORMACIÓN DEL PLANTEL ADMINISTRATIVO
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row row-cols-1">
+                            <div class="col">USUARIO: {{ object}}</div>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                    <div class="modal-body">
+                     
+                        {{ form.as_p }} <br>
+            
+                     
+                        
+                    <div class="modal-footer">
+                        <button type="button" class="colores-botonaceptar" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="colores-botoncerrar">Confirmar</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form action="{% url 'usuario:editar_administrador' object.id %}" method="POST">
-            {% csrf_token %}
-            <div class="modal-body">
-                <div id="erroresEdicion">
-                </div>
-                <td>{{ form.as_p }}</td>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger  btn-circle btn-sm" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="colores-botoncerrar">Confirmar</button>
-
-            </div>
-        </form>
     </div>
 </div>
+{% endif %}
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
+
+{% endblock extrajs %}

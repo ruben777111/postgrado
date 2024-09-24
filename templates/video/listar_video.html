@@ -1,14 +1,16 @@
 {% extends "postgradoApp/base.html" %}
 {% load static %}
 {% block content %}
-<div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i> LISTA DE VIDEOS</h5>
-</div>
-<hr />
-{% if user.tipo_usuario == None or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
-<h5 class="card-title"><a href="{% url 'video:agregar_video'%}" class="btn btn-primary"><i class="fas fa-user-plus"></i>
-        Agregar nuevo Video</a></h5>
-{% endif %}
+<div class="card-header" style="display: flex; justify-content: space-between;">
+    <h5>LISTA DE VIDEOS</h5>
+
+    {% if user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+    <a href="{% url 'video:agregar_video'%}" class="btn btn-primary">
+        REGISTRAR NUEVO VIDEO</a>
+    {% endif %}
+  </div> <br>
+
+
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         <div class="table-responsive">
@@ -16,9 +18,9 @@
                 <thead>
                     <tr>
 
-                        <th class="header" scope="col">Titulo&nbsp;del&nbsp;video</th>
+                        <th class="header" scope="col">Título&nbsp;del&nbsp;video</th>
                         <th class="header" scope="col">Enlace del video</th>
-                        {% if user.tipo_usuario == None or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        {% if user.tipo_usuario == 3  %}
                         <th>
                             <div class="size"> Opciónes&nbsp;de&nbsp;Video</div>
                         </th>

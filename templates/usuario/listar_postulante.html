@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i>LISTA DE MAESTRANTES</h5>
+    <h5>LISTA DE MAESTRANTES POSTULANTES</h5>
 </div>
 <hr />
 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -10,30 +10,59 @@
         <table id="data" class="table table-striped">
             <thead>
                 <tr>
+                    <th class="header" scope="col">C.I.</th>
 
                     <th class="header" scope="col">R.U.</th>
                     <th class="header" scope="col">NOMBRE(S) APELLIDO(S)</th>
-                    <th> TIPO</th>
+                    <th class="header" scope="col">PROGRAMA</th>
+                    <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+                    <th class="header" scope="col">INSTANCIA</th>
+                    <th> TIPO MAESTRANTE</th>
                     <th> #</th>
                 </tr>
             </thead>
             <tbody id="tableBody_users">
                 {% for usuario in actividades %}
                 <tr>
+                    <td>{{ usuario.usuario.ci_usuario }}</td>
 
+                    <td>
+                        {% if usuario.usuario.ru  %}
+                        {{ usuario.usuario.ru }}
+                        {% endif %}
+                    </td>
+                    
+                    <td>{{ usuario.usuario }}</td>
+                    <td>{{ usuario.programa }}</td>
+                    <td>{{ usuario.version }} </td>
+                    <td>
 
-                    <td>{{ usuario.ru }}</td>
-                    <td>{{ usuario.maestrante }}</td>
+                        {% if usuario.instancia == 1 %}
+                        1º instancia
+                        {% elif usuario.instancia == 2 %}
+                        2º instancia
+                        {% elif usuario.instancia == 3 %}
+                        3º instancia
+                        {% elif usuario.instancia == 4 %}
+                        4º instancia
+                        {% elif usuario.instancia == 5 %}
+                        5º instancia
+                        {% elif usuario.instancia == 6 %}
+                        6º instancia
+                        {% elif usuario.instancia == 7 %}
+                        7º instancia
+                        
+                        {% endif %}
+
+                    </td>
                     <td>
                     
-                    {% if usuario.programa_regular %}
-                    Programa regular en curso
-                        {% elif usuario.reincorporacion %}
-                        Reincorporación a nueva versión de programa
-                        {% elif usuario.vigencia_matricula %}
+                    {% if usuario.tipo_maestrante == "1" %}
+                    Programa regular
+                        {% elif usuario.tipo_maestrante == "2"  %}
+                        Programa antiguo
                         
-                        Reincorporación con vigencia de matricula
-
+   
                         
                     {% endif %}
                         
@@ -43,10 +72,15 @@
                     </td>
                     <td>
                         
-
+                        
+                        {% if user.tipo_usuario == 5 %}
+                            
+                        
+                            
                                 <button onclick="abrir_modal_ver('{% url 'usuario:registro_postulante' usuario.id_maestrante %}')"
                                 class="btn btn-primary data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
                                   class="fas fa-user-plus"></i></button>
+                                  {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

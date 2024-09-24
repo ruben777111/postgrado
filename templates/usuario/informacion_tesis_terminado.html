@@ -1,0 +1,186 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form id="informe" method="POST" action="">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-3">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-center">
+                    INFORMACIÓN GENERAL DE TESIS DE MAESTRÍA
+
+
+
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="container">
+              <div class="row row-cols-1">
+
+                <div class="container"> <br>
+                  <h6 class="card-title text-center">
+                    INFORMACIÓN PERSONAL DEL MAESTRANTE
+                  </h6>
+                  MAESTRANTE: {{object.usuario}} <br>
+                  CI: {{object.usuario.ci_usuario}} <br>
+                  
+                  {% if object.usuario.ru %}
+                  RU: {{object.usuario.ru}} <br>
+                  {% endif %}
+                    
+                  
+                  TIPO DE PROGRAMA DEL MAESTRANTE:
+
+                  {% if object.tipo_maestrante == "1" %}
+                  Programa regular
+                  {% elif object.tipo_maestrante == "2" %}
+                  Programa antiguo
+                  {% endif %}
+                  <br>
+                  FECHA DE DERIVACIÓN DEL MAESTRANTE: {{object.fecha_derivacion}} <br>
+
+                  <hr>
+
+                  <h6 class="card-title text-center">
+                    INFORMACIÓN DEL PROGRAMA
+                  </h6>
+
+                  PROGRAMA: {{object.programa}} <br>
+                  VERSIÓN: {{object.version}} <br>
+                  GESTIÓN: {{object.gestion}} <br>
+                  <hr>
+                  <h6 class="card-title text-center">
+                    INFORMACIÓN DE LOS DOCENTES DESIGNADOS
+                  </h6>
+                  DOCENTE PROVISIONAL: {{object.provisional}} <br>
+                  DOCENTE GUÍA: {{object.guia}} <br>
+                  DOCENTE REVISOR: {{object.revisor}} <br>
+                  <hr>
+                  <h6 class="card-title text-center">
+                    INFORMACIÓN DE LOS TÍTULOS DE LA TESIS EN SUS DIFERENTES ETAPAS
+                  </h6>
+                  TEMA DE PERFIL DE TESIS POSTULADO: {{object.tema_perfil_postulado}} <br>
+                  TEMA DE PERFIL DE TESIS: {{object.tema_tesis_perfil}} <br>
+                  TEMA DEL BORRADOR DE TESIS: {{object.tema_borrador_tesis}} <br>
+                  TEMA DE TESIS: {{object.tema_tesis}} <br>
+                  TÍTULO DE LA TESIS: {{object.titulo_de_tesis}} <br>
+                  <hr>
+                  <h6 class="card-title text-center">
+                    INFORMACIÓN DE LA DEFENSA DE TESIS
+                  </h6>
+                  DICTAMEN DE LA NOTA: {{object.dictamen_nota}} <br>
+                  DICTAMEN DE LA ESCALA DE NOTA: {{object.dictamen_escala}} <br>
+
+                  <hr>
+                  <h6 class="card-title text-center">
+                    INFORMACIÓN DE TESIS
+                  </h6>
+                 
+                  
+                  
+                  
+                  {% if object.tesis_recomendada %}
+                  * TESIS RECOMENDADA
+                  {% endif %}
+                    
+                  
+                  <br>
+                  
+                  {% if object.observacion_empaste %}
+                    OBSERVACIÓN ACERCA DEL EMPASTE: {{object.observacion_empaste}} <br>
+                  {% endif %}   
+
+                 <!-- SOLICITUD DEL AREA FINANCIERA:
+                  {% if object.solicitud_area_finaciera %}
+                     Cuenta con solicitud del area financiera 
+                     {% else %}
+                     No cuenta con solicitud del area financiera 
+                  {% endif %}
+                    <br>-->
+
+                  
+                  ARTÍCULOS EN REVISIÓN:                   
+                  {% if object.articulos_revision %}
+                    Si, es un artículo en revisión
+                    {% else %}
+                    No, no es un artículo en revisión
+                  {% endif %}
+                    
+                  <br>
+                            
+                  ARTÍCULOS ORIGINAL:                   
+                  {% if object.articulos_original %}
+                  Si, es un artículo original
+                  {% else %}
+                  No, no es un artículo original
+                {% endif %}     <br>
+
+                
+                {% if object.observacion_pago %}
+                  OBSERVACIÓN DE PAGO: {{object.observacion_pago}} <br>
+                {% endif %}
+                  
+
+                
+                {% if object.observacion_segunda_instancia %}
+                  OBSERVACIÓN DE SEGUNDA INSTANCIA: {{object.observacion_segunda_instancia}}<br>
+                {% endif %}
+                  
+                
+
+                  <hr>
+                  <h6 class="card-title text-center">
+                    INFORMACIÓN DEL EMPASTE DE LA TESIS
+                  </h6>
+                  CODIGO DEL EMPASTE: {{object.codigo_empaste}} <br>
+                  EMPASTE A CD: 
+                  
+                  {% if object.empaste_cd %}
+                    Contiene empaste a CD
+                  {% else %}
+                  No contiene empaste a CD
+                  {% endif %}
+                    
+                  <br>
+                  GESTIÓN DEL EMPASTE A CD: {{object.gestion_empastado}}<br>
+
+                  APROBACIÓN A EMPASTE: 
+
+                  
+                  {% if object.aprobacion_empaste %}
+                    Empaste aprobada
+                    {% else %}
+                    Empaste no aprobada
+                  {% endif %}
+                    <br>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+
+
+            <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% block extrajs %}
+<script src="{% static 'lib/js/pdf.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'lib/js/actividad.js' %}"></script>
+{% endblock extrajs %}

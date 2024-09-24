@@ -8,9 +8,15 @@
           <div class="card">  
             <div class="card-body">
               <input type="hidden" name="id_maestrante" value="{{object.id_maestrante}}">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.ci_usuario }}
+              <h5>Maestrante: {{ object.usuario }}</h5>
+              
+              CI: {{ object.usuario.ci_usuario }} <br>
+              
+              {% if object.usuario.ru %}
+                 R.U.: {{ object.usuario.ru }} <br>
+              {% endif %}
+                
+            
               <hr>
           
               <p>Derivar al maestrante para el proceso de Tesis:

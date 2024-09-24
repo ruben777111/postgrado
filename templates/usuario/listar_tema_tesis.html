@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i> TEMA DE TESIS DEL MAESTRANTE</h5>
+    <h5><i class="far fa-id-card"></i> TÍTULOS Y TEMAS DE TESIS EN SUS DIFERENTES ETAPAS</h5>
 </div>
 <hr />
 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -11,35 +11,51 @@
         <table id="data" class="table table-striped">
             <thead>
                 <tr>
-                    <th>
-                        <div> #</div>
-                    </th>
+                    <th class="header" scope="col">CI</th>
                     <th class="header" scope="col">R.U.</th>
                     <th class="header" scope="col">MAESTRANTE</th>
                     <th class="header" scope="col">PROGRAMA</th>
-                    <th class="header" scope="col">TEMA&nbsp;DE&nbsp;PERFIL&nbsp;DE&nbsp;TESIS</th>
-                    <th class="header" scope="col">TÍTULO&nbsp;DEL&nbsp;BORRADOR&nbsp;DE&nbsp;TESIS</th>
-                    <th class="header" scope="col">TÍTULO&nbsp;DE&nbsp;TESIS</th>
-                    <th class="header" scope="col">TÍTULO&nbsp;DE&nbsp;TESIS</th>
+                    <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th> 
+                    <th class="header" scope="col">TEMA DEL PERFIL POSTULADO</th>
+                    <th class="header" scope="col">TEMA DEL PERFIL DE TESIS</th>
+                    <th class="header" scope="col">TEMA DEL BORRADOR DE TESIS</th>
+                    <th class="header" scope="col">TEMA DE TESIS</th>
+                    <th class="header" scope="col">TÍTULO DE TESIS</th>
+                    <th>#</th>
                 </tr>
             </thead>
             <tbody id="tableBody_users">
                 {% for usuario in actividades %}
                 <tr>
-                    <td>
-                        <button
-                            onclick="abrir_modal_edicion('{% url 'usuario:registrar_tema_tesis' usuario.id_maestrante %}')"
-                            class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
-                    </td>
-                    <td>{{ usuario.ru }}</td>
-                    <td>{{ usuario.maestrante }}</td>
+                    <td>{{ usuario.usuario.ci_usuario }}</td>
+                    <td>{{ usuario.usuario.ru }}</td>
+                    <td>{{ usuario.usuario }}</td>
                     <td>{{ usuario.programa }}</td>
+                    <td>{{ usuario.version }}</td>
+                    <td>
+                        {% if usuario.tema_perfil_postulado %}
+                        {{ usuario.tema_perfil_postulado }}
+                        {% else %}
+                        <div class="colores-primario-msg">
+                            Sin datos
+                        </div>
+                        {% endif %}
+                    </td>
                     <td>
                         {% if usuario.tema_tesis_perfil %}
                         {{ usuario.tema_tesis_perfil }}
                         {% else %}
                         <div class="colores-primario-msg">
-                            Sin tema de peril de tesis
+                            Sin datos
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if usuario.tema_borrador_tesis %}
+                        {{ usuario.tema_borrador_tesis }}
+                        {% else %}
+                        <div class="colores-primario-msg">
+                            Sin datos
                         </div>
                         {% endif %}
                     </td>
@@ -48,9 +64,23 @@
                         {{ usuario.tema_tesis }}
                         {% else %}
                         <div class="colores-primario-msg">
-                            Sin tema de tesis
+                            Sin datos
                         </div>
                         {% endif %}
+                    </td>
+                    <td>
+                        {% if usuario.titulo_de_tesis %}
+                        {{ usuario.titulo_de_tesis }}
+                        {% else %}
+                        <div class="colores-primario-msg">
+                           Sin datos
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button
+                            onclick="abrir_modal_edicion('{% url 'usuario:registrar_tema_tesis' usuario.id_maestrante %}')"
+                            class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -58,5 +88,8 @@
         </table>
     </div>
 </div>
+{% block extrajs %}
+<script src="{% static 'lib/js/data.js' %}"></script>
 
+{% endblock extrajs %}
 {% endblock %}

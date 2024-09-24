@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i> Reporte General</h5>
+    <h5>FORMULARIO DE REPORTE GENERAL</h5>
     <hr />
 </div>
 {% if user.tipo_usuario == 2 or user.tipo_usuario == 3 or user.tipo_usuario == 5  %}
@@ -26,36 +26,62 @@
             <table name="f1" id="data" class="table table-striped table-responsive">
                 <thead>
                     <tr>
-
+                        {% if user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        <th class="header" scope="col">CI</th>
+                        <th class="header" scope="col">R.U.</th>
+                        {% endif %}                        
                         <th class="header" scope="col">MAESTRANTE</th>
+                        <th class="header" scope="col">PROGRAMA</th>
+                        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
 
                         <th class="header" scope="col">DOCENTE REVISOR</th>
                         
-                        <th class="header" scope="col">FECHA LIMITE</th>
+                        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN</th>
+                        <th class="header" scope="col">FECHA PRESENTADA</th>
                         <th class="header" scope="col">DOCUMENTO DE TESIS</th>
                         <th class="header" scope="col">REPORTE GENERAL</th>
-                        <th class="header" scope="col">SEGUNDO REPORTE GENERAL</th>
+                      
                        
                     </tr>
                 </thead>
                 <tbody id="tableBody_users">
                     {% for usuario in actividades %}
                     <tr>
+                        {% if user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+
+                        <td>                            
+                            {% if usuario.user.usuario.ci_usuario %}
+                            {{ usuario.user.usuario.ci_usuario}}
+                            {% else %}
+                            No asignado
+                            {% endif %} 
+                        </td>
+                        <td>                           
+                            {% if usuario.user.usuario.ru %}
+                            {{ usuario.user.usuario.ru}}
+                            {% else %}
+                            No asignado
+                            {% endif %}  
+                        </td>
+                        {% endif %}
                         <td>{{ usuario.user }}</td>
+                        <td>{{ usuario.user.programa }}</td>
+                        <td>{{ usuario.user.version }}</td>
                         <td>{{ usuario.user.revisor }}</td>
 
+                        <td>                            
+                            {{usuario.user.cronograma2.fecha_reporte_general}}                       
+                                                     
+                        </td>
                         <td>
                             
-                            {% if usuario.user.reportegeneral.activar_reporte2 %}
-                            
-                            {{usuario.user.cronograma2.fecha_reporte_general2}} - Segundo reporte                        
+                            {% if usuario.user.reportegeneral.fecha_registro %}
+                            {{usuario.user.reportegeneral.fecha_registro}}
                             {% else %}
-                            {{ usuario.user.cronograma2.fecha_reporte_general }}
-                            
+                            Sin fecha
                             {% endif %}
                                 
-                           
-                        
+                            
                         </td>
                         <td>
 
@@ -89,25 +115,7 @@
                             {% endif %}
                         </td>
 
-                        <td>
-
-                            {% if usuario.activar_reporte2 %}
-                            
-                            {% if not usuario.aceptar_revisor2 and user.tipo_usuario == 2 %}
-                            <button type="button"
-                                onclick="abrir_modal_registrar2('{% url 'usuario:registrar_reportegeneral2' usuario.id_reportegeneral %}')"
-                                class="btn btn-primary "><i class=" fas fa-file-signature"></i></button>
-                            {% elif usuario.aceptar_revisor2 %}
-                            <div class="colores-primario-msg">
-                                <button type="button"
-                                    onclick="abrir_modal_ver2('{% url 'usuario:detalle_reporte2' usuario.id_reportegeneral %}')"
-                                    class="btn btn-primary "><i class=" fas fa-file-alt"></i></button>
-                                    Ver reporte segundo reporte general
-                            </div>
-                           
-                            {% endif %}
-                            {% endif %}
-                        </td>
+                       
                     </tr>
                     {% endfor %}
                 </tbody>

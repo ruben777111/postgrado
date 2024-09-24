@@ -1,0 +1,133 @@
+<!-- heredamos de la plantilla base-->
+
+{% extends "postgradoApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+
+<div class="card-body">
+
+     
+        <div class="container">
+      
+                <article>
+                    <ul class="nav nav-pills justify-content-end" >
+                        <li class="nav-item">
+                          <a class="nav-link " style="background-color: #1D2939;color:#eaf0f0;"  href="{% url 'usuario:listar_avance'  %}">Maestrantes</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" style="background-color: #eaf0f0;color:#1D2939;"  href="{% url 'usuario:listar_reporte_general'  %}">Reporte General</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" style="background-color: #eaf0f0;color:#1D2939;"  href="{% url 'usuario:listar_informe_revisor'  %}">Informes revisor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="background-color: #eaf0f0;color:#1D2939;"  href="{% url 'usuario:listar_informe_guia'  %}">Informes guia </a>
+                          </li>
+                                          
+                      </ul>
+                    <div class="contenedor">
+             
+            <div class="sb-nav-link-icon">
+                <h3><i class="far fa-id-card"></i>  revisor maestrante</h3>
+                <hr /> 
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="table-responsive">
+
+                        <table name="f1" id="data" class="table table-striped table-responsive">
+
+
+
+
+                            <thead>
+                                <tr>
+
+                                    <th class="header" scope="col">#</th>
+                                   
+                                    <th class="header" scope="col">Maestrante</th>
+                                 
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody_users">
+                                
+                                {% for usuario in actividades %}
+                              
+                                {% if  usuario.guia == user.docente_guia or user.tipo_usuario == 3 %}
+                                <tr>
+
+
+
+                                    <td>
+
+                                        <button type="button"  onclick="abrir_modal_editar_usuario('{% url 'usuario:registrar_avance' usuario.id_maestrante %}')"
+                                        class="btn btn-warning"><i class="fa-solid fa-pen"></i></button>
+                                        
+                                        <button type="button"  onclick="abrir_modal_eliminar_usuario('{% url 'usuario:listar_avance' usuario.id_maestrante %}')"
+                                        class="btn btn-warning"><i class="fa-solid fa-pen"></i></button>
+                                        
+                                    </td>
+
+                                    <td>{{ usuario.user.maestrante }}</td>
+                                    <td>{{ usuario.id_maestrante }}</td>
+                                   
+
+
+
+
+
+
+
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+             
+            </div>
+        </div>
+        </div>
+
+
+
+
+
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+{% block extrajs %}
+<script src="{% static 'lib/js/check.js' %}"></script>
+<script src="{% static 'lib/js/fecha.js' %}"></script>
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrir_modal_editar_usuario(url) {
+        $('#edicion').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+    function abrir_modal_eliminar_usuario(url) {
+        $('#eliminar').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

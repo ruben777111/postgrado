@@ -83,10 +83,12 @@ class AbstractNotificacion(models.Model):
     actor_content_type = models.ForeignKey(ContentType, related_name='notificar_actor', on_delete=models.CASCADE)
     object_id_actor = models.PositiveIntegerField()
     actor = GenericForeignKey('actor_content_type', 'object_id_actor')
-
+    maestrante = models.CharField(max_length=800)
+    programa = models.CharField(max_length=800)
     verbo = models.CharField(max_length=800)
     text = models.CharField(max_length=800)
-    tipo_notificacion = models.IntegerField(blank=False, null=True)
+    cod_notificacion = models.IntegerField( blank = True, null = True)
+    rol = models.CharField(max_length=400)
     read = models.BooleanField(default=False)
     publico = models.BooleanField(default=True)
     eliminado = models.BooleanField(default=False)
@@ -105,15 +107,15 @@ class AbstractNotificacion(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             timestamp_str = self.timestamp.strftime('%Y%m%d%H%M%S')
-            aux=aleatorio(15)
-            base_slug = f"{timestamp_str}-{slugify(self.id)}-{slugify(self.actor.username)}-{slugify(aux)}"
+            aux=aleatorio(20)
+            base_slug = f"{timestamp_str}-{slugify(self.actor.username)}-{slugify(aux)}"
             slug = base_slug	
            
 
             self.slug = slug
         super().save(*args, **kwargs)  
 
-def notify_signals(verb,tipo_notificacion,text, **kwargs):
+def notify_signals(verb,programa,maestrante,text,rol,cod_notificacion, **kwargs):
     """
         Funcion de controlador para crear una instancia de notificacion
         tras una llamada de signal de accion
@@ -144,7 +146,10 @@ def notify_signals(verb,tipo_notificacion,text, **kwargs):
             actor_content_type = ContentType.objects.get_for_model(actor),
             object_id_actor = actor.pk,
             verbo = str(verb),
-            tipo_notificacion=tipo_notificacion,
+            programa=str(programa),
+            maestrante=str(maestrante),
+            rol=str(rol),
+            cod_notificacion=str(cod_notificacion),
             publico=publico,
             text=text,
             

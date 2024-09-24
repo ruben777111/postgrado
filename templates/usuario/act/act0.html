@@ -28,45 +28,109 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th class="header" scope="col">CI</th>
         <th class="header" scope="col">R.U.</th>
-        <th class="header" scope="col">Maestrante</th>
-        <th class="header" scope="col">Programa</th>
-        <th class="header" scope="col">Fecha/hora&nbsp;programada</th>
-        <th class="header" scope="col">Programar fecha</th>
+        <th class="header" scope="col">MAESTRANTE</th>
+        <th class="header" scope="col">PROGRAMA</th>
+        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+        <th class="header" scope="col">FECHA/HORA&nbsp;PROGRAMADA</th>
+        <th class="header" scope="col">PROGRAMAR FECHA PARA EL ASESOREMIENTO</th>
+        <th class="header" scope="col">ESTABLECER FECHA DEL ASESOREMIENTO REALIZADA</th>
         <th class="header" scope="col">#</th>
       </tr>
     </thead>
     <tbody id="tableBody_users">
       {% for evi in maestrantesevi %}
       <tr>
-        <td> {{ evi.ru }} </td>
-        <td>{{ evi.maestrante }}</td>
+      <td>                            
+          {% if evi.usuario.ci_usuario %}
+          {{ evi.usuario.ci_usuario}}
+          {% else %}
+          No asignado
+          {% endif %} 
+      </td>
+        <td>                           
+          {% if evi.usuario.ru %}
+          {{ evi.usuario.ru}}
+          {% else %}
+          No asignado
+          {% endif %}  
+      </td>
+        <td>{{ evi.usuario }}</td>
         <td>{{ evi.programa }}</td>
+        <td>{{ evi.version }}</td>
         <td>
-          {% if evi.cronograma.fecha_induccion %}
-          {{ evi.cronograma.fecha_induccion }} a hrs: {{ evi.cronograma.hora_induccion }}
           {% if evi.cronograma.reunion_realizada %}
+
+
           <div class="text-primary">Reunión realizada</div>
+         
+          {% elif evi.cronograma.fecha_induccion %}
+          <div class="alert alert-info"> {{ evi.cronograma.fecha_induccion }} a hrs: {{ evi.cronograma.hora_induccion }}</div>
           
-          {% endif %}
           {% else %}
           Sin fecha ni hora designado
           {% endif %}
           
         </td>
-        <td>
-          <button onclick="abrir_modal_edicion('{% url 'usuario:formulario_asistencia' evi.id_maestrante %}')"
-            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
-              class="fas fa-calendar-check"></i></button>
-              <button onclick="abrir_modal_ver('{% url 'usuario:formulario_asistencia_realizada' evi.id_maestrante %}')"
-              class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
-                class="fas fa-calendar-check"></i></button>
 
+
+
+        <td>
+
+
+              {% if evi.cronograma.reunion_realizada %}
+              <div class="text-primary">Reunión realizada</div>
+              {% else %}
+              <button onclick="abrir_modal_edicion('{% url 'usuario:formulario_asistencia' evi.id_maestrante %}')"
+              class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+                class="fas fa-calendar-check"></i></button> 
+              {% endif %}
         </td>
         <td>
-          <a href="#" onclick="actividad01({{ evi.id_maestrante }})" class="btn btn-primary"><i class="fas fa-user-plus"
-              data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Esta acción habilitará al usuario para el desarrollo de Tesis"></i></a>
+          {% if evi.cronograma.reunion_realizada %}
+          <div class="text-primary">Reunión realizada</div>
+          {% else %}
+          <button onclick="abrir_modal_ver('{% url 'usuario:formulario_asistencia_realizada' evi.id_maestrante %}')"
+          class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+            class="fas fa-calendar-check"></i></button>  
+          {% endif %}
+  
+        </td>
+        <td>
+          
+          {% if evi.tipo_maestrante == "2" %}
+          {% if evi.bloqueo_maestrante  %}
+          Programa de maestrante bloqueado
+          {% else %}          
+          {% if evi.vigencia_matricula_antiguo <   today %}
+          Vigencia de matrícula caducada
+
+          {% elif evi.vigencia_matricula_antiguo_total <   today %}
+          <p class="text-danger">Vigencia de programa caducada</p>
+          
+          {% else %}
+          <a href="#" onclick="actividad01({{ evi.id_maestrante }})" class="btn btn-primary"><i class="fas fa-user-plus"></i></a>  
+          {% endif %}
+          {% endif %}
+          {% endif %}
+          {% if evi.tipo_maestrante == "1" %}
+
+          
+          {% if evi.bloqueo_maestrante  %}
+          Programa de maestrante bloqueado
+          {% else %}
+          {% if evi.vigencia_matricula_regular_total <   today %}
+          <p class="text-danger">Vigencia de programa caducada</p>
+          {% else %}
+          <a href="#" onclick="actividad01({{ evi.id_maestrante }})" class="btn btn-primary"><i class="fas fa-user-plus"></i></a>  
+          {% endif %}           
+          {% endif %} 
+          {% endif %}
+            
+
+
+
 
         </td>
         </td>
@@ -79,9 +143,10 @@
 {% endif %}
 {% block extrajs %}
 
-
+<script src="{% static 'lib/js/data.js' %}"></script>
 <script src="{% static 'lib/js/main.js' %}"></script>
 
 
 {% endblock extrajs %}
 {% endblock %}
+

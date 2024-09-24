@@ -20,12 +20,15 @@
             <table name="f1" id="data" class="table table-striped table-responsive">
                 <thead>
                     <tr>
-                        <th class="header" scope="col">R.U.</th>
+             
                         <th class="header" scope="col">MAESTRANTE</th>
-                        <th class="header" scope="col">TEMA&nbsp;DE&nbsp;TESIS</th>
-                        <th class="header" scope="col">DOCENTE&nbsp;GUÍA</th>
+                        <th class="header" scope="col">PROGRAMA</th>
+                        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+                      
+                        <th class="header" scope="col">DOCENTE GUÍA</th>
+                        <th class="header" scope="col">DOCENTE REVISOR</th>
                         
-                        <th class="header" scope="col">FECHA&nbsp;LIMITE&nbsp;DE&nbsp;PRESENTACIÓN</th>
+                        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN</th>
                         <th class="header" scope="col" style="width:200px">R-0997</th>
              
 
@@ -33,10 +36,12 @@
                 </thead>
                 <tbody id="tableBody_users">
                     {% for usuario in actividades %}
-                    <tr><td>{{ usuario.user.ru }}</td>
+                    <tr>
                         <td>{{ usuario.user }}</td>
-                        <td>{{ usuario.user.tema_tesis }}</td>
+                        <td>{{ usuario.user.programa }}</td>
+                        <td>{{ usuario.user.version }}</td>
                         <td>{{ usuario.user.guia }}</td>
+                        <td>{{ usuario.user.revisor }}</td>
                       
                         <td>{{ usuario.user.cronograma2.fecha_formulario_guia }}</td>
 

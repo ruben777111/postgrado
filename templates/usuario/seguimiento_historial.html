@@ -1,0 +1,79 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+  <h5><i class="far fa-id-card"></i>
+   HISTORIAL DE PROGRAMAS DE MAESTRÍA DEL MAESTRANTE
+  </h5>
+</div>
+<hr />
+  <div class="table-responsive">
+    <table id="data" class="table table-striped">
+      <thead>
+        <tr>
+          <th class="header" scope="col">CI</th>
+          <th class="header" scope="col">R.U.</th>
+          <th class="header" scope="col">MAESTRANTE</th>
+          <th class="header" scope="col">PROGRAMA</th>         
+          <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>   
+          <th class="header" scope="col">ESTADO</th>
+          <th class="header" scope="col">#</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody_users">
+        {% for evi in maestrantesevi %}
+        <tr>
+          <td> {{ evi.usuario.ci_usuario }} </td>
+          <td> 
+            
+            {% if evi.usuario.ru %}
+              {{ evi.usuario.ru }} 
+              {% else %}
+              No asignado
+            {% endif %}
+              
+            
+          </td>
+          <td>{{ evi.usuario }}</td>
+          <td>{{ evi.programa }}</td>     
+          <td>{{ evi.version }}</td>  
+          <td>
+            
+            {% if evi.maestrante_habilitado  %}
+            Maestrante habilitado para el proceso de tesis
+            {% elif evi.tesis_terminado %}
+            Maestrante concluyó el programa de tesis de maestria
+
+          {% else %}
+          El maestrante no esta habilitado para el proceso de tesis
+          {% endif %}
+            
+            
+          </td>  
+          <td>
+
+    
+            
+
+            <a href="{% url 'usuario:busqueda_varios_historial' evi.programa.id_programa evi.usuario.ci_usuario %}"
+            class="btn btn-success">
+            <i
+              class="fas fa-search" data-bs-toggle="tooltip" data-bs-placement="top"
+              title="Buscar actividad del maestrante"> </i>
+            </a>
+           </td>     
+           </td> 
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+
+{% endblock extrajs %}
+{% endblock %}

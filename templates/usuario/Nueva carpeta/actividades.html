@@ -1,0 +1,120 @@
+
+<!-- heredamos de la plantilla base-->
+
+{% extends "postgradoApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+
+<div class="card-body">
+
+
+     
+ 
+ 
+    <div class="container">
+        <article>
+            <div class="contenedor">
+        <div class="sb-nav-link-icon"><h3><i class="far fa-id-card"></i>Notificar Actividades</h3></div>
+            <hr/>        
+    </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+               
+                <form action="{% url 'usuario:checklista3' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}       
+                    <input type="hidden" name="fecha" id="fecha">                    
+                    <input type="hidden" name="usuario" value="{{ user.nombre_usuario }} {{ user.paterno }} {{ user.materno }}">
+                    <div class="table-responsive">
+                    <table class="table table-sm ">
+             
+                     <tbody>
+             
+                         <tr >
+                  
+                             <td>Actividad: </td>
+                             <td><input type="text" name="descripcion" class="form-control" ></td>
+                             
+                           </tr>
+                       <tr>
+                       
+                         <td>Seleccionar archivo: </td>
+                         <td><input type="file" class="form-control" name="documento" required  accept=".pdf"></td>
+                        
+                       </tr>
+             
+                       <tr>
+                        
+                         <td><button type="button" id="marcarTodo" class="btn btn-outline-primary btn-sm">Marcar</button>
+                             <button type="button" id="desmarcarTodo" class="btn btn-outline-success btn-sm">Desmarcar</button>
+                         </td>
+                         <td><button type="submit" class="btn btn-primary">Enviar actividad</button></td>
+                       </tr>
+                     </tbody>
+                   </table>  
+                             <table name="f1" id="data" class="table table-striped table-responsive">
+             
+                                 <thead>
+                                     <tr>
+                                        
+                                         <th class="header" scope="col">Seleccionar</th>
+                               
+                                        
+                                         <th class="header" scope="col">Nombre</th>
+                                         <th class="header" scope="col">Apellido&nbsp;Paterno</th>
+                                         <th class="header" scope="col">Apellido&nbsp;Materno</th>  
+                                         <th class="header" scope="col">Ci</th>
+                                         
+                              
+                                     </tr>
+                                 </thead>
+                                 <tbody id="tableBody_users">
+                                     {% for usuario in actividades %}
+                                                      
+                                     <tr>
+                                         
+                                         <td style="text-align: center;"><input type="checkbox" name="checks[]" value="{{ usuario.id_maestrante }}"></td>
+                                         
+                                       
+                                         <td>{{ usuario.user.nombre_usuario }}</td>
+                                         <td>{{ usuario.user.paterno }}</td>
+                                         <td>{{ usuario.user.materno }}</td>                         
+                                         <td>{{ usuario.user.ci_usuario }}</td>
+                                      
+                                         
+                                     </tr>
+                                  
+                                     {% endfor %}
+                                 </tbody>
+                             </table>
+                            </div>
+                         </form>
+                         
+            </div>
+        </div>
+    </div>
+
+ 
+
+</div>
+</div>
+
+
+
+
+
+
+{% block extrajs %}
+
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/check.js' %}"></script>
+<script src="{% static 'lib/js/fecha.js' %}"></script>
+  
+
+{% endblock extrajs %}
+
+{% endblock %}
+

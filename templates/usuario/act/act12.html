@@ -29,9 +29,11 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th class="header" scope="col">CI</th>
         <th class="header" scope="col">R.U.</th>
-        <th class="header" scope="col">Maestrante</th>
-        <th class="header" scope="col">Programa</th>
+        <th class="header" scope="col">MAESTRANTE</th>    
+        <th class="header" scope="col">PROGRAMA</th>
+        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
         <th class="header" scope="col">#</th>
 
       </tr>
@@ -39,16 +41,108 @@
     <tbody id="tableBody_users">
       {% for evi in maestrantesevi %}
       <tr>
-        <td> {{ evi.ru }} </td>
-        <td>{{ evi.maestrante }}</td>
+      <td>                            
+          {% if evi.usuario.ci_usuario %}
+          {{ evi.usuario.ci_usuario}}
+          {% else %}
+          No asignado
+          {% endif %} 
+      </td>
+        <td>                           
+          {% if evi.usuario.ru %}
+          {{ evi.usuario.ru}}
+          {% else %}
+          No asignado
+          {% endif %}  
+      </td>
+        <td>{{ evi.usuario }}</td>
         <td>{{ evi.programa }}</td>
+        <td>{{ evi.version }}</td>
         <td>
 
+            
 
-          <button onclick="abrir_modal_ver('{% url 'usuario:actividad_12'  evi.id_maestrante %}')"
+              
+
+
+            {% if evi.tipo_maestrante == "2" %}
+            {% if evi.bloqueo_maestrante  %}
+            Programa de maestrante bloqueado
+            {% else %}          
+            {% if evi.vigencia_matricula_antiguo <   today %}
+            Vigencia de matrícula caducada
+  
+            {% elif evi.vigencia_matricula_antiguo_total <   today %}
+            <p class="text-danger">Vigencia de programa caducada</p>
+            {% else %}
+            
+            {% if user.tipo_usuario == 3 %}
+            
+            {% if evi.revisor %}
+            <button onclick="abrir_modal_edicion('{% url 'usuario:actividad_12_compartido'  evi.id_maestrante %}')"
             class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
             title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+            {% else %}
+              Docente revisor no asignado
+            {% endif %}
+              
+          
+     
+            {% endif %}
 
+            {% if user.tipo_usuario == 5 %}
+            {% if evi.revisor %}
+            Docente revisor asignado
+            {% else %}
+            <button onclick="abrir_modal_ver('{% url 'usuario:actividad_12'  evi.id_maestrante %}')"
+            class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+            title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+            {% endif %}
+            {% endif %}
+
+
+            {% endif %}
+            {% endif %}
+            {% endif %}
+            {% if evi.tipo_maestrante == "1" %}
+  
+            
+            {% if evi.bloqueo_maestrante  %}
+            Programa de maestrante bloqueado
+            {% else %}
+            {% if evi.vigencia_matricula_regular_total <   today %}
+            <p class="text-danger">Vigencia de programa caducada</p>
+            {% else %}
+            
+            {% if user.tipo_usuario == 3 %}
+            
+            {% if evi.revisor %}
+            <button onclick="abrir_modal_edicion('{% url 'usuario:actividad_12_compartido'  evi.id_maestrante %}')"
+            class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+            title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+            {% else %}
+              Docente revisor no asignado, actividad en espera a Coordinación de Postgrado. 
+            {% endif %}
+              
+          
+     
+            {% endif %}
+
+            {% if user.tipo_usuario == 5 %}
+            {% if evi.revisor %}
+            Docente revisor asignado
+            {% else %}
+            <button onclick="abrir_modal_ver('{% url 'usuario:actividad_12'  evi.id_maestrante %}')"
+            class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+            title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
+            {% endif %}
+            {% endif %}
+
+            {% endif %}           
+            {% endif %} 
+            {% endif %}
+             
+         
         </td>
       </tr>
       {% endfor %}
@@ -59,7 +153,7 @@
 {% endif %}
 {% block extrajs %}
 
-
+<script src="{% static 'lib/js/data.js' %}"></script>
 <script src="{% static 'lib/js/main.js' %}"></script>
 
 

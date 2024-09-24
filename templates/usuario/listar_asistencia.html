@@ -1,26 +1,10 @@
 {% extends "postgradoApp/base.html" %}
 {% load static %}
 {% block content %}
-<div class="card border-light mb-3" style="max-width: 100%;">
-    <div class="card-body">
-        <ul class="nav nav-pills justify-content-end">
-            <li class="nav-item">
-                <a class=" colores-primario ext" href="{% url 'usuario:registrar_asistencia'  %}">Registrar asistencia</a>
-            </li>
-            <li class="nav-item">
-                <a class=" colores-primario ext" href="{% url 'usuario:listar_asesoramiento'  %}">Asesoramiento
-                    programado</a>
-            </li>
-            <li class="nav-item">
-                <a class=" colores-segundario" href="{% url 'usuario:listar_asistencia'  %}">Historial de
-                    asistencia</a>
-            </li>
-        </ul>
-    </div>
-</div>
+
 <div class="row">
     <div class="sb-nav-link-icon">
-        <h4><i class="far fa-id-card"></i> HISTORIAL DE ASISTENCIA A INDUCCIÓN</h4>
+        <h5>HISTORIAL DE ASISTENCIA A INDUCCIÓN</h5>
     </div>
     <hr />
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -28,24 +12,54 @@
             <table id="data" class="table table-striped">
                 <thead>
                     <tr>
+                        <th class="header" scope="col">CI</th>
                         <th class="header" scope="col">R.U.</th>
-                        <th class="header" scope="col">Nombre</th>
-                        <th class="header" scope="col">Fecha&nbsp;/&nbsp;hora&nbsp;programada</th>
-                        <th class="header" scope="col">Fecha&nbsp;/&nbsp;hora&nbsp;realizada</th>
+                        <th class="header" scope="col">Maestrante</th>
+                        <th class="header" scope="col">Programa</th>
+                        <th class="header" scope="col">Versión del Programa</th>
+                        <th class="header" scope="col">Fecha/hora programada</th>
+                        <th class="header" scope="col">Fecha/hora realizada</th>
                         <th class="header" scope="col">Observaciones</th>
-                        <th class="header" scope="col">Enlace&nbsp;reunión </th>
-                        <th class="header" scope="col">Archivo&nbsp;de&nbsp;reunión&nbsp;presencial </th>
+                        <th class="header" scope="col">Enlace reunión </th>
+                        <th class="header" scope="col">Archivo de reunión presencial </th>
                     </tr>
                 </thead>
                 <tbody id="tableBody_users">
                     {% for usuario in actividades %}
                     <tr>
-                        <td>{{ usuario.maestrante.ru }}</td>
+                        <td>
+                            
+                            {% if usuario.maestrante.usuario.ci_usuario %}
+                            {{ usuario.maestrante.usuario.ci_usuario}}
+                            {% else %}
+                            No asignado
+                            {% endif %}   
+                        </td>
+                        <td>                            
+                            {% if usuario.maestrante.usuario.ru %}
+                            {{ usuario.maestrante.usuario.ru}}
+                            {% else %}
+                            No asignado
+                            {% endif %}
+                        </td>
+
                         <td>{{ usuario.maestrante }}</td>
+                        <td>{{ usuario.maestrante.programa }}</td>
+                        <td>{{ usuario.maestrante.version }}</td>
                         <td>{{ usuario.fecha_asesoramiento }} / {{ usuario.hora_asesoramiento  }} hrs</td>
                 
                         <td>{{ usuario.fecha_realizada  }} / {{ usuario.hora_realizada  }} hrs</td>
-                      <td>{{ usuario.obs    }}</td>
+                      <td>
+
+
+                        {% if usuario.obs  %}
+                        {{ usuario.obs    }}
+                        {% else %}
+                        Sin observaciones
+                        {% endif %}
+    
+
+                      </td>
                         <td>{% if usuario.enlace_reunion %}
                             <a href="{{ usuario.enlace_reunion }}"  target="_blank">Enlace de la reunión</a>
                         {% else %}
@@ -68,5 +82,8 @@
         </div>
     </div>
 </div>
+{% block extrajs %}
+<script src="{% static 'lib/js/data.js' %}"></script>
 
+{% endblock extrajs %}
 {% endblock %}

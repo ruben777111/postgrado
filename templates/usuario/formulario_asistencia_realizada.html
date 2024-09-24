@@ -8,9 +8,8 @@
           <div class="card">  
             <div class="card-body">
               <input type="hidden" name="id_maestrante" value="{{object.id_maestrante}}">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.ci_usuario }}
+              <h5>Maestrante: {{ object.usuario }}</h5>
+           
               <hr>
           
               <p>
@@ -30,7 +29,7 @@
                     </p>
                     <p>
                       <div class="colores-primario-aceptar">Enlace de la reunión:
-                        <input type="search" class="form-control" name="enlace"  >
+                        <input type="search" class="form-control no-uppercase" name="enlace"  >
                       </div>
                       </p>
                     <p>

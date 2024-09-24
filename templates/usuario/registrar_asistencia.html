@@ -26,7 +26,7 @@
     <form class="row g-3" action="{% url 'usuario:busquedaasistencia' %}" method="GET">
         {% csrf_token %}
         <div class="col-4" style="text-align: right;"> <input class="form-control" name="busmaes" type="number"
-                placeholder="Ingresar R.U. del maestrante" aria-label="Busqueda" required>
+                placeholder="Ingresar CI del maestrante" aria-label="Busqueda" required>
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Aceptar</button>

@@ -16,7 +16,7 @@ class DocumentoForm(forms.ModelForm):
         fields = ['titulo_documento','archivo_documento']
         labels = {
 
-            'titulo_documento' : 'Titulo del documento',
+            'titulo_documento' : 'Título del documento',
             'archivo_documento' : 'Documento',
    
         }

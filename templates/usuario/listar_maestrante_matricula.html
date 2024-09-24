@@ -1,0 +1,169 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+<div class="sb-nav-link-icon">
+    <h5>LISTA DE MATRICULA DE LOS MAESTRANTES </h5>
+</div>
+<hr />
+
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+  
+
+        <table id="data" class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="header" scope="col">CI</th>
+                    <th class="header" scope="col">R.U.</th>                    
+                    <th class="header" scope="col">NOMBRE</th> 
+                    <th class="header" scope="col">PROGRAMA</th>
+                    <th class="header" scope="col">VERSIÓN&nbsp;DEL&nbsp;PROGRAMA</th>
+                    <th class="header" scope="col">GESTIÓN</th>
+                    <th class="header" scope="col">TIPO MAESTRANTE</th>
+                    <th class="header" scope="col">VIGENCIA DE PROGRAMA MAESTRANTE REGULAR</th>
+                    <th class="header" scope="col">VIGENCIA DE PROGRAMA MAESTRANTE ANTIGUO</th>
+                    <th class="header" scope="col">VIGENCIA DE MATRICULA MAESTRANTE ANTIGUO </th>
+                   
+                                      
+                
+                   
+                    <th>
+                        DESBLOQUEAR MAESTRANTE
+                    </th>
+                    <th>
+                        BLOQUEAR MAESTRANTE
+                        </th>
+                    <th class="header" scope="col">#</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in actividades %}
+                <tr>
+                    <td>{{ usuario.usuario.ci_usuario }}</td>
+
+                    <td>
+                        {% if usuario.usuario.ru  %}
+                        {{ usuario.usuario.ru }}
+                        {% endif %}
+                    </td>
+                    <td>{{ usuario.usuario }}</td>    
+                    
+                    <td>{{ usuario.programa }}</td>
+                    <td>{{ usuario.version }} </td>
+                    <td>{{ usuario.gestion }}</td>
+                    <td>
+                    
+                    {% if usuario.tipo_maestrante == "1" %}
+                    Programa regular 
+                    {% elif usuario.tipo_maestrante == "2" %}
+                    Programa antiguo
+                
+                    {% endif %}
+                            
+                        
+                    
+                    </td>
+           
+                    <td>
+                        
+                        {% if usuario.vigencia_matricula_regular_total %}
+
+                        {% now "Y-m-d" as fecha_actual %}
+                        {% with usuario.vigencia_matricula_regular_total|date:"Y-m-d" as fecha_vigencia %}
+                        {% if fecha_actual > fecha_vigencia and  usuario.tesis_terminado == False %}
+                        <p class="text-danger">{{ usuario.vigencia_matricula_regular_total }} vigencia de programa caducado</p> 
+                        {% else %}
+                        {{ usuario.vigencia_matricula_regular_total }} 
+                        {% endif %}
+                        {% endwith %}
+                       
+                        {% endif %}
+                            
+                     </td>
+                    <td>
+                      
+             
+                      {% if usuario.vigencia_matricula_antiguo_total %}
+
+                      {% now "Y-m-d" as fecha_actual_1 %}
+                      {% with usuario.vigencia_matricula_antiguo_total|date:"Y-m-d" as fecha_vigencia_1 %}
+                      {% if fecha_actual_1 > fecha_vigencia_1 and  usuario.tesis_terminado == False %}
+                      <p class="text-danger">{{ usuario.vigencia_matricula_antiguo_total }} vigencia de programa caducado</p> 
+                      {% else %}
+                      {{ usuario.vigencia_matricula_antiguo_total }} 
+                      {% endif %}
+                      {% endwith %}
+                     
+                      {% endif %}
+                          
+                      
+
+                    </td>
+                    <td>
+                        
+                        
+                        {% if usuario.vigencia_matricula_antiguo %}
+
+                        {% now "Y-m-d" as fecha_actual_2 %}
+                        {% with usuario.vigencia_matricula_antiguo|date:"Y-m-d" as fecha_vigencia_2 %}
+                        {% if fecha_actual_2 > fecha_vigencia_2 and  usuario.tesis_terminado == False %}
+                        <p class="text-danger">{{ usuario.vigencia_matricula_antiguo }} vigencia de matrícula caducado</p> 
+                        {% else %}
+                        {{ usuario.vigencia_matricula_antiguo }} 
+                        {% endif %}
+                        {% endwith %}
+                       
+                        {% endif %}
+
+                        </td>
+                    
+          
+                    <td>
+
+                        {% if usuario.bloqueo_maestrante %}
+
+                        <a href="#" onclick="habilitarusuario({{ usuario.id_maestrante }})"class="btn btn-outline-primary"><i class=" fas fa-user-check" ></i></a>
+                       
+                        {% else %}
+                        Programa del maestrante habilitado
+                        {% endif %}
+
+                   
+                    </td>
+
+                    <td>
+                        {% if not usuario.bloqueo_maestrante %}
+
+                        <a href="#" onclick="eliminarusuario({{ usuario.id_maestrante }})"
+                            class="btn btn-outline-danger"><i class="fas fa-user-lock" ></i></a>
+                            {% else %}
+                            Programa del maestrante bloqueado         
+                            
+                        {% endif %}
+                   
+                    </td>                    
+                    <td>
+                        
+                        <button
+                        onclick="abrir_modal_edicion('{% url 'usuario:editar_maestrante_matricula' usuario.id_maestrante %}')"
+                        class="btn btn-primary" ><i class="fas fa-user-edit"></i></button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% block extrajs %}
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/main.js' %}"></script>
+
+{% endblock extrajs %}
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,154 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento PDF</title>
+    <style>
+        /* Estilos para el PDF */
+        @page {
+            size: letter landscape; /* Tamaño carta (8.5 x 11 pulgadas) */
+            margin: 1.5cm; /* Márgenes de 1.5 pulgadas en todos los lados */
+        }
+        /* Estilos adicionales */
+        body {
+            font-family: Arial, sans-serif; /* Fuente para el cuerpo del documento */
+            font-size: 11pt; /* Tamaño de fuente predeterminado */
+            line-height: 1; /* Altura de línea predeterminada */
+            
+            margin: 0; /* Eliminar los márgenes predeterminados del cuerpo del documento */
+            padding: 0; /* Eliminar el relleno predeterminado del cuerpo del documento */
+        }
+        .container {
+            margin: 0 auto; /* Centrar el contenido horizontalmente */
+            max-width: 800px; /* Ancho máximo del contenido */
+            padding: 20px; /* Agregar un espacio alrededor del contenido */
+        }
+        /* Estilos para la tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            font-size: 11pt;
+            border: 1px solid black;
+            padding: 3px;
+            text-align: left;
+            line-height: 1.5; /* Interlineado de 1.5 */
+        }
+        th {
+            background-color: #f2f2f2; /* Color de fondo para las celdas de encabezado */
+        }
+        /* Personaliza los estilos según sea necesario */
+        .center-text {
+            text-align: center; /* Centrar el contenido */
+        }
+        .borderless-table {
+        border-collapse: collapse;
+    }
+    .borderless-table td, .borderless-table th {
+        border: none;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="card-body">
+        <div class="container">
+          
+            <TABLE BORDER class="center-text">
+                <TR>
+                    <TD class="center-text">  <img src="{{ STATIC_ROOT }}static/lib/img/logousb.png" >
+                    </TD>
+                    <TD COLSPAN=2 ><h6 class="center-text">
+                      FORMULARIO DE INFORME DEL DOCENTE REVISOR DE TESIS DE MAESTRÍA 
+                      </h6>
+                      <h6 class="center-text">
+                        R-0996 
+                      </h6></TD>
+                </TR>
+               
+            </TABLE>
+
+        </div>
+
+        <div class="container">
+          <div class="row row-cols-1">
+            {% for usuario in maestrantes|slice:":1" %}
+            <TABLE BORDER class="borderless-table">
+                <!-- Primera fila -->
+                <tr>
+                    <td>MAESTRANTE: {{ usuario.user }}</td>
+                    <td>TÍTULO DE LA TESIS: {{ usuario.user.tema_borrador_tesis }}</td>
+                </tr>
+            
+                <!-- Segunda fila -->
+                <tr>
+                    <td>ELABORADO POR: {{ usuario.user.informe.docente }}</td>
+                    <td>FECHA DE REGISTRO DEL INFORME: {{ usuario.user.informe.fecha_registro }}</td>
+                </tr>
+            
+                <!-- Tercera fila con unión de columnas -->
+                <tr>
+                    <td colspan="2">DOCENTE GUÍA: {{ usuario.user.guia }}</td> <!-- Unir las dos columnas -->
+                </tr>
+            
+                <!-- Cuarta fila con unión de columnas -->
+                <tr>
+                    <td colspan="2">PROGRAMA: {{ usuario.user.programa }} </td> <!-- Unir las dos columnas -->
+                </tr>
+            
+               
+            </TABLE>
+
+          </div>
+        </div>
+      </div>
+        <div class="container">
+            <div class="row row-cols-1">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 5%;">Nº</th>
+                                <th scope="col" style="width: 15%;">CAPÍTULO</th>
+                                <th scope="col" style="width: 40%;">DESCRIPCIÓN DE LA OBSERVACIÓN</th>
+                                <th scope="col" style="width: 40%;">SUGERENCIAS</th>
+                            </tr>
+                        </thead>
+                        <tbody>                
+                          {% for usuario in maestrantes %}
+                        <tr> 
+                          <td style="width: 5%;">{{ forloop.counter }}</td>
+                          <td style="width: 15%;">{{ usuario.capitulo }}</td>
+                          <td style="width: 40%;">{{ usuario.descripcion }}</td>
+                          <td style="width: 40%;">{{ usuario.sugerencia }}</td>
+                        </tr>
+                {% endfor %}
+                                                                   
+                        </tbody>
+                    </table><br>
+                    <TABLE BORDER class="center-text">
+                      <TR>
+                          <TD >  OTRAS OBSERVACIONES: <br>
+                            {% if usuario.user.informe.otras_obs %}
+                            {{usuario.user.informe.otras_obs}}
+                            {% else %}
+                            Ninguna
+                            {% endif %}
+                          </TD>
+                         </TD>
+                      </TR>
+                     
+                  </TABLE>
+                   
+                </div>
+
+            </div>
+        </div>
+    </div> {% endfor %}
+</body>
+</html>

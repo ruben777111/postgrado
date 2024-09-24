@@ -7,22 +7,22 @@
           {% csrf_token %}
           <div class="card">  
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.ci_usuario }}<br>
-              TRIBUNAL 1: {{ object.maestrante.tribunaltesis.tribunal_tesis_1 }}<br>
-              TRIBUNAL 2: {{ object.ci_usuario }}<br>
+              <h5>Maestrante: {{ object.usuario }}</h5>
+
+        
+              TRIBUNAL 1: {{ object.tribunaltesis.tribunal_tesis_1 }}<br>
+              TRIBUNAL 2: {{ object.tribunaltesis.tribunal_tesis_2 }}<br>
               
               Dictamen de la defensa de tesis : 
               
               {% if object.procedencia_tesis %}
               <div style="color: rgb(74, 105, 231);">
-              PROCEDENTE
+                Procedente
               </div>
               
               {% else %}
               <div style="color: rgb(231, 95, 74);">
-                IMPROCEDENTE
+                Improcedente
                 </div>
                 
               {% endif %}
@@ -32,7 +32,7 @@
               {{ form.avance_tesis}}
               <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
 
-              Titulo de la Tesis:
+              Título de la Tesis:
               <input type="text"  class="form-control" name="tema" placeholder="Tema de tesis" required><br>              
               Dictamen nota (numeral) :
               <input type="number"  class="form-control" name="numeral" required><br>              
@@ -45,7 +45,7 @@
               Hoja de evaluación firmada por el Tribunal en pleno
               <input type="file" name="hoja" class="form-control" id="informe" required accept="application/pdf"><br>
 
-              Designacion de Tribunal:
+              Designación de Tribunal:
               <input type="file" name="carta_designacion" class="form-control" id="informe" required accept="application/pdf"><br>
 
      

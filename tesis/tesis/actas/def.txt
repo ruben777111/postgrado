@@ -1,0 +1,13 @@
+def AgregarGuia(request):
+    current_user=get_object_or_404(Usuario,pk=request.user.pk)
+    if request.method=='POST':
+        form = GuiaForm(request.POST)
+        if form.is_valid():
+            AgregarGuia = form.save(commit=False)
+            AgregarGuia.user=current_user
+            AgregarGuia.save()
+            messaje.success(request,'enviado')
+            return redirect ('listar_guia')
+    else:
+        form =  GuiaForm()
+    return render(request,'guia/listar_guia.html',{'form':form})

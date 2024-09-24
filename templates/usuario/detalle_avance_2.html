@@ -12,10 +12,10 @@
                 </div>
                 <div class="col">
                   <h6 class="card-title text-center">
-                    FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRIA
+                    FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRÍA
                   </h6>
                   <h6 class="card-title text-center">
-                    R-0859 V.0
+                    R-0859
                   </h6>
                 </div>
               </div>
@@ -24,8 +24,11 @@
             <div class="container">
               <div class="row row-cols-1">
                 <div class="col">PROGRAMA: {{object.user.programa}} </div>
+                <div class="col">VERSIÓN DEL PROGRAMA: {{object.user.version}} </div>
                 <div class="col">MAESTRANTE: {{object.user}} </div>
-                <div class="col">DOCENTE GUÍA: {{object.user.guia}} </div>
+                <div class="col">DOCENTE GUÍA: {{object.docente}} </div>
+                <div class="col">FECHA: {{object.fecha}} </div>
+
                 <!-- <div class="col">TEMA DE TESIS: {{object.user.tema_tesis}} </div> -->
               </div>
             </div>
@@ -40,34 +43,56 @@
                   <thead>
                     <tr>
                       <th scope="col" class="col-2">Capítulo</th>
-                      <th scope="col">Cualitativo(observaciones relevantes por capitulo)</th>
-                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capitulo)</th>  
+                      <th scope="col">Cualitativo(observaciones relevantes por capítulo)</th>
+                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capítulo)</th>  
                     </tr>
                   </thead>
                   <tbody>
                     <tr>  
-                      <td><p>Capítulo IV </p> PRESENTACIÒN DE RESULTADOS</td>
+                      <td><p><strong>CAPÍTULO IV</strong> </p> PRESENTACIÒN DE RESULTADOS</td>
                       <td>{{ object.cap4_cualitativo }}</td>  
-                      <td>{{ object.cap4 }}%</td>  
+                      <td>
+
+                        {% if object.cap4 %}
+                          {{ object.cap4 }} %
+                        {% endif %}
+
+
+                      </td>  
                       
                                           
                     </tr>
                     <tr>  
-                      <td><p>CAPÍTULO V</p>CONCLUSIONES Y RECOMENDACIONES </td>
+                      <td><p><strong>CAPÍTULO V</strong></p>CONCLUSIONES Y RECOMENDACIONES </td>
                       <td>{{ object.cap5_cualitativo }}</td> 
-                      <td>{{ object.cap5 }}%</td>  
+                      <td>
+                        
+                        {% if object.cap5 %}
+                        {{ object.cap5 }} %
+                      {% endif %}
+                      
+                      </td>  
                                            
                     </tr>
                     <tr>
-                      <td><p>CAPÍTULO VI</p> PROPUESTA</td>
+                      <td><p><strong>CAPÍTULO VI</strong></p> PROPUESTA</td>
                       <td>{{ object.cap6_cualitativo }}</td> 
-                      <td>{{ object.cap6 }}%</td>        
+                      <td>
+                        {% if object.cap6 %}
+                        {{ object.cap6 }} %
+                      {% endif %}
+                      </td>        
                                     
                     </tr>
                     <tr>
-                      <td>REFERENCIAS BIBLIOGRÁFICAS  </td>
+                      <td><strong>REFERENCIAS BIBLIOGRÁFICAS</strong>  </td>
                       <td>{{ object.cap7_cualitativo }}</td> 
-                      <td>{{ object.cap7 }}%</td>        
+                      <td>
+                        {% if object.cap7 %}
+                        {{ object.cap7 }} %
+                      {% endif %}
+                      
+                      </td>        
                                     
                     </tr>
                                       
@@ -92,7 +117,7 @@
           
             <div class="modal-footer">
              
-             
+              <a href="{% url 'usuario:avance_2pdf' pk=avance_2.pk %}" class="btn btn-primary" target="_blank">Generar PDF</a>
               <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
              
             </div>

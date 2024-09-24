@@ -7,7 +7,7 @@
           {% csrf_token %}
           <div class="card">
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
+              <h5>Maestrante: {{ object.usuario }}</h5>
               Instancia: 
                 {% if object.instancia == 1 %}
                 1º instancia
@@ -17,8 +17,8 @@
                 3º instancia
                 {% endif %}
                 <br>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.user.ci_usuario }} <br>
+        
+            
               DOCENTE GUÍA PROVISIONAL: {{ object.provisional }}<br>
               <hr>
               {{ form.as_p }}

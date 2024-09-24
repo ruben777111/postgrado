@@ -11,7 +11,7 @@
               </div>
               <div class="col">
                 <h5 class="card-title text-center">
-                  FORMULARIO DE INFORME DEL DOCENTE REVISOR DE TESIS DE MAESTRIA <br> R-0996 V.0
+                  FORMULARIO DE INFORME DEL DOCENTE REVISOR DE TESIS DE MAESTRÍA <br> R-0996
                 </h5>
               </div>
             </div>
@@ -19,15 +19,18 @@
           <hr>
           <div class="row row-cols-1">
             {% for usuario in maestrantes|slice:":1" %}
-            <div class="col">ELABORADO POR: {{usuario.user.revisor}}</div>
+            
+            <div class="col">ELABORADO POR EL DOCENTE REVISOR: {{usuario.user.informe.docente}}</div>
             {% if usuario.user.revisor.user.docente.mostrar_numero %}
             <div class="col">Nº CELULAR DE DOCENTE REVISOR: {{usuario.user.revisor.user.cel_usuario}}</div>  
             
             {% endif %}   
             <div class="col">CORREO INSTITUCIONAL DEL DOCENTE REVISOR: {{usuario.user.revisor.user.correo_inst}}</div>
             
-            <div class="col">TÍTULO DE LA TESIS: {{usuario.user.tema_tesis}}</div>
+            <div class="col">TÍTULO DE LA TESIS: {{usuario.user.tema_borrador_tesis}}</div>
             <div class="col">MAESTRANTE: {{ usuario.user }}</div>
+            <div class="col">PROGRAMA: {{ usuario.user.programa }}</div>
+            <div class="col">VERSIÓN DEL PROGRAMA: {{ usuario.user.version }}</div>
             <div class="col">DOCENTE GUÍA: {{usuario.user.guia}}</div>
 
             <div class="col">FECHA DE REGISTRO DEL INFORME: {{ usuario.user.informe.fecha_registro }}</div>
@@ -64,47 +67,16 @@
             Ninguna
             {% endif %}
           </div>
-          {% endfor %}
+          
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button id="generarPDFBtn" class="btn btn-primary">Generar PDF</button>
+      <a href="{% url 'usuario:detalle_informe_revisor_pdf' pk=usuario.user.id_maestrante %}" class="btn btn-primary" target="_blank">Generar PDF</a>
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
         style="background-color: #1D2939;color:#eaf0f0;">Cerrar</button>
     </div>
   </div>
+  {% endfor %}
 </div>
-{% block extrajs %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    function generarPDF() {
-      alert("jola");
-      const pdf = new jsPDF('landscape');
-      pdf.setFontSize(10);
 
-      // Espera a que el modal se muestre completamente
-      const modalContent = document.querySelector("#pdfModal");
-
-      if (!modalContent) {
-        alert("Modal no encontrado");
-        return;
-      }
-
-      // Usa html2canvas para capturar el contenido del modal como una imagen
-      html2canvas(modalContent, {
-        scale: 2,
-      }).then(function (canvas) {
-        const imgData = canvas.toDataURL("image/png");
-        pdf.addImage(imgData, 'PNG', 10, 10, 280, 150);
-        pdf.save("contenido_modal.pdf");
-      });
-    }
-
-    const generarPDFBtn = document.querySelector("#generarPDFBtn");
-    generarPDFBtn.addEventListener("click", generarPDF);
-  });
-</script>
-{% endblock extrajs %}

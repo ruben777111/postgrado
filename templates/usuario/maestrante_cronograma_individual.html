@@ -1,0 +1,54 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <p class="text-primary"> <strong>CRONOGRAMA DE ACTIVIDADES HASTA PROCEDENCIA DE TEMA</strong> </p>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+
+                {% for usuario in cronograma %}
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            <button
+                                onclick="abrir_modal_edicion('{% url 'usuario:cronograma_maestrante' usuario.id_cronograma  %}')"
+                                class="list-group-item list-group-item-action">{{ usuario.user }} - {{ usuario.user.programa}} - {{ usuario.user.version }} <p class="text-primary"
+                                    style=" float: right;">
+                                    <em>Acceder</em>
+                                </p></button>
+                        </th>
+                    </tr>
+                    {% endfor %}
+            </table>
+        </div>
+
+
+        <p class="text-primary"> <strong>CRONOGRAMA DE ACTIVIDADES DE MAESTRÍA EN CURSO</strong> </p>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                {% for usuario in cronograma2 %}
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            <button
+                                onclick="abrir_modal_edicion('{% url 'usuario:cronograma_maestrante2' usuario.id_cronograma  %}')"
+                                class="list-group-item list-group-item-action">{{ usuario.user }} - {{ usuario.user.programa}} - {{ usuario.user.version }} <p class="text-primary"
+                                    style=" float: right;">
+                                    <em>Acceder</em>
+                                </p></button>
+                        </th>
+
+                    </tr>
+
+
+
+                    {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

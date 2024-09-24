@@ -1,0 +1,123 @@
+<!-- heredamos de la plantilla base-->
+
+{% extends "postgradoApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+
+
+
+<div class="card-body">
+
+     
+    <div class="container">
+        <article>
+            <div class="contenedor">
+
+    
+      
+        <div class="row">
+            <div class="sb-nav-link-icon"><h4><i class="far fa-id-card"></i> PROGRAMA - VERSIÓN DEL PROGRAMA DE LA GESTIÓN DEL MAESTRANTE</h4></div>
+            <hr /> 
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                
+                <div class="table-responsive">
+                <table id="data" class="table table-striped">
+
+                    <thead>
+                        <tr>
+                          
+                            <th>
+                                <div> #</div>
+                            </th>
+                           
+                            
+                            <th class="header" scope="col">R.U.</th>
+                            <th class="header" scope="col">Maestrante</th>
+                            <th class="header" scope="col">Programa</th>
+                            <th class="header" scope="col">Versión</th>
+                            
+  
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody_users">
+                        {% for usuario in actividades %}
+                                         
+                        <tr>
+   
+                            <td>
+                                <button onclick="abrir_modal_edicion('{% url 'usuario:registrar_programa_version' usuario.id_maestrante %}')" class="btn btn-primary"><i class="fas fa-user-edit"></i></button>
+                 
+                            </td>
+                           
+                            <td>{{ usuario.user.ru }}</td>
+                            <td>{{ usuario.user.maestrante }}</td>
+                            <td>
+                                {% if usuario.programa %}
+                                 {{ usuario.programa }}
+                                 {% else %}
+                                <div class="colores-primario-msg" >
+                                    Sin programa de Postgrado
+                                  </div>
+                                  {% endif %}
+                            </td>
+                            <td>
+                                {% if usuario.version %}
+                                 {{ usuario.version }}
+                                 {% else %}
+                                <div class="colores-primario-msg" >
+                                    Sin versión
+                                  </div>
+                                  {% endif %}
+                            </td>
+
+                            
+
+                        </tr>
+                     
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+ 
+
+</div>
+</div>
+</div>
+
+
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+{% block extrajs %}
+
+<script src="{% static 'lib/js/informe.js' %}"></script>
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/main.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+
+    function abrir_modal_eliminar_usuario(url) {
+        $('#eliminar').load(url, function () {
+            $(this).modal('show');
+        });
+    }
+
+
+</script>
+
+
+{% endblock extrajs %}
+
+{% endblock %}

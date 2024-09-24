@@ -1,55 +1,284 @@
-<!-- heredamos de la plantilla base-->
 
 {% extends "postgradoApp/base.html" %}
-
 {% load static %}
 {% block content %}
 
+{% if user.tipo_usuario == 3 or user.tipo_usuario == 4 or user.is_superuser %}
+  
+<div class="card border-light mb-3" style="max-width: 100%;">
+  <div class="card-body">
 
-<div id="layoutSidenav_content">
-    
-        <div class="card-body">
-            
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <h5> REGISTRO DEL PLANTEL ADMINISTRATIVO</h5> <br>
+        <div class="card" id="obtener_datos_usuario">
+          <div class="card-header" style="display: flex; justify-content: space-between;">
+            <h5>OBTENER DATOS DEL USUARIO</h5>
+            <a class="colores-segundario" href="{% url 'usuario:registrar_administradores_nuevo'  %}">FORMULARIO DE REGISTRO
+              DEL PLANTEL ADMINISTRATIVO</a>
 
-            <div class="card" style="width: 40rem;">
-                <div class="card-header text-center" >
-                    <h2 class="mt-4"><i class="fas fa-file-signature me-2 "></i>Registrar Administradores </h2>
-                </div>
-           
-                <div class="card-body">
+          </div>
 
-                    <form   method="POST">
-                        {% if messages %}
-                        <div class="alert alert-danger">
-                          <ul class="errorlist">
-                            {% for message in messages %}
-                              <li>{{ message }}</li>
-                            {% endfor %}
-                          </ul>
-                        </div>
-                      {% endif %}
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                       
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-4">
+                <input type="number" id="usuarioId" class="form-control" placeholder="Ingrese el CI del usuario"
+                  required>
+              </div>
+              <div class="col-3">
+                <button id="buscarMaestrante" class="btn btn-primary mb-3">Buscar Usuario</button>
+              </div>
+             
+              <div class="card-body">
+                <div id="datosUsuario"></div>
 
-
-                                           
-                    <div class="card-footer text-muted text-center">
-                        <button type="submit" class="btn btn-primary">Confirmar</button>                                            
-                    </form>
-                    
-                      </div>
-                </div>
+                <button id="habilitar_programa" class="btn btn-primary mb-3">INSCRIBIR COMO PLANTEL ADMINISTRATIVO</button>
+              </div>
             </div>
+          </div>
+        </div>
 
-        </div> 
-        
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+          <form id="informe" method="POST">
+            <h5> FORMULARIO DE REGISTRO DEL PLANTEL ADMINISTRATIVO</h5>
+            {% if messages %}
+            <div class="alert alert-danger">
+              <ul class="errorlist">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+            <div class="card colores-formulario">
+              {% csrf_token %}
+
+              {% if form.errors %}
+              {% for field in form %}
+              {% for error in field.errors %}
+              <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+              </div>
+              {% endfor %}
+              {% endfor %}
+              {% endif %}
+
+              {{ form.as_p }}
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="colores-botoncerrar">Registrar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+{% endif %}
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
 
+<script>
+
+
+  function mostrarDatosUsuario(data, tipo) {
+    if (tipo === 'maestrante') {
+      if (!Object.keys(data).length) {
+        const maestranteInfo = document.getElementById('datosUsuario');
+        maestranteInfo.innerHTML = 'No se encontraron datos para el maestrante con el ID especificado.';
+      } else {
+        const maestranteInfo = document.getElementById('datosUsuario');
+        maestranteInfo.innerHTML = `
+        <div class="table-responsive">
+        <table class="table table-sm">
+  <thead>
+    <tr>
+      
+      
+      <th scope="row">DATOS GENERALES</th>
+      
+      <th scope="row"></th>
+   
+    </tr>
+   
+  </thead>
+  <tbody>
+    <tr>
+      <td ">C.I.</td>
+      <td>${data.ci_usuario}</td>
+     
+    </tr>
+    <tr>
+      <td >NOMBRE</td>
+      <td>   
+     ${data.nombre_usuario}
+      </td>   
+    </tr>
+
+    <tr>
+      <td >APELLIDO PATERNO</td>
+      <td>   
+     ${data.paterno}
+      </td>   
+    </tr>
+
+    <tr>
+      <td >APELLIDO MATERNO</td>
+      <td>   
+  
+     ${data.materno ? `${data.materno}` : ''} 
+      </td>   
+    </tr>
+
+
+    <tr>
+      <td >CORREO INSTITUCIONAL</td>
+      <td>   
+     
+     ${data.correo_inst}
+      </td>   
+    </tr>    
+    <tr>
+      <td >NUMERO DE CELULAR</td>
+      <td>   
+     ${data.cel_usuario}
+      </td>   
+    </tr>    
+    <tr>
+      <td >Fecha de registro</td>
+      <td>   
+        ${data.fecha_registro}
+      </td>      
+    </tr>
+    <tr>
+      
+      
+      <th colspan="2" >ROLES DEL USUARIO</th>
+     
+    </tr>
+   
+        ${data.rol_docente ? '<tr><td >ROL DOCENTE</td><td> Activado</td></tr>' : ' '} 
+        ${data.rol_maestrante ? '<tr><td >ROL MAESTRANTE</td><td> Activado</td></tr>' : ' '} 
+        ${data.rol_tecnico_investigacion ? '<tr><td >ROL TECNICO - COORDINACIÓN</td><td> Activado</td></tr>' : ' '}
+        ${data.rol_postgrado ? '<tr><td >ROL POSTGRADO</td><td> Activado</td></tr>' : ' '}
+    
+
+   
+
+  </tbody>
+</table>
+</div>
+${data.usuario_administrador ? '<div class="alert alert-primary" role="alert"> El usuario está registrado como plantel administrativo, no es necesario registrarlo.</div>' : ' '} 
+
+          `;
+
+      }
+    }
+  }
+
+
+  document.getElementById('buscarMaestrante').addEventListener('click', function () {
+    const usuarioId = document.getElementById('usuarioId').value;
+    const url = `/usuario/obtener_usuario_administrador/${usuarioId}`;
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Ocurrió un error al obtener los datos.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        mostrarDatosUsuario(data, 'maestrante');
+
+        const idCiUsuario = document.getElementById('id_ci_usuario');
+        const idNombreUsuario = document.getElementById('id_nombre_usuario');
+        const idPaterno = document.getElementById('id_paterno');
+        const idMaterno = document.getElementById('id_materno');
+        const idCelUsuario = document.getElementById('id_cel_usuario');
+        const idCorreoInst = document.getElementById('id_correo_inst');
+        const habilitarPrograma = document.getElementById('habilitar_programa');
+        const rol_postgrado = document.getElementById('id_rol_postgrado');
+        const rol_tecnico_investigacion = document.getElementById('id_rol_tecnico_investigacion');
+        const usuario_administrador = data.usuario_administrador;
+
+        // Asignamos valores solo si el elemento existe
+        if (idCelUsuario) {
+          idCelUsuario.value = data.cel_usuario;
+          idCelUsuario.readOnly = true;
+        }
+       
+        if (idCiUsuario) {
+          idCiUsuario.value = data.ci_usuario;
+          idCiUsuario.readOnly = true;
+        }
+
+        if (idNombreUsuario) {
+          idNombreUsuario.value = data.nombre_usuario;
+          idNombreUsuario.readOnly = true;
+        }
+
+        if (idPaterno) {
+          idPaterno.value = data.paterno;
+          idPaterno.readOnly = true;
+        }
+
+        if (idMaterno) {
+          idMaterno.value = data.materno;
+          idMaterno.readOnly = true;
+        }
+
+        if (idCelUsuario) {
+          idCelUsuario.value = data.cel_usuario || '';
+        }
+
+          if (idCorreoInst) {
+          if (data.correo_inst === null || data.correo_inst === 'null' || data.correo_inst === undefined || data.correo_inst === 'undefined') {
+            idCorreoInst.value = '';
+            idCorreoInst.readOnly = false;
+          } else {
+            idCorreoInst.value = data.correo_inst;
+            idCorreoInst.readOnly = true;
+            console.log(data.correo_inst)
+          }
+        }
+        if (!usuario_administrador){
+        if (habilitarPrograma) {
+          habilitarPrograma.style.display = 'block';
+        }
+
+        }
+
+
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('datosUsuario').innerHTML = 'No se logró obtener infromación del usuario, verifique que los datos sean los correctos caso contrario registrar al usuario mediante el formulario, gracias.';
+  
+      });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("informe").style.display = "none";
+
+    document.getElementById("habilitar_programa").style.display = "none";
+
+    document.getElementById("habilitar_programa").addEventListener("click", function () {
+
+      document.getElementById('informe').style.display = 'block';
+      document.getElementById("obtener_datos_usuario").style.display = "none";
+
+
+    });
+  });
+
+</script>
+
+{% endblock extrajs %}
 
 {% endblock %}
-                                        
-
-
-

@@ -3,7 +3,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <div class="card border-primary" style="width: 100%;">
-                <form  action="{% url 'usuario:habilitarmaestranteguia' object.id_maestrante %}" method="POST">
+                <form  id="informe" id="informe" action="{% url 'usuario:habilitarmaestranteguia' object.id_maestrante %}" method="POST">
                     <div class="card-body ">
                         <div class="container">
                             <div class="row">
@@ -20,7 +20,7 @@
                         </div>
                         <hr>
                         <div class="row row-cols-1">
-                            <div class="col">MAESTRANTE: {{object.user}}</div>
+                            <div class="col">MAESTRANTE: {{object.usuario}}</div>
                         </div>
                     </div>
                     {% csrf_token %}
@@ -36,3 +36,7 @@
         </div>
     </div>
 </div>
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
+
+{% endblock extrajs %}

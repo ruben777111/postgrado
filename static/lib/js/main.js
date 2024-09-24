@@ -75,8 +75,8 @@ function notificacionSuccess(mensaje) {
 
 function eliminarusuario(id) {
 	Swal.fire({
-		"title": "Estas seguro",
-		"text": "Esta acción deshabilitará al usuario",
+		"title": "¿Estas seguro?",
+		"text": "Esta acción bloqueará al programa del maestrante",
 		"icon": "question",
 		"showCancelButton": true,
 		"cancelButtonText": "Cancelar",
@@ -97,8 +97,8 @@ function eliminarusuario(id) {
 
 function habilitarusuario(id) {
 	Swal.fire({
-		"title": "Estas seguro",
-		"text": "Esta acción habilitará al usuario para el proceso de Tesis",
+		"title": "¿Estas seguro?",
+		"text": "Esta acción habilitará al programa del maestrante",
 		"icon": "question",
 		"showCancelButton": true,
 		"cancelButtonText": "Cancelar",
@@ -121,7 +121,7 @@ function habilitarusuario(id) {
 
 function actividad01(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "Registrar actividad",
 		"icon": "question",
 		"showCancelButton": true,
@@ -142,7 +142,7 @@ function actividad01(id) {
 }
 function habilitarnumero(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "Esta acción habilitará el número del docente",
 		"icon": "question",
 		"showCancelButton": true,
@@ -163,7 +163,7 @@ function habilitarnumero(id) {
 }
 function deshabilitarnumero(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "Esta acción deshabilitará el número del docente",
 		"icon": "question",
 		"showCancelButton": true,
@@ -184,7 +184,7 @@ function deshabilitarnumero(id) {
 }
 function habilitardocente(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "Esta acción habilitará al docente",
 		"icon": "question",
 		"showCancelButton": true,
@@ -205,7 +205,7 @@ function habilitardocente(id) {
 }
 function eliminardocente(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "Esta acción deshabilitará al docente",
 		"icon": "question",
 		"showCancelButton": true,
@@ -226,7 +226,7 @@ function eliminardocente(id) {
 }
 function asistencia(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "Registrar asistencia usuario",
 		"icon": "question",
 		"showCancelButton": true,
@@ -248,7 +248,7 @@ function asistencia(id) {
 
 function eliminarperfiltesis(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "Esta acción deshabilitará al usuario",
 		"icon": "question",
 		"showCancelButton": true,
@@ -270,7 +270,7 @@ function eliminarperfiltesis(id) {
 
 function quitarlista(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Quitar de la lista ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -292,7 +292,7 @@ function quitarlista(id) {
 
 function avanceuno() {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Programar actividad ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -319,7 +319,7 @@ function avanceuno() {
 }
 function improcedenciatema(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Tema del perfil de tesis improcedente ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -340,7 +340,7 @@ function improcedenciatema(id) {
 }
 function registraravance(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Avance de tesis NO aprobada ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -361,7 +361,7 @@ function registraravance(id) {
 }
 function registraravance2(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Avance de tesis NO aprobada ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -382,7 +382,7 @@ function registraravance2(id) {
 }
 function registraravanceaprobado(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Avance de tesis aprobada ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -403,7 +403,7 @@ function registraravanceaprobado(id) {
 }
 function procedenciatema(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Tema del perfil de tesis procedente ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -424,7 +424,7 @@ function procedenciatema(id) {
 }
 function tesisprocedente(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Tema de tesis procedente ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -445,7 +445,7 @@ function tesisprocedente(id) {
 }
 function tesisimprocedente(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Tema de tesis Improcedente ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -466,7 +466,7 @@ function tesisimprocedente(id) {
 }
 function procedenciareporte(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Reporte general aprobada ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -487,7 +487,7 @@ function procedenciareporte(id) {
 }
 function procedenciareportetribunalinterno(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Reporte general de tribunal interno aprobada ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -509,8 +509,8 @@ function procedenciareportetribunalinterno(id) {
 
 function activarreporte2(id) {
 	Swal.fire({
-		"title": "Estas seguro",
-		"text": "¿ Activar reporte ?",
+		"title": "¿Estas seguro?",
+		"text": "¿ Activar segundo reporte ?",
 		"icon": "question",
 		"showCancelButton": true,
 		"cancelButtonText": "Cancelar",
@@ -531,7 +531,7 @@ function activarreporte2(id) {
 }
 function activarreporte3(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Activar reporte ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -552,7 +552,7 @@ function activarreporte3(id) {
 }
 function prorroga(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "¿ Habilitar al maestrante para prorroga ?",
 		"icon": "question",
 		"showCancelButton": true,
@@ -573,7 +573,7 @@ function prorroga(id) {
 }
 function siguienteproceso(id) {
 	Swal.fire({
-		"title": "Estas seguro",
+		"title": "¿Estas seguro?",
 		"text": "esta acción no tiene reversa",
 		"icon": "question",
 		"showCancelButton": true,

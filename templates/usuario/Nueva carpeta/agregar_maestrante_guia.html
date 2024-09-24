@@ -1,0 +1,45 @@
+<!-- heredamos de la plantilla base-->
+
+{% extends "postgradoApp/base.html" %}
+
+{% load static %}
+{% block content %}
+
+
+<div id="layoutSidenav_content">
+    
+        <div class="card-body">
+            <button onclick="window.location.href='{ url 'usuario:listar_avance'  %}'" class="btn btn-danger">Ir atras</button>         
+
+            <div class="card" style="width: 40rem;">
+                <div class="card-header text-center" >
+                    <h2 class="mt-4"><i class="fas fa-file-signature me-2 "></i>Registrar Equipo Maestrante - Guia</h2>
+                </div>
+           
+                <div class="card-body">
+
+                    <form   method="POST">
+                        {% csrf_token %}
+                        <td>{{ form.as_p }}</td>
+
+
+                                           
+                    <div class="card-footer text-muted text-center">
+                        <button type="submit" class="btn btn-primary">Confirmar</button>                                            
+                    </form>
+                    
+                      </div>
+                </div>
+            </div>
+
+        </div> 
+        
+</div>
+
+
+
+{% endblock %}
+                                        
+
+
+

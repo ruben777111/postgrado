@@ -11,7 +11,7 @@
                             </div>
                             <div class="col">
                                 <h5 class="card-title text-center">
-                                    REPORTE GENERAL <br> R-0877 V.0
+                                    REPORTE GENERAL <br> R-0877
                                 </h5>
                             </div>
                         </div>
@@ -22,9 +22,12 @@
                     </h6>
 
                     <div class="row row-cols-1">
-                        <div class="col">ELABORADO POR: {{object.user.revisor}}</div>
-                        <div class="col">TÍTULO:{{object.user.tema_tesis}}</div>
+                        <div class="col">ELABORADO POR: {{object.user.reportegeneral.docente}}</div>
+                        <div class="col">TÍTULO: {{object.user.tema_borrador_tesis}}</div>
                         <div class="col">MAESTRANTE: {{object.user}}</div>
+                        <div class="col">PROGRAMA: {{ object.user.programa }}</div>
+                        <div class="col">VERSIÓN DEL PROGRAMA: {{ object.user.version }}</div>           
+
                         <div class="col">DOCENTE GUÍA: {{object.user.guia}}</div>
                         
                         
@@ -37,11 +40,11 @@
                     {{ object.reporte2 }} <br>
 
                     
-                 
+                    
                     
                 </div>
                 <div class="modal-footer">
-
+                    <a href="{% url 'usuario:detalle_reporte_2_pdf' pk=object.id_reportegeneral %}" class="btn btn-primary" target="_blank">Generar PDF</a>
                     <button type="button" class="btn btn-circle btn-sm" data-bs-dismiss="modal"
                         style="background-color: #1D2939;color:#eaf0f0;">Cerrar</button>
                 </div>

@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento PDF</title>
+    <style>
+        /* Estilos para el PDF */
+        @page {
+            size: letter; /* Tamaño carta (8.5 x 11 pulgadas) */
+            margin: 1.5cm; /* Márgenes de 1.5 pulgadas en todos los lados */
+        }
+        /* Estilos adicionales */
+        body {
+            font-family: Arial, sans-serif; /* Fuente para el cuerpo del documento */
+            font-size: 11pt; /* Tamaño de fuente predeterminado */
+            line-height: 1; /* Altura de línea predeterminada */
+            
+            margin: 0; /* Eliminar los márgenes predeterminados del cuerpo del documento */
+            padding: 0; /* Eliminar el relleno predeterminado del cuerpo del documento */
+        }
+        .container {
+            margin: 0 auto; /* Centrar el contenido horizontalmente */
+            max-width: 800px; /* Ancho máximo del contenido */
+            padding: 20px; /* Agregar un espacio alrededor del contenido */
+        }
+        /* Estilos para la tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            font-size: 11pt;
+            border: 1px solid black;
+            padding: 3px;
+            text-align: left;
+            line-height: 1.5; /* Interlineado de 1.5 */
+        }
+        th {
+            background-color: #f2f2f2; /* Color de fondo para las celdas de encabezado */
+        }
+        /* Personaliza los estilos según sea necesario */
+        .center-text {
+            text-align: center; /* Centrar el contenido */
+        }
+        .borderless-table {
+        border-collapse: collapse;
+    }
+    .borderless-table td, .borderless-table th {
+        border: none;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="card-body">
+        <div class="container">
+          
+            <TABLE BORDER class="center-text">
+                <TR>
+                    <TD class="center-text">  <img src="{{ STATIC_ROOT }}static/lib/img/logousb.png" >
+                    </TD>
+                    <TD COLSPAN=2 ><h6 class="center-text">
+                        FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRÍA
+                      </h6>
+                      <h6 class="center-text">
+                        R-0859
+                      </h6></TD>
+                </TR>
+               
+            </TABLE>
+
+        </div>
+
+        <div class="container">
+          <div class="row row-cols-1">
+
+            <TABLE BORDER class="borderless-table">
+                <TR>
+                    <TD>
+                        <div class="col">PROGRAMA: {{object.user.programa}} </div>
+                        <div class="col">VERSIÓN DEL PROGRAMA: {{object.user.version}} </div>
+                        <div class="col">MAESTRANTE: {{object.user}} </div>
+                        <div class="col">DOCENTE GUÍA: 
+                            {% if object.docete_guia %}
+                            {{object.docete_guia}}
+                        {% endif %}
+                            
+                            {% if object.docente %}
+                            {{object.docente}}
+                            {% endif %} </div>
+                        <div class="col">FECHA: {{object.fecha }} </div>
+                    </TD> 
+                    
+                </TR>
+                
+            </TABLE>
+
+          </div>
+        </div>
+      </div>
+        <div class="container">
+            <div class="row row-cols-1">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 25%;">Capítulo</th>
+                                <th scope="col" style="width: 60%;">Cualitativo (observaciones relevantes por capítulo)</th>
+                                <th scope="col" style="width: 15%;">Cuantitativo (porcentaje de avance por capítulo)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>  
+                                <td style="width: 25%;"><p><strong>CAPÍTULO IV</strong></p>PRESENTACIÒN DE RESULTADOS</td>
+                                <td style="width: 60%;">{{ object.cap4_cualitativo }}</td>  
+                                <td style="width: 15%;" class="center-text">
+                                    {% if object.cap4 %}
+                                    {{ object.cap4 }} %
+                                  {% endif %}
+                                </td>  
+                            </tr>
+                            <tr>  
+                                <td style="width: 25%;"><p><strong>CAPÍTULO V</strong></p>CONCLUSIONES Y RECOMENDACIONES</td>
+                                <td style="width: 60%;">{{ object.cap5_cualitativo }}</td> 
+                                <td style="width: 15%;" class="center-text">
+                                    {% if object.cap5 %}
+                                    {{ object.cap5 }} %
+                                  {% endif %}
+                                </td>  
+                            </tr>
+                            <tr>
+                                <td style="width: 25%;"><p><strong>CAPÍTULO VI</strong></p>PROPUESTA</td></td>
+                                <td style="width: 60%;">{{ object.cap6_cualitativo }}</td> 
+                                <td style="width: 15%;" class="center-text">
+                                    {% if object.cap6 %}
+                                    {{ object.cap6 }} %
+                                  {% endif %}
+                                </td>        
+                            </tr>  
+                            <tr>
+                                <td style="width: 25%;"><p><strong>REFERENCIAS BIBLIOGRÁFICAS</strong></p></td>
+                                <td style="width: 60%;">{{ object.cap7_cualitativo }}</td> 
+                                <td style="width: 15%;" class="center-text">
+                                    {% if object.cap7 %}
+                                    {{ object.cap7 }} %
+                                  {% endif %}
+                                </td>        
+                            </tr>                                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

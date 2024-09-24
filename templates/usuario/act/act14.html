@@ -19,8 +19,11 @@
   <h5><i class="far fa-id-card"></i>
     {% for actividades in actividad %}
     {{ actividades.actividad }} <br><br>
-    {{ actividades.requisito }}
-
+    {{ actividades.requisito }}<br><br>
+    <div class="alert alert-primary" role="alert">
+      La fecha de presentación del Informe R-0997 se establece a los <strong>{{ actividades.tiempo }}</strong>  dias hábiles a partir de la presentación del Informe R-0996. <br><br>
+     <p class="small">Código de actividad = {{ actividades.nro_requisito }}</p>
+    </div>
     {% endfor %}
   </h5>
 </div>
@@ -32,11 +35,13 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th class="header" scope="col">CI</th>
         <th class="header" scope="col">R.U.</th>
         <th class="header" scope="col">MAESTRANTE</th>
         <th class="header" scope="col">PROGRAMA</th>
+        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
         <th class="header" scope="col">DOCENTE GUÍA</th>
-        <th class="header" scope="col">FECHA LIMITE DE PRESENTACIÓN DE FORMULARIO</th>
+        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DE FORMULARIO</th>
 
 
 
@@ -45,12 +50,26 @@
     <tbody id="tableBody_users">
       {% for evi in maestrantesevi %}
       <tr>
-        <td> {{ evi.ru }} </td>
-        <td>{{ evi.maestrante }}</td>
+      <td>                            
+          {% if evi.usuario.ci_usuario %}
+          {{ evi.usuario.ci_usuario}}
+          {% else %}
+          No asignado
+          {% endif %} 
+      </td>
+        <td>                           
+          {% if evi.usuario.ru %}
+          {{ evi.usuario.ru}}
+          {% else %}
+          No asignado
+          {% endif %}  
+      </td>
+        <td>{{ evi.usuario }}</td>
         <td>{{ evi.programa }}</td>
+        <td>{{ evi.version }}</td>
         <td>{{ evi.guia }}</td>
         <td>
-          {{ evi.cronograma2.fecha_formulario_guia }}
+         
         
           {% if evi.cronograma2.fecha_formulario_guia < today  %}
           <span style="color: red;">{{ evi.cronograma2.fecha_formulario_guia }} - expiró fecha de entrega</span>
@@ -71,7 +90,7 @@
 
 {% block extrajs %}
 
-
+<script src="{% static 'lib/js/data.js' %}"></script>
 <script src="{% static 'lib/js/main.js' %}"></script>
 
 

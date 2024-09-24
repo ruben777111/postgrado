@@ -7,18 +7,15 @@
           {% csrf_token %}
           <div class="card">  
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.ci_usuario }}<br>
-           
-                
+              <h5>Maestrante: {{ object.usuario }}</h5>
+
             
               <hr>
               {{ form.avance_tesis}}
               <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
 
            
-              Asignación de codigo a empaste :
+              Asignación de código a empaste :
               <input type="text" class="form-control" name="codigo"  minlength="4" maxlength="200" placeholder="Codigo a empaste" required/>
             </div>
             <div class="modal-footer">

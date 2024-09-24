@@ -1,0 +1,149 @@
+{% extends "postgradoApp/base.html" %}
+{% load static %}
+{% block content %}
+{% if user.tipo_usuario == 3 or user.tipo_usuario == 4 or user.is_superuser %}
+
+<div class="sb-nav-link-icon">
+    <h5><i class="far fa-id-card"></i> LISTA DE USUARIOS</h5>
+</div>
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+        <table id="data" class="table table-striped table-responsive">
+            <thead>
+                <tr>
+
+                    <th class="header" scope="col">CI</th>
+                    <th class="header" scope="col">NOMBRE</th>
+                    <th class="header" scope="col">APELLIDO PATERNO</th>
+                    <th class="header" scope="col">APELLIDO MATERNO</th>
+                    <th class="header" scope="col">RU</th>
+                    <th class="header" scope="col">Nº CELULAR</th>
+                    <th class="header" scope="col">Nº CELULAR REFERENCIA</th>
+                    <th class="header" scope="col">CORREO INSTITUCIONAL</th>
+                    <th class="header" scope="col">CORREO PERSONAL</th>
+                    <th class="header" scope="col">FECHA DE REGISTRO</th>
+                    
+                    <th class="header" scope="col">ROLES DEL USUARIO</th>
+                    <th class="header" scope="col">NOMBRE DE USUARIO DE CUENTA</th>
+
+                    <th class="header" scope="col">
+                       REESTABLECER USUARIO Y CONTRASEÑA DEL USUARIO
+                    </th>
+                    <th>
+                        #
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tableBody_users">
+                {% for usuario in actividades %}
+
+                <tr>
+                    <td>{{ usuario.ci_usuario }}</td>
+                    <td>{{ usuario.nombre_usuario }}</td>
+                    <td>
+                        
+                        {% if usuario.paterno %}
+                        {{ usuario.paterno }}
+                        {% endif %}
+                            
+                        </td>
+                    <td>
+                        {% if usuario.materno %}
+                        {{ usuario.materno }}
+                   
+                    {% endif %} 
+                    </td>
+                    <td>                       
+                        {% if usuario.ru %}
+                            {{ usuario.ru }}
+                        {% else %}
+                        Sin dato
+                        {% endif %}   
+                    </td>
+
+                    <td>                       
+                        {% if usuario.cel_usuario  %}
+                            {{ usuario.cel_usuario  }}
+                        {% else %}
+                        Sin dato
+                        {% endif %}   
+                    </td>   
+                    <td>                       
+                        {% if usuario.cel_usuario2  %}
+                            {{ usuario.cel_usuario2  }}
+                        {% else %}
+                        Sin dato
+                        {% endif %}   
+                    </td>      
+                    <td>                       
+                        {% if usuario.correo_inst  %}
+                            {{ usuario.correo_inst  }}
+                        {% else %}
+                        Sin dato
+                        {% endif %}   
+                    </td>                         
+                    <td>                       
+                        {% if usuario.correo  %}
+                            {{ usuario.correo  }}
+                        {% else %}
+                        Sin dato
+                        {% endif %}   
+                    </td>       
+                    <td>{{ usuario.fecha_registro }}</td>              
+                    <td>
+                        
+                        {% if usuario.is_superuser %}
+                        
+                        <p class="text-secondary"><em>[Super_administrador]</em></p>
+                        {% endif %}
+                            
+
+                        {% if usuario.rol_tecnico_investigacion %}
+                        <p class="text-primary">[Técnico / Coordinación]</p>
+                        
+                        {% endif %}
+
+                        {% if usuario.rol_postgrado %}
+                        <p class="text-success">[Postgrado]</p>
+                        
+                        
+                        {% endif %}
+
+                        {% if usuario.rol_maestrante  %}
+                        <p class="text-danger">[Maestrante]</p>
+                        
+                        {% endif %}
+
+                        {% if usuario.rol_docente  %}
+                        [Docente]
+                        {% endif %}                        
+                    </td>
+                    <td>{{ usuario.username }}</td> 
+
+                    <td>
+                        
+                        <button
+                        onclick="abrir_modal_ver('{% url 'usuario:reestablecer_usuario_password' usuario.id %}')"
+                        class="btn btn-warning"><i class="fas fa-user-lock"></i></button></td> 
+                    <td><button
+                            onclick="abrir_modal_edicion('{% url 'usuario:editar_usuario' usuario.id %}')"
+                            class="btn btn-primary"><i class="fa-solid fa-pen"></i></button>
+
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% block extrajs %}
+
+<script src="{% static 'lib/js/data.js' %}"></script>
+
+
+
+{% endblock extrajs %}
+
+{% endblock %}

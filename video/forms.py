@@ -7,7 +7,7 @@ class VideoForm(forms.ModelForm):
     #referencia a los metadatos del formulario
     
     titulo_video = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control"}),min_length=3, max_length=120)
-    enlace_video = forms.URLField(widget=forms.TextInput(attrs={"class":"form-control","type":"search"}),min_length=3, max_length=100)
+    enlace_video = forms.URLField(widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=3, max_length=100)
 
     class Meta:
         model = Video
@@ -16,7 +16,7 @@ class VideoForm(forms.ModelForm):
         fields = ['titulo_video','enlace_video']
         labels = {
 
-            'titulo_video' : 'Titulo del video',
+            'titulo_video' : 'Título del video',
             'enlace_video' : 'Enlace del video',
    
         }

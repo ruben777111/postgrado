@@ -41,7 +41,7 @@
       {% for evi in maestrantesevi %}
       <tr>
         <td> {{ evi.ru }} </td>
-        <td>{{ evi.maestrante }}</td>
+        <td>{{ evi.usuario }}</td>
         <td>{{ evi.programa }}</td>
         <td> {{ evi.tribunaltesis.tribunal_tesis_2 }} </td>
         <td>
@@ -49,8 +49,7 @@
 
 {% if evi.maestrante.reportegeneraltribunalinterno.aceptar_revisor %}
 <a href="#" onclick="procedenciareportetribunalinterno({{ evi.id_maestrante }})" class="btn btn-primary"><i
-  class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
-  title="Tema de perfil procedente"></i></a>
+  class="fas fa-user-plus" ></i></a>
 Formulario emitido
 {% endif %}
   

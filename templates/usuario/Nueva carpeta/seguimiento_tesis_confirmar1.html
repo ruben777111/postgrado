@@ -1,0 +1,71 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+      <div class="modal-header">
+        <div class="card border-primary" style="width: 100%;">
+        
+            <form id="informe" method="POST" action="{% url 'usuario:procesarrequisito' %}">
+              {% csrf_token %}
+              
+            
+              {% for usuario in maestrantes %}
+
+              <input type="hidden" name="id_maestrante" id="id_maestrante" value="{{ usuario.maestrante.id_maestrante }}">
+              <input type="hidden" name="usuario" id="usuario" value="{{user.administracion.id_administracion }}">
+              <input type="hidden" name="ru" id="ru" value="{{usuario.ru }}">
+              <input type="hidden" name="evidencia" id="evidencia" value="{{ usuario.maestrante.requerimiento }}">
+   
+              <div class="card-body">
+                <div class="container">
+                  
+                
+                    <div class="col">
+                      <h5 class="card-title">         
+                        Maestrante: {{ usuario.maestrante }}
+                      </h5>
+                      <h6 class="card-title">         
+                        R.U.: {{ usuario.ru }} 
+                      </h6>
+                      <h6 class="card-title">         
+                        C.I.: {{ usuario.ci_usuario }}
+                      </h6>
+                
+                   
+                  </div>
+                </div>
+              <hr>              
+
+
+          
+                <div class="card-body">
+                 
+                    <p>Requerimientos / evidencia: </p>
+                    <h6 class="card-text">{{ usuario.maestrante.requerimiento }}</h6>
+                  
+                    
+
+              
+                </div>
+            
+              {% endfor %}
+           
+                                    <div class="modal-footer">
+                                      
+                <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="colores-botonaceptar" >Confirmar</button>
+        
+                    </div>
+              
+            </form>
+          </div>
+     
+      </div></div></div>
+
+
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/informe.js' %}"></script>
+
+{% endblock extrajs %}
+

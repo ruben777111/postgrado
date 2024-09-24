@@ -13,7 +13,7 @@
                 </div>
                 <div class="col">
                   <h5 class="card-title text-center">
-                    FORMULARIO PARA INFORME DE DOCENTE REVISOR DE TESIS DE MAESTRIA <br> R-0996 V.0
+                    FORMULARIO PARA INFORME DE DOCENTE REVISOR DE TESIS DE MAESTRÍA <br> R-0996 
                   </h5>
                 </div>
               </div>
@@ -25,7 +25,7 @@
                 <div class="col">Maestrante: {{object.user}}</div>
                 <div class="col">Docente Guía: {{object.user.guia}}</div>
                 <div class="col">Docente Revisor: {{object.user.revisor}}</div>
-                <div class="col">Tema: {{object.user.tema_tesis}}</div>
+                <div class="col">Tema: {{object.user.tema_borrador_tesis}}</div>
               </div>
             </div>
 
@@ -93,9 +93,11 @@
 
 <script src="{% static 'lib/js/informe.js' %}"></script>
 <script type="text/javascript">
-  const agregarFila = () => {
-    document.getElementById('tablaprueba').insertRow(-1).innerHTML = '<td><input type="text" style="width:140px" class="form-control" name="cap" required placeholder="Capítulo"></td><td><textarea class="form-control " style="width:440px" rows="3"  name="desc" placeholder="Descripción de la observación"></textarea></td><td><textarea class="form-control " style="width:440px" rows="3"  name="sug" placeholder="Sugerencia(s) para subsanar la observación"></textarea></td>'
-  }
+const agregarFila = () => {
+  const table = document.getElementById('tablaprueba');
+  const newRow = table.insertRow(-1);
+  newRow.innerHTML = '<td><input type="text" class="form-control" name="cap" required placeholder="Capítulo"></td><td><textarea class="form-control" rows="3" name="desc" placeholder="Descripción de la observación" oninput="autoResize(this)"></textarea></td><td><textarea class="form-control" rows="3" name="sug" placeholder="Sugerencia(s) para subsanar la observación" oninput="autoResize(this)"></textarea></td>';
+}
   
   const eliminarFila = () => {
     const table = document.getElementById('tablaprueba')
@@ -107,7 +109,10 @@
       table.deleteRow(rowCount -1)
   }
 
-  
+  const autoResize = (element) => {
+  element.style.height = 'auto';
+  element.style.height = (element.scrollHeight) + 'px';
+}
 
 var modal = document.getElementById('myModal');
 modal.backdrop = "static";

@@ -3,57 +3,85 @@
 {% block content %}
 
 <div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i>LISTA DE MAESTRANTES</h5>
+    <h5>HISTORIAL DE SUSTENTACIÓN DE TESIS DE MAESTRANTES</h5>
 </div>
 <hr />
-<form class="row g-3" action="{% url 'usuario:busquedatesishistorial' %}" method="GET">
-    {% csrf_token %}
-    <div class="col-4" style="text-align: right;"> <input class="form-control" name="busmaestrante" type="number"
-        placeholder="Ingresar R.U. del maestrante" aria-label="Busqueda" required>
-    </div>
 
-    <div class="col-auto">
-      <button type="submit" class="btn btn-primary mb-3">Buscar</button>
-    </div>
-  </form>
 
     <div class="table-responsive">
         <table id="data" class="table table-striped">
             <thead>
                 <tr>
-                    <th class="header" scope="col">#</th>
+                    <th class="header" scope="col">CI</th>
                     <th class="header" scope="col">R.U.</th>
                     <th class="header" scope="col">MAESTRANTE</th>
-                    <th class="header" scope="col">FECHA&nbsp;SUSTENTACIÓN</th>                  
-                    <th class="header" scope="col">HORA&nbsp;SUSTENTACIÓN</th>  
-                    <th class="header" scope="col">DOCENTE&nbsp;GUÍA</th>
-                    <th class="header" scope="col">TRIBUNAL&nbsp;INTERNO&nbsp;1&nbsp;DESIGNADO&nbsp;(Presidente&nbsp;de&nbsp;tribunal)</th>
-                    <th class="header" scope="col">TRIBUNAL&nbsp;INTERNO&nbsp;2&nbsp;DESIGNADO&nbsp;(Docente&nbsp;de&nbsp;area&nbsp;-&nbsp;Revisor)</th>
-                    <th class="header" scope="col">INSTANCIA&nbsp;DEFENSA </th>
-                    <th class="header" scope="col">TEMA&nbsp;DE&nbsp;TESIS</th>
+                    <th class="header" scope="col">PROGRAMA</th>
+                    <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+                    <th class="header" scope="col">FECHA SUSTENTACIÓN</th>                  
+                    <th class="header" scope="col">HORA SUSTENTACIÓN</th>  
+                    <th class="header" scope="col">DOCENTE GUÍA</th>
+                    <th class="header" scope="col">TRIBUNAL INTERNO 1 DESIGNADO (Presidente de tribunal)</th>
+                    <th class="header" scope="col">TRIBUNAL INTERNO 2 DESIGNADO (Docente de área - Revisor)</th>
+                    <th class="header" scope="col">INSTANCIA DEFENSA </th>
+                    <th class="header" scope="col">TEMA DE TESIS</th>
                     <th class="header" scope="col">RESULTADO</th>
                     
-                    <th class="header" scope="col">DICTAMEN&nbsp;NOTA&nbsp;(numeral)</th>
-                    <th class="header" scope="col">DICTAMEN&nbsp;ESCALA&nbsp;(cualitativo)</th>
+                    <th class="header" scope="col">DICTAMEN NOTA (numeral)</th>
+                    <th class="header" scope="col">DICTAMEN ESCALA (cualitativo)</th>
                     
-                    <th class="header" scope="col">Acta&nbsp;de&nbsp;defensa&nbsp;de&nbsp;Tesis</th>
-                    <th class="header" scope="col">Hoja&nbsp;de&nbsp;evaluación&nbsp;firmada</th>
-                    <th class="header" scope="col">Designación&nbsp;de&nbsp;Tribunal</th>
+                    <th class="header" scope="col">Acta de defensa de Tesis</th>
+                    <th class="header" scope="col">Hoja de evaluación firmada</th>
+                    <th class="header" scope="col">Designación de Tribunal</th>
+                    <th class="header" scope="col">#</th>
                     
                 </tr>
             </thead>
             <tbody id="tableBody_users">
-                {% for usuario in maestrantes %}
+                {% for usuario in actividades %}
                 <tr>
-                    <td>{{ usuario.id_sustentacion }}</td>
-                    <td>{{ usuario.user.ru }}</td>
+                    <td>                            
+                        {% if usuario.user.usuario.ci_usuario %}
+                        {{ usuario.user.usuario.ci_usuario}}
+                        {% else %}
+                        No asignado
+                        {% endif %} 
+                    </td>                    
+                    <td>                           
+                        {% if usuario.user.usuario.ru %}
+                        {{ usuario.user.usuario.ru}}
+                        {% else %}
+                        No asignado
+                        {% endif %}  
+                    </td>
+
                     <td>{{ usuario.user }}</td>
+                    <td>{{ usuario.user.programa }}</td>
+                    <td>{{ usuario.user.version }}</td>
                     <td>{{ usuario.fecha_sustentacion }}</td>                   
                     <td>{{ usuario.hora_sustentacion }}</td>
                     <td>{{ usuario.docente_guia }}</td>
                     <td>{{ usuario.tribunal_1 }}</td>
                     <td>{{ usuario.tribunal_2 }}</td>
-                    <td>{{ usuario.user.instancia_defensa }}</td>
+                    <td>
+                        
+                        
+                        {% if usuario.instancia == 1 %}
+                        1º instancia
+                        {% elif usuario.instancia == 2 %}
+                        2º instancia
+                        {% elif usuario.instancia == 3 %}
+                        3º instancia
+                        {% elif usuario.instancia == 4 %}
+                        4º instancia
+                        {% elif usuario.instancia == 5 %}
+                        5º instancia
+                        {% elif usuario.instancia == 6 %}
+                        6º instancia
+                        {% elif usuario.instancia == 7 %}
+                        7º instancia
+                        
+                        {% endif %}
+                    </td>
                     <td>{{ usuario.tema_tesis }}</td>
                     <td>
                         {% if usuario.resultado %}
@@ -111,7 +139,11 @@
                         {% else %}
                         sin documento
                         {% endif %}
-                    </td>      
+                    </td>     
+                    <td>                                
+                        <button type="button"
+                        onclick="abrir_modal_ver('{% url 'usuario:editar_archivos_tesis' usuario.id_sustentacion %}')"
+                        class="btn btn-primary "><i class=" fas fa-file-alt"></i></button></td>  
                                      
                 </tr>
                 
@@ -121,11 +153,8 @@
     </div>
 
 
-{% block extrajs %}
-
-
-<script src="{% static 'lib/js/main.js' %}"></script>
-
-{% endblock extrajs %}
-
+    {% block extrajs %}
+    <script src="{% static 'lib/js/data.js' %}"></script>
+    
+    {% endblock extrajs %}
 {% endblock %}

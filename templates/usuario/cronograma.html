@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <div class="sb-nav-link-icon">
-    <h3><i class="fas fa-calendar-alt"></i> Cronograma de actividades del Maestrante</h3>
+    <h5>CRONOGRAMA HASTA PROCEDENCIA DE TEMA DEL MAESTRANTE</h5>
 </div>
 <hr />
 <div class="row">
@@ -12,15 +12,18 @@
 
                 <thead>
                     <tr>
+                        <th class="header" scope="col">CI</th>
                         <th class="header" scope="col">R.U. </th>
-                        <th class="header" scope="col">Nombre </th>
-                        <th class="header" scope="col">Programa </th>
-                        <th class="header" scope="col">Fecha&nbsp;y&nbsp;hora&nbsp;de&nbsp;asesoramiento</th>
-                        <th class="header" scope="col">Formulario&nbsp;de&nbsp;habilitación</th>
-                        <th class="header" scope="col">Entrega&nbsp;de&nbsp;perfil</th>
-                        <th class="header" scope="col">Acto&nbsp;de&nbsp;sustentación</th>
-                        <th class="header" scope="col">Hora&nbsp;de&nbsp;sustentación</th>
-                        <th class="header" scope="col">Entrega&nbsp;de&nbsp;perfil&nbsp;mejorada</th>
+                        <th class="header" scope="col">NOMBRE </th>
+                        <th class="header" scope="col">PROGRAMA </th>
+                        <th class="header" scope="col">VERSIÓN DEL PROGRAMA </th>
+                        
+                        <th class="header" scope="col">FECHA/HORA DE ASESORAMIENTO</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL FORMULARIO DE HABILITACIÓN</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL PERFIL DE TESIS</datagrid></th>
+                        <th class="header" scope="col">FECHA/HORA DEL ACTO DE SUSTENTACIÓN</th>
+                      
+                        <th class="header" scope="col">PRESENTACIÓN DEL PERFIL DE TESIS MEJORADO</th>
                         <th class="header" scope="col"># </th>
                    
                     </tr>
@@ -32,12 +35,27 @@
               
                     {% for usuario in actividades %}
                     <tr>
-                        <td class="header" scope="col">{{ usuario.user.ru }}</td>
+                        <td>                           
+                   {% if usuario.user.usuario.ci_usuario %}
+                            {{ usuario.user.usuario.ci_usuario}}
+                            {% else %}
+                            No asignado
+                            {% endif %} 
+                        </td>
+                        <td>                            
+           
+                            {% if usuario.user.usuario.ru %}
+                            {{ usuario.user.usuario.ru}}
+                            {% else %}
+                            No asignado
+                            {% endif %}  
+                        </td>
                         <td>{{ usuario.user }}</td>
                         <td>{{ usuario.user.programa }}</td>
+                        <td>{{ usuario.user.version }}</td>
                         <td>
                             {% if usuario.fecha_induccion %}
-                            {{ usuario.fecha_induccion}}- {{hora_induccion}} hrs
+                            {{ usuario.fecha_induccion}} - {{usuario.hora_induccion}} hrs
                             {% else %}
                             <div class="colores-primario-msg">
                                 No asignado
@@ -66,22 +84,14 @@
 
                         <td>
                             {% if usuario.fecha_3 %}
-                            {{ usuario.fecha_3}}
+                            {{ usuario.fecha_3}} - {{ usuario.hora_sustentacion}}
                             {% else %}
                             <div class="colores-primario-msg">
                                 No asignado
                             </div>
                             {% endif %}
                         </td>
-                        <td>
-                            {% if usuario.hora_sustentacion %}
-                            {{ usuario.hora_sustentacion}}
-                            {% else %}
-                            <div class="colores-primario-msg">
-                                No asignado
-                            </div>
-                            {% endif %}
-                        </td>
+                       
                         <td>
                             {% if usuario.fecha_4 %}
                             {{ usuario.fecha_4 }}
@@ -93,13 +103,13 @@
                         </td>                   
                         <td>
                             
-                            {% if user.is_staff %}
+                            
                                 
                             <button type="button"
                             onclick="abrir_modal_edicion('{% url 'usuario:editar_cronograma' usuario.id_cronograma %}')"
                             class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Designar fechas "><i class="fa-solid fa-calendar-days"></i></button>
-                            {% endif %}
+                            
                                 
 
                            

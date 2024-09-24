@@ -26,11 +26,12 @@
         <a href="{% url 'vernotificacion' notify.slug %}" class="list-group-item list-group-item-action">{{notify.verbo}} 
             <!-- hace {{ notify.timestamp }}-->
             {% if notify.read %}
-            <i class="  fas fa-eye" style="color: rgb(142, 244, 145);"></i>visto
+          <p class="text-primary" style=" float: right;"> <em>Visto</em> - <em>Acceder</em></p>
             {% else %}
         
-            <i class=" fas fa-eye-slash" style="color: rgb(230, 244, 142);"></i>no visto
+            <p class="text-warning " style="float: right;"><em>No visto</em> - <em>Acceder</em></p>
             {% endif %}
+            
             
         </a>
         {% empty %}

@@ -22,10 +22,12 @@
             <hr>
             <div class="container">
               <div class="row row-cols-1">
-                <div class="col">MAESTRANTE: {{object.maestrante}} </div>
+                MAESTRANTE: {{object.usuario}} </br>
+                DOCENTE GUÍA PROVISIONAL: {{ object.provisional }}<br>
+                PERFIL POSTULADO: {{ object.tema_perfil_postulado }}<br>
                 <div class="container"><br>
-                  * Perfil de tesis con aval de docente guía (en formato impreso y digital) <br>
-                  * Nota de solicitud de acto de sustentacion de tema
+                  Perfil de tesis con aval de docente guía (en formato impreso y digital) <br>
+                  Nota de solicitud de acto de sustentación de tema
                   {{ form.as_p }}
                 </div>
               </div>

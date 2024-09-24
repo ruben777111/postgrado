@@ -12,7 +12,7 @@
                 </div>
                 <div class="col">
                   <h5 class="card-title text-center">
-                    FORMULARIO PARA INFORME FINAL DE DOCENTE GUÍA Y APROBACIÓN PARA DEFENSA DE TESIS <br> R-0997 V.0
+                    FORMULARIO PARA INFORME FINAL DE DOCENTE GUÍA Y APROBACIÓN PARA DEFENSA DE TESIS <br> R-0997
                   </h5>
                 </div>
               </div>
@@ -20,15 +20,17 @@
             <hr>
             <div class="row row-cols-1">
               {% for usuario in maestrantes|slice:":1" %}
-              <div class="col">ELABORADO POR: {{usuario.user.guia}}</div>
+              <div class="col">ELABORADO POR DOCENTE GUÍA: {{usuario.user.informeguia.docente}}</div>
               {% if usuario.user.guia.user.docente.mostrar_numero %}
               <div class="col">Nº CELULAR DE DOCENTE REVISOR: {{usuario.user.guia.user.cel_usuario}}</div>  
               
               {% endif %}   
               <div class="col">CORREO INSTITUCIONAL DEL DOCENTE GUÍA: {{usuario.user.guia.user.correo_inst}}</div>
-              <div class="col">TÍTULO DE LA TESIS: {{usuario.user.tema_tesis}}</div>
+              <div class="col">TÍTULO DE LA TESIS: {{usuario.user.tema_borrador_tesis}}</div>
 
               <div class="col">MAESTRANTE: {{ usuario.user }}</div>
+              <div class="col">PROGRAMA: {{ usuario.user.programa }}</div>
+              <div class="col">VERSIÓN DEL PROGRAMA: {{ usuario.user.version }}</div>
               
               <div class="col">DOCENTE REVISOR: {{usuario.user.revisor}}</div>
               
@@ -48,10 +50,8 @@
                         en el informe del tribunal revisor</th>
                       <th scope="col" style='font-size: 12px; text-align:center;'>¿ SE INCORPORARON LAS OPTIMIZACIONES
                         RESPECTIVAS TOMANDO EN CUENTA LA OBSERVACIÓN ?</th>
-                      <th scope="col" style="font-size: 12px; text-align:center;">PAGINA(S). EN LAS QUE SE EVIDENCIA LA
-                        OPTIMIZACIÓN DE LA TESIS OMANDO EN CUENTA LA OBSERVACIÓN</th>
-                      <th scope="col" style="font-size: 12px; text-align:center;">FUNTAMENTACIÓN llenar esta casilla en
-                        caso de no haber tomado en cuenta el número </th>
+                      <th scope="col" style="font-size: 12px; text-align:center;">PAGINA(S). EN LAS QUE SE EVIDENCIA LA OPTIMIZACIÓN DE LA TESIS EN CASO DE HABER TOMANDO EN CUENTA LA OBSERVACIÓN</th>
+                      <th scope="col" style="font-size: 12px; text-align:center;">FUNDAMENTACIÓN, llenar esta casilla en caso de no haber tomado en cuenta la observación</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +61,7 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ usuario.capitulo }}</td>
                     <td>{{ usuario.obs }}</td>
-                    <td>{{ usuario.opcion }}</td>
+                    <td style="text-align: center;">{{ usuario.opcion }}</td>
                     <td>{{ usuario.pagina }}</td>
                     <td>{{ usuario.fundamentacion }}</td>
                   </tr>
@@ -77,7 +77,7 @@
               {% endif %}
             </div>
             <hr>
-            Tesis mejorada:
+            Documento de Tesis mejorada:
             {% if usuario.user.tesis_mejorado %}
             <a href="{{ usuario.user.tesis_mejorado.url }}" class="btn btn-outline-primary"
                 target="_blank">Ver</a>
@@ -87,7 +87,7 @@
             {% else %}
             <span class="text-muted">Sin&nbsp;archivo</span>
             {% endif %}
-            {% endfor %}
+            
           </div>
 
 
@@ -96,11 +96,11 @@
   
       </div>
       <div class="modal-footer">
-        <a href="javascript:imprSelec('seleccion')" ><button id="generarPDFBtn" class="btn btn-primary no-imprimir">Generar PDF</button></a>
+        <a href="{% url 'usuario:detalle_informe_guia_pdf' pk=usuario.user.id_maestrante %}" class="btn btn-primary" target="_blank">Generar PDF</a>
         <button type="button" class="btn btn-secondary no-imprimir" data-bs-dismiss="modal"
           style="background-color: #1D2939;color:#eaf0f0;">Cerrar</button>
       </div>
-    </div>
+    </div>{% endfor %}
   </div>
   {% block extracss %}
 <style>

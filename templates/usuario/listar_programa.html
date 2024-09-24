@@ -1,12 +1,13 @@
 {% extends "postgradoApp/base.html" %}
 {% load static %}
 {% block content %}
-<div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i>LISTA DE PROGRAMAS DE MAESTRIA</h5>
-</div>
-<hr />
-<h5 class="card-title"><a href="{% url 'usuario:registrar_programa'%}" class="btn btn-primary"><i
-    class="fas fa-user-plus"></i> Agregar nuevo programa</a></h5>
+
+
+  <div class="card-header" style="display: flex; justify-content: space-between;">
+    <h5>LISTA DE PROGRAMAS DE MAESTRÍA</h5>
+    <a href="{% url 'usuario:registrar_programa'%}" class="btn btn-primary"> REGISTRAR NUEVO PROGRAMA</a>
+
+  </div> <br>
 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <div class="table-responsive">
         <table id="data" class="table table-striped">

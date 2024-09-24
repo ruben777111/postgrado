@@ -1,0 +1,195 @@
+<!-- heredamos de la plantilla base-->
+
+{% extends "postgradoApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+
+
+
+<div class="card-body">
+
+     
+    <div class="container">
+        <article>
+            <div class="contenedor">
+        <div class="sb-nav-link-icon"><h4><i class="far fa-id-card"></i> FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRÍA</h4></div>
+        <hr /> 
+            </div>
+            <form id="formulariosegtesis" method="POST" action="{% url 'usuario:procesarinforme' %}">
+                {% csrf_token %}
+                <input type="hidden" name="tecnico" id="tecnico" value="{{user.nombre_usuario}} {{user.paterno}} {{user.materno}}">
+                <p>Docente Guía : {{user.nombre_usuario}} {{user.paterno}} {{user.materno}}</p>
+                <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">INDICADORES DE AVANCE</th>
+                        <th scope="col">Si</th>
+                        <th scope="col">No</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for actividad in actividades %}
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>{{actividad.pre1}}</td>
+                        <td><input type="radio" name="pre1" id="pre1" value="1"></td>
+                        <td><input type="radio" name="pre1" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>{{actividad.pre2}}</td>
+                        <td><input type="radio" name="pre2" id="pre2" value="1"></td>
+                        <td><input type="radio" name="pre2" value="0"></td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>{{actividad.pre3}}</td>
+                        <td><input type="radio" name="pre3" id="pre3" value="1"></td>
+                        <td><input type="radio" name="pre3" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">4</th>
+                        <td>{{actividad.pre4}}</td>
+                        <td><input type="radio" name="pre4" id="pre4" value="1"></td>
+                        <td><input type="radio" name="pre4" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">5</th>
+                        <td>{{actividad.pre5}}</td>
+                        <td><input type="radio" name="pre5" id="pre5" value="1"></td>
+                        <td><input type="radio" name="pre5" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">6</th>
+                        <td>{{actividad.pre6}}</td>
+                        <td><input type="radio" name="pre6" id="pre6" value="1"></td>
+                        <td><input type="radio" name="pre6" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">7</th>
+                        <td>{{actividad.pre7}}</td>
+                        <td><input type="radio" name="pre7" id="pre7" value="1"></td>
+                        <td><input type="radio" name="pre7" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">8</th>
+                        <td>{{actividad.pre8}}</td>
+                        <td><input type="radio" name="pre8" id="pre8" value="1"></td>
+                        <td><input type="radio" name="pre8" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">9</th>
+                        <td>{{actividad.pre9}}</td>
+                        <td><input type="radio" name="pre9" id="pre9" value="1"></td>
+                        <td><input type="radio" name="pre9" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">10</th>
+                        <td>{{actividad.pre10}}</td>
+                        <td><input type="radio" name="pre10" id="pre10" value="1"></td>
+                        <td><input type="radio" name="pre10" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">11</th>
+                        <td>{{actividad.pre11}}</td>
+                        <td><input type="radio" name="pre11" id="pre11" value="1"></td>
+                        <td><input type="radio" name="pre11" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">12</th>
+                        <td>{{actividad.pre12}}</td>
+                        <td><input type="radio" name="pre12" id="pre12" value="1"></td>
+                        <td><input type="radio" name="pre12" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">13</th>
+                        <td>{{actividad.pre13}}</td>
+                        <td><input type="radio" name="pre13" id="pre13" value="1"></td>
+                        <td><input type="radio" name="pre13" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">14</th>
+                        <td>{{actividad.pre14}}</td>
+                        <td><input type="radio" name="pre14" id="pre14" value="1"></td>
+                        <td><input type="radio" name="pre14" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">15</th>
+                        <td>{{actividad.pre15}}</td>
+                        <td><input type="radio" name="pre15" id="pre15" value="1"></td>
+                        <td><input type="radio" name="pre15" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">16</th>
+                        <td>{{actividad.pre16}}</td>
+                        <td><input type="radio" name="pre16" id="pre16" value="1"></td>
+                        <td><input type="radio" name="pre16" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">17</th>
+                        <td>{{actividad.pre17}}</td>
+                        <td><input type="radio" name="pre17" id="pre17" value="1"></td>
+                        <td><input type="radio" name="pre17" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">18</th>
+                        <td>{{actividad.pre18}}</td>
+                        <td><input type="radio" name="pre18" id="pre18" value="1"></td>
+                        <td><input type="radio" name="pre18" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">19</th>
+                        <td>{{actividad.pre19}}</td>
+                        <td><input type="radio" name="pre19" id="pre19" value="1"></td>
+                        <td><input type="radio" name="pre19" value="0"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">20</th>
+                        <td>{{actividad.pre20}}</td>
+                        <td><input type="radio" name="pre20" id="pre20" value="1"></td>
+                        <td><input type="radio" name="pre20" value="0"></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-primary me-md-2"  type="submit">Enviar</button>
+                    
+                  </div>
+                
+            </form>
+            </div>
+
+            </div>
+        </div>
+    </div>
+ 
+
+</div>
+</div>
+
+
+
+
+
+
+{% block extrajs %}
+
+<script src="{% static 'lib/js/data.js' %}"></script>
+<script src="{% static 'lib/js/main.js' %}"></script>
+  
+
+
+
+{% endblock extrajs %}
+
+{% endblock %}

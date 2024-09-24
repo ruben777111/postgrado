@@ -7,22 +7,17 @@
           {% csrf_token %}
           <div class="card">  
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.ci_usuario }}<br>
+              <h5>Maestrante: {{ object.usuario }}</h5>
+                       
+              PROGRAMA: {{ object.programa }}<br>
            
                 
             
               <hr>
-              {{ form.avance_tesis}}
+             
               <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
-              Reporte de mejora de tesis en segunda instancia:
-              <input type="file" name="tesis_segunda" class="form-control" id="informe" required accept="application/pdf"><br>
-              
-              Hoja de evaluación:
-              <input type="file" name="hoja" class="form-control" id="informe" required accept="application/pdf"><br>
-              Observaciones:
-              <input type="text" class="form-control" name="obs"  minlength="4" maxlength="200" />
+              Reporte General de mejora de tesis en segunda instancia:
+              <input type="file" name="reporte_general" class="form-control" id="informe" required accept="application/pdf"><br>
 
             </div>
             <div class="modal-footer">

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from usuario.models import ReporteGeneralTribunalInterno,SustentacionTesisHistorial,BancoNotificacion,AvanceHistorial,Avance_2_Histoiral,SustentacionPerfilHistorial,SustentacionPerfil,DocenteProvisional,TribunalPerfil,TribunalTesis,InformeGuiaFormulario,InformeGuia,InformeRevisor,Post,AsistenciaInduccion,Avance,Avance_2,Informe,ReporteGeneral,Programa,Requisitos,Cronograma,Cronograma2,CentroActividades,Docente_Revisor,ActividadesMaestrante,Usuario,Maestrante,Administracion,Docente
+from usuario.models import ReporteGeneralTribunalInterno,SustentacionTesisHistorial,BancoNotificacion,AvanceHistorial,Avance_2_Histoiral,SustentacionPerfilHistorial,DocenteProvisional,TribunalPerfil,TribunalTesis,InformeGuiaFormulario,InformeGuia,InformeRevisor,Post,AsistenciaInduccion,Avance,Avance_2,Informe,ReporteGeneral,Programa,Requisitos,Cronograma,Cronograma2,CentroActividades,Docente_Revisor,Usuario,Maestrante,Administracion,Docente
 # Register your models here.
 admin.site.register(Usuario)
 
@@ -11,10 +11,10 @@ admin.site.register(Administracion)
 admin.site.register(SustentacionPerfilHistorial)
 admin.site.register(Docente)
 admin.site.register(DocenteProvisional)
-admin.site.register(SustentacionPerfil)
+
 admin.site.register(Docente_Revisor)
 admin.site.register(CentroActividades)
-admin.site.register(ActividadesMaestrante)
+
 admin.site.register(Cronograma)
 admin.site.register(Cronograma2)
 

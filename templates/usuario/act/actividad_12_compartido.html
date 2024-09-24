@@ -1,0 +1,53 @@
+{% load static %}
+<div class="modal-dialog modal-lg " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+        <form id="informe" method="POST" action="{% url 'usuario:actividad_12_compartido' object.id_maestrante %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-3">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h5 class="card-title text-center">
+                    REGISTRAR DOCENTE REVISOR
+
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <hr>
+           
+            <div class="container">
+              <div class="row row-cols-1">
+                <div class="col">MAESTRANTE: {{object.usuario}} </div>
+                <div class="col">DOCENTE GUÍA: {{object.guia}} </div>
+                <div class="col">DOCENTE REVISOR: {{object.revisor}} </div>
+                <div class="container"><br>
+                  {{ form.as_p }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <input type="checkbox" required>
+            <div class="text-primary"> - Marque la casilla para confirmar el registro de la actividad.</div>
+            <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="colores-botonaceptar">Confirmar</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% block extrajs %}
+<script src="{% static 'lib/js/pdf.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'lib/js/actividad.js' %}"></script>
+  
+{% endblock extrajs %}

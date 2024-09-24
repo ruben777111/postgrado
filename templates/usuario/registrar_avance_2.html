@@ -13,10 +13,10 @@
                 </div>
                 <div class="col">
                   <h6 class="card-title text-center">
-                    FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRIA
+                    FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRÍA
                   </h6>
                   <h6 class="card-title text-center">
-                    R-0859 V.0
+                    R-0859
                   </h6>
                 </div>
               </div>
@@ -25,6 +25,7 @@
             <div class="container">
               <div class="row row-cols-1">
                 <div class="col">PROGRAMA: {{object.user.programa}} </div>
+                <div class="col">VERSIÓN DEL PROGRAMA: {{object.user.version}} </div>
                 <div class="col">MAESTRANTE: {{object.user}} </div>
                 <div class="col">DOCENTE GUÍA: {{object.user.guia}} </div>
                 <!-- <div class="col">TEMA DE TESIS: {{object.user.tema_tesis}} </div> -->
@@ -40,33 +41,33 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col" class="col-2">Capítulo</th>
-                      <th scope="col">Cualitativo(observaciones relevantes por capitulo)</th>
-                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capitulo)</th>  
+                      <th scope="col" class="col-2">CAPÍTULO</th>
+                      <th scope="col">Cualitativo(observaciones relevantes por capítulo)</th>
+                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capítulo)</th>  
                     </tr>
                   </thead>
                   <tbody>
                     <tr>  
-                      <td><p>Capítulo IV </p> PRESENTACIÒN DE RESULTADOS</td>
+                      <td><p><strong>CAPÍTULO IV</strong> </p> PRESENTACIÒN DE RESULTADOS</td>
                       <td>{{ form.cap4_cualitativo }}</td>  
                       <td>{{ form.cap4 }}%</td>  
                       
                                           
                     </tr>
                     <tr>  
-                      <td><p>CAPÍTULO V</p>CONCLUSIONES Y RECOMENDACIONES </td>
+                      <td><p><strong>CAPÍTULO V</strong></p>CONCLUSIONES Y RECOMENDACIONES </td>
                       <td>{{ form.cap5_cualitativo }}</td> 
                       <td>{{ form.cap5 }}%</td>  
                                            
                     </tr>
                     <tr>
-                      <td><p>CAPÍTULO VI</p> PROPUESTA</td>
+                      <td><p><strong>CAPÍTULO VI</strong></p> PROPUESTA</td>
                       <td>{{ form.cap6_cualitativo }}</td> 
                       <td>{{ form.cap6 }}%</td>        
                                     
                     </tr>
                     <tr>
-                      <td>REFERENCIAS BIBLIOGRÁFICAS  </td>
+                      <td><strong>REFERENCIAS BIBLIOGRÁFICAS</strong>  </td>
                       <td>{{ form.cap7_cualitativo }}</td> 
                       <td>{{ form.cap7 }}%</td>        
                                     
@@ -100,13 +101,46 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static 'lib/js/actividad.js' %}"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-      const cap3Cualitativo = document.getElementById("id_cap7_cualitativo");
-      const cap3 = document.getElementById("id_cap7");
-  
-      cap3Cualitativo.addEventListener("input", function() {
-          cap3.hidden = false; // Activar el campo cap3
-      });
+  // Función para habilitar/deshabilitar campos y establecer/eliminar el atributo requerido
+  function toggleFieldAndRequirement(inputId, relatedFieldId) {
+    const inputElement = document.getElementById(inputId);
+    const relatedElement = document.getElementById(relatedFieldId);
+
+    const hasValue = inputElement.value.trim() !== "";
+
+    // Habilitar o deshabilitar el campo relacionado
+    relatedElement.disabled = !hasValue;
+
+    // Establecer el campo como requerido si tiene valor, o eliminar el atributo requerido
+    if (hasValue) {
+      relatedElement.setAttribute("required", "required");
+    } else {
+      relatedElement.removeAttribute("required");
+    }
+  }
+
+  // Eventos para los campos cualitativos para habilitar/deshabilitar el campo relacionado
+  document.getElementById("id_cap4_cualitativo").addEventListener("input", function () {
+    toggleFieldAndRequirement("id_cap4_cualitativo", "id_cap4");
   });
-  </script>
+
+  document.getElementById("id_cap5_cualitativo").addEventListener("input", function () {
+    toggleFieldAndRequirement("id_cap5_cualitativo", "id_cap5");
+  });
+
+  document.getElementById("id_cap6_cualitativo").addEventListener("input", function () {
+    toggleFieldAndRequirement("id_cap6_cualitativo", "id_cap6");
+  });
+
+  document.getElementById("id_cap7_cualitativo").addEventListener("input", function () {
+    toggleFieldAndRequirement("id_cap7_cualitativo", "id_cap7");
+  });
+
+  // Inicializar el estado de los campos al cargar la página
+  toggleFieldAndRequirement("id_cap4_cualitativo", "id_cap4");
+  toggleFieldAndRequirement("id_cap5_cualitativo", "id_cap5");
+  toggleFieldAndRequirement("id_cap6_cualitativo", "id_cap6");
+  toggleFieldAndRequirement("id_cap7_cualitativo", "id_cap7");
+</script>
+
 {% endblock extrajs %}

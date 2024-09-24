@@ -12,10 +12,10 @@
                 </div>
                 <div class="col">
                   <h6 class="card-title text-center">
-                    FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRIA
+                    FORMULARIO PARA INFORME DE DOCENTE GUÍA SOBRE AVANCE DE TESIS DE MAESTRÍA
                   </h6>
                   <h6 class="card-title text-center">
-                    R-0859 V.0
+                    R-0859
                   </h6>
                 </div>
               </div>
@@ -24,8 +24,10 @@
             <div class="container">
               <div class="row row-cols-1">
                 <div class="col">PROGRAMA: {{object.user.programa}} </div>
+                <div class="col">VERSIÓN DEL PROGRAMA: {{object.user.version}} </div>
                 <div class="col">MAESTRANTE: {{object.user}} </div>
                 <div class="col">DOCENTE GUÍA: {{object.docete_guia}} </div>
+                <div class="col">FECHA: {{object.fecha_registro }} </div>
                 <!-- <div class="col">TEMA DE TESIS: {{object.user.tema_tesis}} </div> -->
               </div>
             </div>
@@ -40,28 +42,51 @@
                   <thead>
                     <tr>
                       <th scope="col" class="col-2">Capítulo</th>
-                      <th scope="col">Cualitativo(observaciones relevantes por capitulo)</th>
-                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capitulo)</th>  
+                      <th scope="col">Cualitativo(observaciones relevantes por capítulo)</th>
+                      <th scope="col" class="col-1">Cuantitativo (porcentaje de avance por capítulo)</th>  
                     </tr>
                   </thead>
                   <tbody>
                     <tr>  
-                      <td><p>CAPÍTULO I</p> INTRODUCCIÓN A LA ESTRUCTURA PROPOSITIVA DE LA INVESTIGACIÓN</td>
+                      <td><p><strong>CAPÍTULO I</strong></p> INTRODUCCIÓN A LA ESTRUCTURA PROPOSITIVA DE LA INVESTIGACIÓN</td>
                       <td>{{ object.cap1_cualitativo }}</td>  
-                      <td>{{ object.cap1 }}%</td>  
+                      <td>
+                        
+                        {% if object.cap1 %}
+                        {{ object.cap1 }}%
+                        {% endif %}
+                          
+                        
+                      </td>  
                       
                                           
                     </tr>
                     <tr>  
-                      <td><p>CAPÍTULO II</p> FUNDAMENTO TEÓRICO Y EPISTEMOLÓGICO.</td>
+                      <td><p><strong>CAPÍTULO II</strong></p> FUNDAMENTO TEÓRICO Y EPISTEMOLÓGICO.</td>
                       <td>{{ object.cap2_cualitativo }}</td> 
-                      <td>{{ object.cap2 }}%</td>  
+                      <td>
+                        
+                        {% if object.cap2 %}
+                        {{ object.cap2 }}%
+                        {% endif %}
+                          
+                       
+                      </td>  
                                            
                     </tr>
                     <tr>
-                      <td><p>CAPÍTULO III</p> METODOLOGÍA DE LA INVESTIGACIÓN</td>
+                      <td><p><strong>CAPÍTULO III</strong></p> METODOLOGÍA DE LA INVESTIGACIÓN</td>
                       <td>{{ object.cap3_cualitativo }}</td> 
-                      <td>{{ object.cap3 }}%</td>        
+                      <td>
+                      
+                        
+                        {% if object.cap3 %}
+                        {{ object.cap3 }}%
+                        {% endif %}
+                          
+                        
+                        
+                      </td>        
                                     
                     </tr>
                                         
@@ -87,6 +112,7 @@
              
           
               <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+              <a href="{% url 'usuario:detalle_avance_historial_pdf' pk=object.id_avance %}" class="btn btn-primary" target="_blank">Generar PDF</a>
              
             </div>
             

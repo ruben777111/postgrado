@@ -7,19 +7,13 @@
           {% csrf_token %}
           <div class="card">  
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.user.ci_usuario }}<br>
+              <h5>Maestrante: {{ object.usuario }}</h5>
+                   
+              DOCENTE GUÍA: {{ object.guia }}<br>
+              TÍTULO DEL BORRADOR DE TESIS: {{ object.tema_borrador_tesis}} <br>
           
               <hr>
               <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
-              Título del borrador de tesis
-              <input type="text"  class="form-control" name="titulo" placeholder="Título del borrador de tesis" required><br>              
-              Solicitud de nombramiento de docente revisor
-              <input type="file" name="nombramiento" class="form-control" accept="application/pdf" required><br>
-              Otros documentos de respaldo (borrador de tesis,aval del docente guía, otros)
-              <input type="file" name="respaldo" class="form-control" accept="application/pdf" required ><br>
-
               Fecha de recepción de borrador de tesis(registrada en investigación)<br>
                 <input type="date" name="recepcion_borrador" class="form-control" required>
               <hr>      

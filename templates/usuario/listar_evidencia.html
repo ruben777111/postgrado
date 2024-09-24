@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="sb-nav-link-icon">
-        <h4><i class="far fa-id-card"></i> LISTA DE EVIDENCIAS / REQUISITOS</h4>
+        <h5>AJUSTE DE ACTIVIDADES Y REQUISITOS </h5>
     </div>
     <hr />
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -12,13 +12,14 @@
                 <thead>
                     <tr>
                         <th class="header" scope="col">#</th>
-                        <th class="header" scope="col">Nº requisito.</th>
+                        <th class="header" scope="col">Código de actividad</th>
                         <th class="header" scope="col">Actividad</th>
                         <th class="header" scope="col">Evidencia</th>
-                        <th class="header" scope="col">Tiempo/Dias</th>
-                        <th class="header" scope="col">Técnico</th>
-                        <th class="header" scope="col">Investigación</th>
-                        <th class="header" scope="col">Postgrado</th>
+                        <th class="header" scope="col">Tiempo/Días</th>
+                        <th class="header" scope="col">Formato de días</th>
+                        <th class="header" scope="col">Técnico  de Postgrado / Coordinación de investigación</th>
+                        
+                        <th class="header" scope="col">Coordinación de Postgrado</th>
                     
                     </tr>
                 </thead>
@@ -31,10 +32,44 @@
                         <td>{{ usuario.nro_requisito }}</td>
                         <td>{{ usuario.actividad }}</td>
                         <td>{{ usuario.requisito }}</td>
-                        <td>{{ usuario.tiempo }}</td>
-                        <td>{{ usuario.rol1 }}</td>
-                        <td>{{ usuario.rol2 }}</td>
-                        <td>{{ usuario.rol3 }}</td>
+                        <td>
+                        
+                        {% if usuario.nro_requisito == 1 or usuario.nro_requisito == 3 or usuario.nro_requisito == 6 or usuario.nro_requisito == 13 or usuario.nro_requisito == 14 or usuario.nro_requisito == 15 or usuario.nro_requisito == 16 or usuario.nro_requisito == 20 or usuario.nro_requisito == 11 or usuario.nro_requisito == 111 or usuario.nro_requisito == 112 or usuario.nro_requisito == 113 %}
+                              {{ usuario.tiempo }}
+                        
+                        {% else %}
+                              
+                              <p class="text-secondary">No se requiere asignar dias a esta actividad</p>
+                        {% endif %}
+                            
+                        
+                          
+                        
+                        </td>
+                        <td>
+                            
+                            {% if usuario.nro_requisito == 1 or usuario.nro_requisito == 3 or usuario.nro_requisito == 6 or usuario.nro_requisito == 13 or usuario.nro_requisito == 14 or usuario.nro_requisito == 15 or usuario.nro_requisito == 16 or usuario.nro_requisito == 20 %}
+                            <p class="text-primary">Días hábiles</p>    
+                            {% endif %}
+                            {% if usuario.nro_requisito == 11 or usuario.nro_requisito == 111 or usuario.nro_requisito == 112 or usuario.nro_requisito == 113  %}
+                            <p class="text-success">Días calendario</p>
+                        {% endif %}
+                        </td>
+                        <td>
+                            
+                            {% if usuario.rol1 %}
+                                Asignado
+                            {% endif %}
+                                
+                            
+                            
+                        
+                        </td>
+
+                        <td>                            
+                            {% if usuario.rol3 %}
+                            Asignado
+                        {% endif %}</td>
                
                     </tr>
                     {% endfor %}

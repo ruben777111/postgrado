@@ -11,15 +11,24 @@
   
 <div class="card">
     <div class="card-header">
-        Dirigido a: {{ usuario.destiny }}
+        <strong  class="text-primary" style="float: right;">{{usuario.rol}}</strong>
+        Dirigido a: {{ usuario.destiny }} 
+
+
     </div>
     <div class="card-body">
       <h5 class="card-title">{{ usuario.verbo }}</h5>
       <p class="card-text">{{ usuario.text }}</p>
+      <p class="card-text">Maestrante: {{ usuario.maestrante }}</p>
+      <p class="card-text">Programa: {{ usuario.programa }}</p>
      
     </div>
     <div class="card-footer text-muted">
         Fecha publicada: {{ usuario.timestamp }}
+        
+        <div style="text-align: right;">
+            Nº Noti.: {{usuario.cod_notificacion}}
+          </div>
     </div>
   </div>
   {% endfor %}   

@@ -3,12 +3,10 @@ $('input[type="file"]').on('change', function(){
     if ($( this ).val() != '') {
       if(ext == "pdf"){
   
-        if($(this)[0].files[0].size > 100048576){
-          console.log("El documento excede el tamaño máximo");
-          $('#modal-title').text('¡Precaución!');
-          $('#modal-msg').html("Se solicita un archivo no mayor a 200MB. Por favor verifica.");
-          $("#modal-gral").modal();           
+        if($(this)[0].files[0].size > 3000000){
+
           $(this).val('');
+          alert("Se solicita un archivo no mayor a 4 MB. Por favor se sugiere verificar.");
         }else{
           $("#modal-gral").hide();
         }

@@ -1,0 +1,71 @@
+{% load static %}
+
+<div class="modal-dialog modal-lg " role="document">
+    <div class="modal-content">
+              <div class="modal-header">                
+                
+                    <div class="card border-primary" style="width: 100%;">
+
+                      <form id="informe" method="POST" action="{% url 'usuario:registrar_tesis_aprobado' object.user.maestrante.id_maestrante %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                      
+                      <div class="card-body">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col col-lg-3">
+                              <img src="{% static 'lib/img/logousb.png' %}"  class="img-fluid" alt="Responsive image">
+                            </div>
+                            <div class="col">
+                              <h5 class="card-title text-center">
+                      
+                      
+                          
+                                REGISTRAR PERFIL DE TESIS
+                              
+                               
+                             </h5>
+                            </div>
+                           
+                          </div>
+                        </div>
+                      <hr>
+
+                      <div class="container">
+                        <div class="row row-cols-1">
+                          <div class="col">MAESTRANTE: {{object.user.maestrante}} </div>                          
+
+                          <div class="container"><br>
+                           * Subir archivo de perfil de Tesis
+                            <input type="file" class="form-control" name="tesis" id="tesis" onchange="return validarExt()" accept="application/pdf">
+                          </div>
+                          
+                        </div>
+                      </div>
+
+        </div>
+            
+          
+              
+            <div class="modal-footer">
+          
+              
+              <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="colores-botonaceptar" onclick="return vacio();">Confirmar</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+{% block extrajs %}
+
+
+<script src="{% static 'lib/js/informe.js' %}"></script>
+
+
+
+
+
+{% endblock extrajs %}

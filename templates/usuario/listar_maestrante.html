@@ -2,90 +2,123 @@
 {% load static %}
 {% block content %}
 <div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i>LISTA DE MAESTRANTES</h5>
+    <h5>LISTA DE MAESTRANTES EN SISTEMA</h5>
 </div>
 <hr />
 
 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <div class="table-responsive">
-  
+
 
         <table id="data" class="table table-striped">
             <thead>
                 <tr>
-                    <th>
-                        <div>OPCIONES&nbsp;DE&nbsp;USUARIO</div>
-                    </th>
+                    <th class="header" scope="col">CI</th>
                     <th class="header" scope="col">R.U.</th>
-                    
                     <th class="header" scope="col">NOMBRE</th>
-                    <th class="header" scope="col">APELLIDO&nbsp;PATERNO</th>
-                    <th class="header" scope="col">APELLIDO&nbsp;MATERNO</th>
-                    <th class="header" scope="col">C.I.</th>
-                    <th class="header" scope="col">DEPARTAMENTO</th>
-                    
                     <th class="header" scope="col">PROGRAMA</th>
-                    <th class="header" scope="col">VERSIÓN&nbsp;DEL&nbsp;PROGRAMA</th>
+                    <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+
                     <th class="header" scope="col">GESTIÓN</th>
-                    <th class="header" scope="col">Nº&nbsp;DE&nbsp;CELULAR</th>
-                    <th class="header" scope="col">Nº&nbsp;DE&nbsp;REFERENCIA</th>
-                    
-                    <th class="header" scope="col">CORREO&nbsp;INSTITUCIONAL</th>
-                    <th class="header" scope="col">CORREO&nbsp;PERSONAL</th>
-                    <th class="header" scope="col">NOMBRE&nbsp;DE&nbsp;USUARIO</th>
-                    <th class="header" scope="col">FECHA&nbsp;DE&nbsp;DERIVACIÓN</th>
-                    <th class="header" scope="col">FECHA&nbsp;DE&nbsp;REGISTRO</th>
+                    <th class="header" scope="col">TIPO MAESTRANTE</th>
+     
+                    <th class="header" scope="col">FECHA DE DERIVACIÓN</th>
+                    <th class="header" scope="col">FECHA DE REGISTRO</th>
+                    <th>
+                        #
+                    </th>                    
+                    <th>
+                        ESTADO DEL AVANCE DE TESIS (código de la actividad)
+                    </th>
+                    <th class="header" scope="col">DICTAMEN DEL ACTO DE SUSTENTACIÓN DEL TEMA DE TESIS (Perfil)</th>
+                    <th class="header" scope="col">DICTAMEN DEL ACTO DE DEFENSA DE TESIS</th>
+                    <th class="header" scope="col">MODIFICAR DICTAMEN DE DEFENSA DE PERFIL Y DEFENSA DE TESIS </th>
                 </tr>
             </thead>
             <tbody id="tableBody_users">
                 {% for usuario in actividades %}
                 <tr>
+                    <td>{{ usuario.usuario.ci_usuario }}</td>
+
                     <td>
                         
-                        {% if user.tipo_usuario == 3 or user.tipo_usuario == 4 %}
-                          <a href="#" onclick="eliminarusuario({{ usuario.id_maestrante }})" class="btn btn-danger"><i
-                                class="fas fa-user-minus" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="Esta acción deshabilitara al maestrante"></i></a>
-                          {% else %}
-                               
+                        {% if usuario.usuario.ru  %}
+                        {{ usuario.usuario.ru }}
+                        {% endif %}
+                            
+                        
+                       </td>
+                    <td>{{ usuario.usuario }}</td>
+
+                    <td>{{ usuario.programa }}</td>
+                    <td>{{ usuario.version }} </td>
+                    <td>{{ usuario.gestion }}</td>
+                    <td>
+
+                        {% if usuario.tipo_maestrante == "1" %}
+                        Programa regular
+                        {% elif usuario.tipo_maestrante == "2" %}
+                        Programa antiguo
+
+                        {% endif %}
+                    </td>
+                 
+
+                    <td>
+                        {% if usuario.fecha_derivacion %}
+                        {{ usuario.fecha_derivacion }}
+                        {% else %}
+                        Maestrante no derivado
+                        {% endif %}
+
+                    </td>
+                    <td>{{ usuario.usuario.fecha_registro }}</td>
+                    <td>
+                        <button
+                            onclick="abrir_modal_edicion('{% url 'usuario:editar_maestrante' usuario.id_maestrante %}')"
+                            class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Editar datos"><i class="fas fa-user-edit"></i></button>
+                    </td>
+                    <td>
+
+                        
+                        {% if usuario.avance_tesis == 1000 %}
+                        Tesis concluido
+
+                        {% elif usuario.avance_tesis >= 0 %}
+                           {{ usuario.avance_tesis }} 
                         {% endif %}
                             
 
-                 
-                                <button onclick="abrir_modal_edicion('{% url 'usuario:editar_maestrante' usuario.id_maestrante %}')"
+                        
+                    </td>
+                    <td>
+                        {% if usuario.procedencia_tema == True %}
+                        <p class="text-primary">Procedente</p>
+                        
+                        
+                        {% elif usuario.procedencia_tema == False %}
+                        
+                        <p class="text-danger">Improcedente</p>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if usuario.procedencia_tesis == True %}
+                        <div style="color: rgb(74, 105, 231);">
+                            Procedente
+                        </div>                        
+                        {% elif usuario.procedencia_tesis == False %}
+                        <div style="color: rgb(231, 95, 74);">
+                            Improcedente
+                          </div>                          
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button
+                            onclick="abrir_modal_ver('{% url 'usuario:editar_maestrante_dictamen' usuario.id_maestrante %}')"
                             class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Editar datos"><i class="fas fa-user-edit"></i></button>
                     </td>
-
-                    <td>{{ usuario.ru }}</td>
-                    <td>{{ usuario.nombre_usuario }}</td>
-                    <td>{{ usuario.paterno }}</td>
-                    <td>{{ usuario.materno }}</td>
-                    <td>{{ usuario.ci_usuario }}</td>
-                    <td>{{ usuario.departamento }}</td>
-                    
-                    <td>{{ usuario.programa }}</td>
-                    <td>{{ usuario.version }}
-                        
-                        {{ usuario.nueva_version }}
-
-                    </td>
-                    <td>{{ usuario.gestion }}</td>
-                    <td>{{ usuario.cel_usuario }}</td>
-                    <td>{{ usuario.cel_usuario2 }}</td>
-                    <td>{{ usuario.correo_inst }}</td>
-                    <td>{{ usuario.correo }}</td>
-                    <td>{{ usuario.username }}</td>
-                    <td>
-                    {% if usuario.fecha_derivacion %}
-                        {{ usuario.fecha_derivacion }}
-                    {% else %}
-                    Maestrante no derivado
-                    {% endif %}
-                        
-                        </td>
-                    <td>{{ usuario.fecha_registro }}</td>
-                    
                 </tr>
                 {% endfor %}
             </tbody>
@@ -93,54 +126,10 @@
     </div>
 </div>
 
+
 {% block extrajs %}
+<script src="{% static 'lib/js/data.js' %}"></script>
 
-<script>
-    var $ = jQuery.noConflict();
-    $(document).ready(function () {
-
-        var table = $('#data').DataTable({
-            "language": {
-                "lengthMenu": "Mostrar" + `
-                <select class="custom-select custom-select-sm form-control form-control-sm">
-                    <option value ='10'>10</option>
-                    <option value ='25'>25</option>
-                    <option value ='50'>50</option>
-                    <option value ='100'>100</option>
-                    <option value ='-1'>Todos</option>
-                    ` + " registros por página",
-                "zeroRecords": "No hay registros disponibles",
-                "info": "Mostrar _PAGE_ de _PAGES_ paginas",
-                "infoEmpty": "No hay registros disponibles",
-                "infoFiltered": "(filtrado de _MAX_ registros totales)",
-                "search": "Buscar",
-                "paginate": {
-                    'next': "Siguiente",
-                    'previous': "Anterior"
-                }
-            }
-        });
-
-        // Agregar filtros para las columnas específicas (nombre, apellido, R.U.)
-        $('#filtro-nombre').on('keyup', function () {
-            table.column(2).search(this.value).draw();
-        });
-
-        $('#filtro-apellido').on('keyup', function () {
-            table.column(3).search(this.value).draw();
-        });
-        $('#filtro-materno').on('keyup', function () {
-            table.column(4).search(this.value).draw();
-        });
-        $('#filtro-ru').on('keyup', function () {
-            table.column(1).search(this.value).draw();
-        });
-    });
-</script>
 {% endblock extrajs %}
 
 {% endblock %}
-
-
-
-

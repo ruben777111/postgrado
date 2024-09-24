@@ -29,15 +29,19 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th class="header" scope="col">CI</th>
         <th class="header" scope="col">R.U.</th>
         <th class="header" scope="col">MAESTRANTE</th>
         <th class="header" scope="col">PROGRAMA</th>
-        <th class="header" scope="col">FECHA&nbsp;SUSTENTACIÓN</th>                  
-        <th class="header" scope="col">DOCENTE&nbsp;PROVISIONAL</th>
-        <th class="header" scope="col">TRIBUNAL&nbsp;1</th>
-        <th class="header" scope="col">TRIBUNAL&nbsp;2</th>
-        <th class="header" scope="col">INSTANCIA&nbsp;SUSTENTACIÓN </th>
-        <th class="header" scope="col">Dictamen&nbsp;del&nbsp;acto&nbsp;de&nbsp;sustentación</th>
+        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
+        <th class="header" scope="col">FECHA SUSTENTACIÓN</th>                  
+        <th class="header" scope="col">DOCENTE PROVISIONAL</th>
+        <th class="header" scope="col">TRIBUNAL 1</th>
+        <th class="header" scope="col">TRIBUNAL2</th>
+        <th class="header" scope="col">INSTANCIA SUSTENTACIÓN </th>
+        <th class="header" scope="col">TEMA IMPROCEDENTE</th>
+        <th class="header" scope="col">TEMA PROCEDENTE</th>
+       
 
 
       </tr>
@@ -45,9 +49,23 @@
     <tbody id="tableBody_users">
       {% for evi in maestrantesevi %}
       <tr>
-        <td> {{ evi.ru }} </td>
-        <td>{{ evi.maestrante }}</td>
+      <td>                            
+          {% if evi.usuario.ci_usuario %}
+          {{ evi.usuario.ci_usuario}}
+          {% else %}
+          No asignado
+          {% endif %} 
+      </td>
+        <td>                           
+          {% if evi.usuario.ru %}
+          {{ evi.usuario.ru}}
+          {% else %}
+          No asignado
+          {% endif %}  
+      </td>
+        <td>{{ evi.usuario }}</td>
         <td>{{ evi.programa }}</td>
+        <td>{{ evi.version }}</td>
         <td>{{ evi.cronograma.fecha_3 }} - {{ evi.cronograma.hora_sustentacion }} hrs</td>
         
         <td>{{ evi.provisional }}</td>
@@ -78,7 +96,8 @@
           <a href="#" onclick="improcedenciatema({{ evi.id_maestrante }})" class="btn btn-danger"><i
               class="fas fa-times" data-bs-toggle="tooltip" data-bs-placement="top"
               title="Tema de perfil improcedente"></i></a>
-
+            </td>
+            <td>
           <a href="#" onclick="procedenciatema({{ evi.id_maestrante }})" class="btn btn-primary"><i class="fas fa-check"
               data-bs-toggle="tooltip" data-bs-placement="top" title="Tema de perfil procedente"></i></a>
 
@@ -94,7 +113,7 @@
 {% endif %}
 {% block extrajs %}
 
-
+<script src="{% static 'lib/js/data.js' %}"></script>
 <script src="{% static 'lib/js/main.js' %}"></script>
 
 

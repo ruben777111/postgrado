@@ -26,8 +26,7 @@
                     {% for usuario in actividades %}
                     <tr>
                         <td><button onclick="abrir_modal_edicion('{% url 'usuario:editar_evidencia' usuario.id_requisito %}')"
-                            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Editar datos"><i class="fas fa-user-edit"></i></button></td>
+                            class="btn btn-warning" ><i class="fas fa-user-edit"></i></button></td>
                         <td>{{ usuario.nro_requisito }}</td>
                         <td>{{ usuario.actividad }}</td>
                         <td>{{ usuario.requisito }}</td>

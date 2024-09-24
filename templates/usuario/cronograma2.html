@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <div class="sb-nav-link-icon">
-    <h3><i class="fas fa-calendar-alt"></i> Cronograma de actividades del Maestrante</h3>
+    <h5>CRONOGRAMA DE MAESTRANTES EN CURSO</h5>
 </div>
 <hr />
 <div class="row">
@@ -12,23 +12,25 @@
 
                 <thead>
                     <tr>
+                        <th class="header" scope="col">CI</th>
                         <th class="header" scope="col">R.U. </th>
-                        <th class="header" scope="col">Nombre </th>
-                        <th class="header" scope="col">Programa </th>
-                        <th class="header" scope="col">Primer&nbsp;avance</th>
-                        <th class="header" scope="col">Segundo&nbsp;avance</th>
-                        <th class="header" scope="col">Presentación&nbsp;borrador</th>
-                        <th class="header" scope="col">Presentación&nbsp;borrador&nbsp;prorroga</th>
-                        <th class="header" scope="col">Presentación&nbsp;formulario&nbsp;docente&nbsp;revisor</th>
-                        <th class="header" scope="col">Presentación&nbsp;formulario&nbsp;docente&nbsp;guía</th>
-                        <th class="header" scope="col">Presentación&nbsp;reporte&nbsp;general</th>
+                        <th class="header" scope="col">NOMBRE </th>
+                        <th class="header" scope="col">PROGRAMA </th>
+                        <th class="header" scope="col">VERSIÓN DEL PROGRAMA </th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL PRIMER AVANCE</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL SEGUNDO AVANCE</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL BORRADOR DE TESIS</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL BORRADOR DE TESIS PRORROGA</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL FORMULARIO DOCENTE REVISOR</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL FORMULARIO DOCENTE GUÍA</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL REPORTE GENERAL</th>
                         
-                        <th class="header" scope="col">reporte&nbsp;general&nbsp;segundo</th>
-                        <th class="header" scope="col">Presentación&nbsp;Tesis&nbsp;habilitada</th>
-                        <th class="header" scope="col">Acto&nbsp;de&nbsp;sustentación</th>
-                        <th class="header" scope="col">Hora&nbsp;de&nbsp;sustentación</th>
-                        <th class="header" scope="col">Tesis&nbsp;mejorada&nbsp;para&nbsp;empaste</th>
-                        <th class="header" scope="col">Reporte&nbsp;general&nbsp;Tribunal&nbsp;interno&nbsp;(prorroga)</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL SEGUNDO REPORTE GENERAL</th>
+                        <th class="header" scope="col">PRESENTACIÓN DE TESIS PARA HABILITACIÓN A DEFENSA</th>
+                        <th class="header" scope="col">FECHA/HORA DE LA DEFENSA DE TESIS</th>
+                    
+                        <th class="header" scope="col">PRESENTACIÓN DE TESIS MEJORADA A PARA EMPASTE</th>
+                        <th class="header" scope="col">PRESENTACIÓN DEL REPORTE GENERAL TRIBUNAL INTERNO (PRORROGA)</th>
 
                         <th class="header" scope="col"># </th>
                    
@@ -41,9 +43,24 @@
               
                     {% for usuario in actividades %}
                     <tr>
-                        <td class="header" scope="col">{{ usuario.user.ru }}</td>
+                        <td>                           
+                            {% if usuario.user.usuario.ci_usuario %}
+                            {{ usuario.user.usuario.ci_usuario}}
+                            {% else %}
+                            No asignado
+                            {% endif %} 
+                        </td>
+                        <td>                            
+  
+                            {% if usuario.user.usuario.ru %}
+                            {{ usuario.user.usuario.ru}}
+                            {% else %}
+                            No asignado
+                            {% endif %}  
+                        </td>
                         <td>{{ usuario.user }}</td>
                         <td>{{ usuario.user.programa }}</td>
+                        <td>{{ usuario.user.version }}</td>
                         <td>
                             {% if usuario.fecha_avance1 %}
                             {{ usuario.fecha_avance1}}
@@ -129,22 +146,14 @@
                         </td> 
                         <td>
                             {% if usuario.fecha_sustentacion %}
-                            {{ usuario.fecha_sustentacion}}
+                            {{ usuario.fecha_sustentacion}} -  {{ usuario.hora_sustentacion}}
                             {% else %}
                             <div class="colores-primario-msg">
                                 No asignado
                             </div>
                             {% endif %}
                         </td>
-                        <td>
-                            {% if usuario.hora_sustentacion %}
-                            {{ usuario.hora_sustentacion}}
-                            {% else %}
-                            <div class="colores-primario-msg">
-                                No asignado
-                            </div>
-                            {% endif %}
-                        </td>  
+                       
                         <td>
                             {% if usuario.fecha_tesis_mejorada %}
                             {{ usuario.fecha_tesis_mejorada}}
@@ -165,13 +174,13 @@
                         </td>                                         
                         <td>
                             
-                            {% if user.is_staff %}
+                           
                                 
                             <button type="button"
                             onclick="abrir_modal_edicion('{% url 'usuario:editar_cronograma2' usuario.id_cronograma %}')"
                             class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Designar fechas "><i class="fa-solid fa-calendar-days"></i></button>
-                            {% endif %}
+                
                                 
 
                            

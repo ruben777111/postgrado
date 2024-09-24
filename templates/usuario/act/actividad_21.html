@@ -7,22 +7,19 @@
           {% csrf_token %}
           <div class="card">  
             <div class="card-body">
-              <h5>Maestrante: {{ object.maestrante }}</h5>
-              R.U.: {{ object.ru }} <br>
-              C.I.: {{ object.ci_usuario }}<br>
+              <h5>Maestrante: {{ object.usuario }}</h5>
+         
+              FECHA DE SOLICITUD DE PAGO: {{ object.recepcion_solicitud }}<br>
            
                 
             
               <hr>
-              {{ form.avance_tesis}}
+        
               <input type="hidden" name="id_maestrante" value="{{ object.id_maestrante }}"><br>
 
-              <div> Fecha de recepción de solicitud de coordinación de investigación:<input type="date" class="form-control" name="fecha_recepcion" required></div> <br>
+              <div><input type="checkbox" required>Confirmación de la fecha de recepción de solicitud de pago</div> <br>
              
 
-              Observaciones:
-              <input type="text" class="form-control" name="obs"  minlength="4" maxlength="200" />
-            </div>
             <div class="modal-footer">
               <input type="checkbox" required>
               <div class="text-primary"> - Marque la casilla para confirmar el registro de la actividad.</div>

@@ -19,7 +19,11 @@
   <h5><i class="far fa-id-card"></i>
     {% for actividades in actividad %}
     {{ actividades.actividad }} <br><br>
-    {{ actividades.requisito }}
+    {{ actividades.requisito }}<br><br>
+    <div class="alert alert-primary" role="alert">
+      La fecha de presentación del Reporte General se establece a los <strong>{{ actividades.tiempo }}</strong>  dias hábiles a partir de la presentación del Informe R-0997. <br><br>
+     <p class="small">Código de actividad = {{ actividades.nro_requisito }}</p>
+    </div>
 
     {% endfor %}
   </h5>
@@ -32,14 +36,17 @@
   <table id="data" class="table table-striped">
     <thead>
       <tr>
+        <th class="header" scope="col">CI</th>
         <th class="header" scope="col">R.U.</th>
         <th class="header" scope="col">MAESTRANTE</th>
         <th class="header" scope="col">PROGRAMA</th>
+        <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
         <th class="header" scope="col">DOCENTE REVISOR</th>
-        <th class="header" scope="col">FECHA LIMITE DE PRESENTACIÓN</th>
-        <th class="header" scope="col">Detalle de reporte</th>
-        <th class="header" scope="col">Activar segundo reporte</th>
-
+        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DE REPORTE GENERAL</th>
+        <th class="header" scope="col">DETALLE DEL REPORTE</th>
+        <th class="header" scope="col">ACTIVAR SEGUNDO REPORTE GENERAL</th>
+        <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DE SEGUNDO REPORTE GENERAL</th>
+        <th class="header" scope="col">DETALLE DEL SEGUNDO REPORTE</th>
         <th class="header" scope="col">#</th>
 
 
@@ -49,9 +56,23 @@
     <tbody id="tableBody_users">
       {% for evi in maestrantesevi %}
       <tr>
-        <td> {{ evi.ru }} </td>
-        <td>{{ evi.maestrante }}</td>
+      <td>                            
+          {% if evi.usuario.ci_usuario %}
+          {{ evi.usuario.ci_usuario}}
+          {% else %}
+          No asignado
+          {% endif %} 
+      </td>
+        <td>                           
+          {% if evi.usuario.ru %}
+          {{ evi.usuario.ru}}
+          {% else %}
+          No asignado
+          {% endif %}  
+      </td>
+        <td>{{ evi.usuario }}</td>
         <td>{{ evi.programa }}</td>
+        <td>{{ evi.version }}</td>
         <td>{{ evi.revisor }}</td>
         <td>
           {% if evi.cronograma2.fecha_reporte_general < today  %}
@@ -62,11 +83,12 @@
 
         </td>
 
-        <td>{% if evi.reportegeneral.aprobacion == "no" %}
-          <div class="colores-primario-msg">Reporte no aprobado</div> 
+        <td>
+          {% if evi.reportegeneral.aprobacion == "no" %}
           
+          <p class="text-danger">Reporte no procedente</p>
           {% elif evi.reportegeneral.aprobacion == "si" %}
-          <div class="colores-primario-msg">Reporte aprobado
+          <div class="colores-primario-msg">Reporte procedente
           </div> 
           {% else %}
           Reporte no emitido
@@ -80,17 +102,107 @@
       
               {% endif %}
               {% endif %}
-              {% if evi.reportegeneral.aceptar_revisor and evi.reportegeneral.aprobacion == "no" and not evi.reportegeneral.aceptar_revisor2  %}
-              <a href="#" onclick="activarreporte2({{ evi.id_maestrante }})" class="btn btn-warning"><i class="fas fa-check"
-                data-bs-toggle="tooltip" data-bs-placement="top" title="Tema de perfil procedente"></i></a>
+              {% if evi.reportegeneral.aceptar_revisor and evi.reportegeneral.aprobacion == "no" and not evi.reportegeneral.aceptar_revisor2 and not evi.reportegeneral.activar_reporte2 %}
+      
+                <button onclick="abrir_modal_ver('{% url 'usuario:segundo_reporte_general' evi.id_maestrante %}')"
+                class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+                  class="fas fa-calendar-check"></i></button>
+    {% else %}
     
+    {% if evi.reportegeneral.activar_reporte2 and not evi.reportegeneral.aceptar_revisor2 %}
+       Segundo reporte general asignado
+    {% endif %}
+      
+   
               {% endif %}
+        </td>
+
+        <td>
+          {% if evi.cronograma2.fecha_reporte_general2 < today  %}
+            <span style="color: red;">{{ evi.cronograma2.fecha_reporte_general2 }} - expiró fecha de entrega</span>
+          {% else %}
+          
+          {% if evi.cronograma2.fecha_reporte_general2 %}
+          {{ evi.cronograma2.fecha_reporte_general2 }}
+          {% endif %}
+            
+            
+          {% endif %}
+
+        </td>
+        <td>
+          
+          {% if evi.reportegeneral.activar_reporte2 %}
+          {% if evi.reportegeneral.aceptar_revisor2 %}
+          Segundo reporte general emitido
+            {% else %}
+            Segundo reporte general no emitido
+          {% endif %}          
+          {% endif %}
+            
+
+            
         </td>
         <td>
      
-          <a href="#" onclick="procedenciareporte({{ evi.id_maestrante }})" class="btn btn-primary"><i
-              class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Tema de perfil procedente"></i></a>
+
+    
+      {% if evi.tipo_maestrante == "2" %}
+      {% if evi.bloqueo_maestrante  %}
+      Programa de maestrante bloqueado
+      {% else %}          
+      {% if evi.vigencia_matricula_antiguo <   today %}
+      Vigencia de matrícula caducada
+
+      {% elif evi.vigencia_matricula_antiguo_total <   today %}
+      <p class="text-danger">Vigencia de programa caducada</p>
+      {% else %}
+
+      {% if evi.reportegeneral.aceptar_revisor and evi.reportegeneral.aprobacion == "si" %}
+      <a href="#" onclick="procedenciareporte({{ evi.id_maestrante }})" class="btn btn-primary"><i
+       class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
+       title="Tema de perfil procedente"></i></a>
+       
+      {% endif %}
+       
+       {% if evi.reportegeneral.aceptar_revisor2 %}
+       <a href="#" onclick="procedenciareporte({{ evi.id_maestrante }})" class="btn btn-primary"><i
+         class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
+         title="Tema de perfil procedente"></i></a>
+       {% endif %}
+         
+
+      {% endif %}
+      {% endif %}
+      {% endif %}
+      {% if evi.tipo_maestrante == "1" %}
+
+      
+      {% if evi.bloqueo_maestrante  %}
+      Programa de maestrante bloqueado
+      {% else %}
+      {% if evi.vigencia_matricula_regular_total <   today %}
+      <p class="text-danger">Vigencia de programa caducada</p>
+      {% else %}
+      
+      {% if evi.reportegeneral.aceptar_revisor and evi.reportegeneral.aprobacion == "si" %}
+      <a href="#" onclick="procedenciareporte({{ evi.id_maestrante }})" class="btn btn-primary"><i
+       class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
+       title="Tema de perfil procedente"></i></a>
+       
+      {% endif %}
+       
+       {% if evi.reportegeneral.aceptar_revisor2 %}
+       <a href="#" onclick="procedenciareporte({{ evi.id_maestrante }})" class="btn btn-primary"><i
+         class="fas fa-user-plus" data-bs-toggle="tooltip" data-bs-placement="top"
+         title="Tema de perfil procedente"></i></a>
+       {% endif %}
+         
+
+      {% endif %}           
+      {% endif %} 
+      {% endif %}
+
             
         </td>
       </tr>
@@ -100,6 +212,7 @@
 </div>
 {% endif %}
 {% block extrajs %}
+<script src="{% static 'lib/js/data.js' %}"></script>
 <script src="{% static 'lib/js/main.js' %}"></script>
 {% endblock extrajs %}
 {% endblock %}

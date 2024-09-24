@@ -48,8 +48,7 @@ class SendMessageView(View):
         return HttpResponse('Mensaje enviado por defecto a la sala de chat.')
 from asgiref.sync import async_to_sync
 def Prueba(request):
-    print("coneccion")
-    print("testeo")
+
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         "notification_broadcast",

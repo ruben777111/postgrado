@@ -3,79 +3,66 @@
 {% block content %}
 <div class="card border-light mb-3" style="max-width: 100%;">
   <div class="card-body">
-    <h5><i class="far fa-id-card"></i> FORMULARIO DE REGISTRO DE DOCENTE</h5>
-    <hr />
+
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-        <form id="informe" method="POST">
-          {% if messages %}
-          <div class="alert alert-danger">
-            <ul class="errorlist">
-              {% for message in messages %}
-                <li>{{ message }}</li>
-              {% endfor %}
-            </ul>
+        <h5> REGISTRO DE DOCENTE</h5> <br>
+
+        <div class="card" id="obtener_datos_usuario">
+          <div class="card-header" style="display: flex; justify-content: space-between;">
+            <h5>OBTENER DATOS DEL USUARIO</h5>
+            <a class="colores-segundario" href="{% url 'usuario:registrar_nuevo_docente'  %}">FORMULARIO DE REGISTRO DE DOCENTE</a>
+
           </div>
-        {% endif %}
-          <div class="card colores-formulario">
-          {% csrf_token %}
-          
-          {% if form.errors %}
-          {% for field in form %}
-              {% for error in field.errors %} 
-                 <div class="alert alert-danger">
-                      <strong>{{ error|escape }}</strong>
-                 </div>
-              {% endfor %}
-          {% endfor %}
-       {% endif %}
-          
-
-       {{ form.tipo_usuario }}<br>
-       {{ form.nombre_usuario.label }}
-       {{ form.nombre_usuario }} <br>
-
-       {{ form.paterno.label }}
-       {{ form.paterno }}<br>
-
-       {{ form.materno.label }}
-       {{ form.materno }}<br>
-
-
-
-       {{ form.ci_usuario.label }}
-       {{ form.ci_usuario }}<br>
-
-       {{ form.departamento.label }}
-       {{ form.departamento }} <br>
-
-
-
-       {{ form.cel_usuario.label }}
-       {{ form.cel_usuario }}<br>
-
-       {{ form.cel_usuario2.label }}
-       {{ form.cel_usuario2 }}<br>
-
-       {{ form.correo.label }}
-       {{ form.correo }}<br>
-
-       {{ form.correo_inst.label }}
-       {{ form.correo_inst }}<br>
-
-
-       {{ form.docente_interno.label }}
-       {{ form.docente_interno }}<br>
-
-       {{ form.docente_externo.label }}
-       {{ form.docente_externo }}<br>
-
-       {{ form.especialidad_docente.label }}
-       {{ form.especialidad_docente }}<br>
-          </div>
-            <div class="modal-footer">
-              <button type="submit" class="colores-botoncerrar">Registrar</button>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-4">
+                <input type="number" class="form-control" id="usuarioId" placeholder="Ingrese el Ci del docente"
+                  required>
+              </div>
+              <div class="col-3">
+                <button id="buscarMaestrante" class="btn btn-primary mb-3">Buscar Docente</button>
+              </div>
             </div>
+            <div id="maestrante-info"></div>
+
+
+            <button id="habilitar_formulario" class="btn btn-primary mb-3">Habilitar formulario para registrar como docente</button>
+          </div>
+
+
+        </div>
+        <br>
+        {% if messages %}
+        <div class="alert alert-danger">
+          <ul class="errorlist">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        <form id="informe" method="POST">
+          <h5> FORMULARIO DE REGISTRO DE NUEVO DOCENTE</h5>
+
+          <div class="card colores-formulario">
+            {% csrf_token %}
+
+            {% if form.errors %}
+            {% for field in form %}
+            {% for error in field.errors %}
+            <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+            {% endfor %}
+            {% endif %}
+
+            {{ form.as_p }}
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="colores-botoncerrar">Registrar</button>
+          </div>
         </form>
       </div>
     </div>
@@ -84,6 +71,154 @@
 
 {% block extrajs %}
 <script src="{% static 'lib/js/formulario.js' %}"></script>
+<script>
+  // Función para mostrar los datos del usuario en el HTML
+
+  function mostrarDatosUsuario(data, tipo) {
+    if (tipo === 'maestrante') {
+      if (!Object.keys(data).length) {
+        const maestranteInfo = document.getElementById('maestrante-info');
+        maestranteInfo.innerHTML = 'No se encontraron datos para el maestrante con el CI especificado.';
+      } else {
+        const maestranteInfo = document.getElementById('maestrante-info');
+        maestranteInfo.innerHTML = `
+        <div class="table-responsive">
+        <table class="table table-sm">
+  <thead>
+    <tr>
+      
+      
+      <th scope="row" colspan="2">DATOS GENERALES</th>
+     
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td ">C.I.</td>
+      <td>${data.ci_usuario}</td>
+     
+    </tr>
+
+    <tr>
+      <td >NOMBRE</td>
+      <td>   
+       ${data.nombre_usuario}
+      </td>   
+    </tr>
+
+    <tr>
+      <td >APELLIDO PATERNO</td>
+      <td>   
+       ${data.paterno}
+      </td>   
+    </tr>
+
+    <tr>
+      <td >APELLIDO MATERNO</td>
+      <td>   
+        ${data.materno ? `${data.materno}` : ''} 
+      </td>   
+    </tr>
+
+    <tr>
+      <td >ESPECIALIDAD DEL DOCENTE</td>
+      <td>   
+        
+        ${data.especialidad_docente ? `${data.especialidad_docente}` : 'El usuario no esta registrdo como docente '} 
+      </td>      
+    </tr>    
+    <tr>
+      <td >Fecha de registro</td>
+      <td>   
+        ${data.fecha_registro}
+      </td>      
+    </tr>
+    <tr>
+      
+      
+      <th colspan="2" >ROLES DEL USUARIO</th>
+     
+    </tr>
+  
+  
+      ${data.rol_docente ? '<tr><td >ROL DOCENTE</td><td> Activado</td></tr>' : ' '} 
+        ${data.rol_maestrante ? '<tr><td >ROL MAESTRANTE</td><td> Activado</td></tr>' : ' '} 
+        ${data.rol_tecnico_investigacion ? '<tr><td >ROL TECNICO - COORDINACIÓN</td><td> Activado</td></tr>' : ' '}
+        ${data.rol_postgrado ? '<tr><td >ROL POSTGRADO</td><td> Activado</td></tr>' : ' '}
+    
+
+   
+  </tbody>
+</table>
+</div>
+${data.rol_docente ? '<div class="alert alert-primary" role="alert"> El usuario está registrado como docente, no es necesario registrarlo.</div>' : ' '} 
+
+          `;
+
+      }
+    }
+  }
+
+
+  // Event listener para buscar maestrante
+  document.getElementById('buscarMaestrante').addEventListener('click', function () {
+    const usuarioId = document.getElementById('usuarioId').value;
+    const url = `/usuario/obtener_usuario_docente/${usuarioId}`;
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Ocurrió un error al obtener los datos.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!data.rol_docente) {
+
+          document.getElementById('id_ci_usuario').value = data.ci_usuario;
+          document.getElementById('id_ci_usuario').readOnly = true;
+          document.getElementById('id_nombre_usuario').value = data.nombre_usuario;
+          document.getElementById('id_nombre_usuario').readOnly = true;
+          document.getElementById('id_paterno').value = data.paterno;
+          document.getElementById('id_paterno').readOnly = true;
+          document.getElementById('id_materno').value = data.materno;
+          document.getElementById('id_cel_usuario').value = data.cel_usuario;
+          document.getElementById('id_cel_usuario').readOnly = true;
+          document.getElementById('id_materno').readOnly = true;
+
+          if (data.correo_inst === null || data.correo_inst === 'null' || data.correo_inst === undefined || data.correo_inst === 'undefined') {
+
+            document.getElementById('id_correo_inst').value = '';
+          } else {
+
+            document.getElementById('id_correo_inst').value = data.correo_inst;
+            document.getElementById('id_correo_inst').readOnly = true;
+          }
+          document.getElementById("habilitar_formulario").style.display = "block";
+        }
+        mostrarDatosUsuario(data, 'maestrante');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+
+        document.getElementById('maestrante-info').innerHTML = 'No se logró obtener infromación del usuario, verifique que los datos sean los correctos caso contrario registrar al usuario mediante el FORMULARIO DE REGISTRO DE DOCENTE, gracias.';
+
+      });
+  });
+
+
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("informe").style.display = "none";
+    document.getElementById("habilitar_formulario").style.display = "none";
+    document.getElementById("habilitar_formulario").addEventListener("click", function () {
+      document.getElementById("informe").style.display = "block";
+      document.getElementById("obtener_datos_usuario").style.display = "none";
+    });
+  });
+</script>
 {% endblock extrajs %}
+
 
 {% endblock %}

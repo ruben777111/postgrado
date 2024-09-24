@@ -1,14 +1,16 @@
 {% extends "postgradoApp/base.html" %}
 {% load static %}
 {% block content %}
-<div class="sb-nav-link-icon">
-    <h5><i class="far fa-id-card"></i> LISTA DE DOCUMENTOS </h5>
-</div>
-{% if user.is_staff %}
-<h5 class="card-title"><a href="{% url 'documento:agregar_documento'%}" class="btn btn-primary"><i
-            class="fas fa-user-plus"></i> Agregar nuevo documento</a></h5>
-{% endif %}
-<hr />
+
+<div class="card-header" style="display: flex; justify-content: space-between;">
+    <h5>LISTA DE DOCUMENTOS</h5>
+
+    {% if user.tipo_usuario == 3  %}
+    <a href="{% url 'documento:agregar_documento'%}" class="btn btn-primary">REGISTRAR NUEVO DOCUMENTO</a>
+    {% endif %}
+  </div> <br>
+
+
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         <div class="table-responsive">
@@ -16,9 +18,9 @@
                 <thead>
                     <tr>
 
-                        <th class="header" scope="col">Titulo&nbsp;del&nbsp;documento</th>
+                        <th class="header" scope="col">Título&nbsp;del&nbsp;documento</th>
                         <th class="header" scope="col">Documento</th>
-                        {% if user.tipo_usuario == None or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        {% if user.tipo_usuario == 3 %}
                         <th>
                             <div class="size"> Opciónes&nbsp;de&nbsp;documento</div>
                         </th>
@@ -41,7 +43,7 @@
                         <span class="text-muted">Sin&nbsp;archivo</span>
                         {% endif %}
                         </td>
-                        {% if user.tipo_usuario == None or user.tipo_usuario == 3 or user.tipo_usuario == 5 %}
+                        {% if  user.tipo_usuario == 3 %}
                         <td><button
                                 onclick="abrir_modal_editar_documento('{% url 'documento:editar_documento' documento.id_documento %}')"
                                 class="btn btn-primary"><i class="fa-solid fa-pen"></i></button>

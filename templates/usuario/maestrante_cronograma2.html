@@ -1,0 +1,281 @@
+{% load static %}
+<div class="modal-dialog modal-xl " role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="card border-primary" style="width: 100%;">
+
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="container">
+              <div class="row">
+                <div class="col col-lg-3">
+                  <img src="{% static 'lib/img/logousb.png' %}" class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col">
+                  <h6 class="card-title text-center">
+                    CRONOGRAMA DE ACTIVIDADES DE MAESTRÍA EN CURSO
+
+
+
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <hr>
+         
+              <div class="row row-cols-1">
+
+                <div class="container">
+                 
+                  MAESTRANTE: {{object.user}} <br>
+                  CI: {{object.user.usuario.ci_usuario}} <br>
+
+                  
+                  {% if object.user.usuario.ru %}
+                    RU: {{object.user.usuario.ru}} <br>
+                  {% endif %}
+
+
+                  {% if object.user.tipo_maestrante == "1" %}
+                  TIPO DE PROGRAMA: Programa regular
+                  {% elif object.user.tipo_maestrante == "2" %}
+                  TIPO DE PROGRAMA: Programa antiguo
+                  {% endif %}
+                  <br>
+                  PROGRAMA: {{object.user.programa}} <br>
+                  VERSIÓN: {{object.user.version}} <br>
+                  GESTIÓN: {{object.user.gestion}} <br>
+                  <hr>
+                  <div class="row">
+                    <div class="table-responsive">  
+                      <table class="table table-striped">
+                         
+                  
+                          {% if object.fecha_avance1  %}
+                          <tr>
+                           
+                              <td colspan="2">Fecha límite de presentación del formulario del Primer avance</td>
+                              <th scope="row">{{ object.fecha_avance1}}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 8 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_avance2  %}
+                          <tr>
+                             
+                              <td colspan="2">Fecha límite de presentación del formulario del Segundo avance</td>
+                              <th scope="row">{{ object.fecha_avance2 }}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 10 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_borrador  %}
+                          <tr>
+                           
+                              <td colspan="2">Fecha límite de presentación del Borrador de Tesis</td>
+                              <th scope="row">{{ object.fecha_borrador}}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 11 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_borrador_prorroga %}                        
+                          <tr>
+                             
+                              <td colspan="2">Fecha límite de presentación del Borrador de Tesis (Prórroga)</td>
+                              <th scope="row">{{ object.fecha_borrador_prorroga}}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 22 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_formulario_revisor %}
+                          <tr>
+                             
+                              <td colspan="2">Fecha límite de presentación del Formulario de informe del docente revisor</td>
+                              <th scope="row">{{ object.fecha_formulario_revisor}}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 13 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_formulario_guia %}
+                          <tr>
+                           
+                              <td colspan="2">Fecha límite de presentación del Formulario de informe del docente guía</td>
+                              <th scope="row">{{ object.fecha_formulario_guia}}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 14 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_reporte_general %}
+                          <tr>
+                             
+                              <td colspan="2">Fecha límite de presentación del Reporte General</td>
+                              <th scope="row">{{ object.fecha_reporte_general}}</th>
+                              <td>
+                                  {% if object.user.reportegeneral.aceptar_revisor %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_reporte_general2 %}
+                          <tr>
+                             
+                              <td colspan="2">Fecha límite de presentación del Segundo Reporte General</td>
+                              <th scope="row">{{ object.fecha_reporte_general2}}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 15 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_tesis_habilitada %}
+                          <tr>
+                            
+                              <td colspan="2">Fecha límite de presentación de Tesis para habilitación a defensa</td>
+                              <th scope="row">{{ object.fecha_tesis_habilitada}}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 16 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_sustentacion %}
+                          <tr>
+                            
+                              <td colspan="2">Fecha y hora de la Defensa de Tesis</td>
+                              <th scope="row">{{ object.fecha_sustentacion}} - {{ object.hora_sustentacion}} hrs</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 18 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+              
+                          {% if object.fecha_tesis_mejorada %}
+                          <tr>
+                         
+                              <td colspan="2">Fecha límite de presentación de Tesis mejorada para empaste</td>
+                              <th scope="row">{{ object.fecha_tesis_mejorada}}</th>
+                              <td>
+                                  {% if object.user.avance_tesis > 20 %}
+                                  <div class="colores-primario-msg">
+                                      Actividad realizada
+                                    </div>     
+                                    {% else %}
+                                    Actividad pendiente
+                                  {% endif %}
+                                      
+                      
+                                  </td> 
+                          </tr>
+                          {% endif %}
+                          {% if object.fecha_reporte_general_tribunal_interno %}
+                          <tr>
+                            
+                              <td colspan="2">Fecha límite de presentación del Reporte General (Tribunal interno, Prórroga)</td>
+                              <th scope="row">{{ object.fecha_reporte_general_tribunal_interno}}</th>
+                          </tr>
+                          {% endif %}
+                        
+                      </table>
+                  </div>
+                
+                                
+                    </div>
+                </div>
+              </div>
+       
+          </div>
+
+          <div class="modal-footer">
+
+
+            <button type="button" class="colores-botoncerrar" data-bs-dismiss="modal">Cerrar</button>
+
+          </div>
+
+      </div>
+    </div>
+  </div>
+</div>

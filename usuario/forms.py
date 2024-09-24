@@ -1,5 +1,5 @@
 from django import forms
-from .models import BancoNotificacion,Programa,ReporteGeneralTribunalInterno,Avance_2,DocenteProvisional,TribunalPerfil,TribunalTesis,Avance,Requisitos,Usuario,Maestrante,Docente,Cronograma,Cronograma2,ReporteGeneral,Docente_Revisor
+from .models import SustentacionTesisHistorial,SustentacionPerfilHistorial,CentroActividades,BancoNotificacion,Programa,Avance_2,DocenteProvisional,TribunalPerfil,TribunalTesis,Avance,Requisitos,Usuario,Maestrante,Docente,Cronograma,Cronograma2,ReporteGeneral,Docente_Revisor
 
 
 import random
@@ -57,8 +57,8 @@ class CustomPasswordResetForm(PasswordResetForm):
     def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name=None):
         username = self.cleaned_data.get('username')
         correo_inst = self.cleaned_data.get('correo_inst')
-        print(username)
-        print(correo_inst)
+        
+        
         # Valida que al menos se proporcione un username o un correo_inst
         if not username and not correo_inst:
             return
@@ -113,32 +113,176 @@ class FormularioPrograma(forms.ModelForm):
         if nombre_programa:
             return nombre_programa.upper()
         return nombre_programa  
-class FormularioAdministradores(forms.ModelForm):     
+
+class FormularioUsuario(forms.ModelForm):     
     
-    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Numero de cedula de identidad"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
-    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre"}),min_length=3, max_length=120, label="NOMBRE :")
+    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de cedula de identidad","id":"ci"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
+    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre","id":"nom"}),min_length=3, max_length=120, label="NOMBRE :") 
+    ru = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"RU","id":"ru"}),required=False, max_value=100000000000000, label="R.U. :")  
+    cel_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular","id":"celular"}),required=True,min_value=1, max_value=100000000000000, label="Nº CELULAR :")  
+    cel_usuario2 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular de referencia","id":"celular2"}),required=False,min_value=1, max_value=100000000000000, label="Nº CELULAR DE REFERENCIA:") 
+    correo_inst = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico institucional", "id": "correoinst"}), label="CORREO INSTITUCIONAL", required=True)
+    correo = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico personal", "id": "correo"}), label="CORREO PERSONAL", required=False)
+  
     paterno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido paterno"}),min_length=3, max_length=120, label="APELLIDO PATERNO :")
-    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),min_length=3, max_length=120, label="APELLIDO MATERNO :")    
-    cel_usuario= forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Numero de celular"}),required=True,min_value=1, max_value=2147483646, label="Nº CEL :")
-    cel_usuario2= forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Numero de celular de referencia"}),required=True,min_value=1, max_value=2147483646, label="Nº CEL REFERENCIA :") 
-    departamento= forms.Select(attrs={'class':'form-control','required':'required'})
+    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),required=False,min_length=3, max_length=120, label="APELLIDO MATERNO :")    
 
     class Meta:
         model=Usuario
-        fields=('nombre_usuario','paterno','materno','ci_usuario','departamento','cel_usuario','cel_usuario2','correo','correo_inst','tipo_usuario')
+        fields=('ci_usuario','nombre_usuario','paterno','materno','ru','cel_usuario','cel_usuario2','correo_inst','correo')
         widgets={
-            'departamento': forms.Select(attrs={'class':'form-control','required':'required'}),
-            'tipo_usuario': forms.Select(attrs={'class':'form-control'}),
-            'correo': forms.EmailInput(attrs={'class':'form-control no-uppercase','placeholder':'Correo personal','required':'required'}),
-            'correo_inst': forms.EmailInput(attrs={'class':'form-control no-uppercase','placeholder':'Correo electronico institucional','required':'required'}),
             
-        }       
+            'tipo_usuario': forms.Select(attrs={'class':'form-control'}),
+          
+            'correo_inst': forms.EmailInput(attrs={'class':'form-control no-uppercase','placeholder':'Correo electronico institucionalsss','required':'required'}),
+            
+        }      
+      
         labels = {
-            'departamento': ('DEPARTAMENTO :'),
-            'correo': ('CORREO PERSONAL :'),
-            'correo_inst': ('CORREO INSTITUCIONAL  :'),
+            
+           
+            'correo_inst': ('CORREO INSTITUCIONAL :'),
             'ci_usuario': ('CEDULA DE IDENTIDAD  :'),
         }
+
+
+    def clean_nombre_usuario(self):
+        nombre_usuario = self.cleaned_data['nombre_usuario']
+        if nombre_usuario:
+            return nombre_usuario.upper()
+        return nombre_usuario 
+    def clean_paterno(self):
+        paterno = self.cleaned_data['paterno']
+        if paterno:
+            return paterno.upper()
+        return paterno     
+    def clean_materno(self):
+        materno = self.cleaned_data['materno']
+        if materno:
+            return materno.upper()
+        return materno    
+
+class FormularioAdministradores(forms.ModelForm):     
+    
+    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de cedula de identidad"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
+    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre"}),min_length=3, max_length=120, label="NOMBRE :") 
+    cel_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular"}),required=True,min_value=1, max_value=100000000000000, label="Nº CELULAR :")  
+    correo_inst = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico institucional"}), label="CORREO INSTITUCIONAL", required=True)
+    
+    paterno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido paterno"}),min_length=3, max_length=120, label="APELLIDO PATERNO :")
+    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),required=False,min_length=3, max_length=120, label="APELLIDO MATERNO :")    
+
+    class Meta:
+        model=Usuario
+        fields=('ci_usuario','nombre_usuario','paterno','materno','cel_usuario','correo_inst')
+        widgets={
+            
+            'tipo_usuario': forms.Select(attrs={'class':'form-control'}),
+
+        }      
+      
+        labels = {
+            
+           
+            'correo_inst': ('CORREO INSTITUCIONAL :'),
+            'ci_usuario': ('CEDULA DE IDENTIDAD  :'),
+        }
+
+    tipo_usuario = forms.ChoiceField(
+        choices=[('', 'Seleccione tipo de administrador'), ('1', 'Tecnico de Postgrado/Coordinación de investigación'), ('2', 'Coordinación de Postgrado')],
+        required=True,
+        label="TIPO DE ADMINISTRADOR",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    def clean_nombre_usuario(self):
+        nombre_usuario = self.cleaned_data['nombre_usuario']
+        if nombre_usuario:
+            return nombre_usuario.upper()
+        return nombre_usuario 
+    def clean_paterno(self):
+        paterno = self.cleaned_data['paterno']
+        if paterno:
+            return paterno.upper()
+        return paterno     
+    def clean_materno(self):
+        materno = self.cleaned_data['materno']
+        if materno:
+            return materno.upper()
+        return materno     
+class FormularioAdministradoresNuevo(forms.ModelForm):     
+    
+    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de cedula de identidad"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
+    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre"}),min_length=3, max_length=120, label="NOMBRE :") 
+    cel_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular"}),required=True,min_value=1, max_value=100000000000000, label="Nº CELULAR :")  
+    correo_inst = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico institucional"}), label="CORREO INSTITUCIONAL", required=True)
+    
+    paterno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido paterno"}),min_length=3, max_length=120, label="APELLIDO PATERNO :")
+    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),required=False,min_length=3, max_length=120, label="APELLIDO MATERNO :")    
+
+    class Meta:
+        model=Usuario
+        fields=('ci_usuario','nombre_usuario','paterno','materno','cel_usuario','correo_inst')
+        widgets={
+            
+            'tipo_usuario': forms.Select(attrs={'class':'form-control'}),
+
+        }      
+      
+        labels = {
+            
+           
+            'correo_inst': ('CORREO INSTITUCIONAL :'),
+            'ci_usuario': ('CEDULA DE IDENTIDAD  :'),
+        }
+
+    tipo_usuario = forms.ChoiceField(
+        choices=[('', 'Seleccione tipo de administrador'), ('1', 'Tecnico de Postgrado/Coordinación de investigación'), ('2', 'Coordinación de Postgrado')],
+        required=True,
+        label="TIPO DE ADMINISTRADOR",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    def clean_nombre_usuario(self):
+        nombre_usuario = self.cleaned_data['nombre_usuario']
+        if nombre_usuario:
+            return nombre_usuario.upper()
+        return nombre_usuario 
+    def clean_paterno(self):
+        paterno = self.cleaned_data['paterno']
+        if paterno:
+            return paterno.upper()
+        return paterno     
+    def clean_materno(self):
+        materno = self.cleaned_data['materno']
+        if materno:
+            return materno.upper()
+        return materno 
+class FormularioAdministradoresEditar(forms.ModelForm):     
+    
+    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de cedula de identidad"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
+    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre"}),min_length=3, max_length=120, label="NOMBRE :") 
+    cel_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular"}),required=True,min_value=1, max_value=100000000000000, label="Nº CELULAR :")  
+    correo_inst = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico institucional"}), label="CORREO INSTITUCIONAL", required=True)
+    
+    paterno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido paterno"}),min_length=3, max_length=120, label="APELLIDO PATERNO :")
+    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),required=False,min_length=3, max_length=120, label="APELLIDO MATERNO :")    
+
+    class Meta:
+        model=Usuario
+        fields=('ci_usuario','nombre_usuario','paterno','materno','cel_usuario','correo_inst','rol_postgrado','rol_tecnico_investigacion')
+        widgets={
+            
+            'tipo_usuario': forms.Select(attrs={'class':'form-control'}),
+
+        }      
+      
+        labels = {
+            
+           
+            'correo_inst': ('CORREO INSTITUCIONAL :'),
+            'ci_usuario': ('CEDULA DE IDENTIDAD  :'),
+        }
+
+
     def clean_nombre_usuario(self):
         nombre_usuario = self.cleaned_data['nombre_usuario']
         if nombre_usuario:
@@ -155,70 +299,234 @@ class FormularioAdministradores(forms.ModelForm):
             return materno.upper()
         return materno     
 
-class FormularioUsuarioMaestrante(FormularioAdministradores):
-    tipo_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"value":"1","type":"hidden"}),required=True)
 
-    version = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Versión del programa","id":"tipo1","hidden":"true"}),min_length=1, max_length=120, label="VERSIÓN DEL PROGRAMA :",required=False) 
-    nueva_version = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nueva versión del programa","id":"tipo2","hidden":"true"}),min_length=1, max_length=120, label="NUEVA VERSIÓN DEL PROGRAMA :",required=False) 
-    version_cursada = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Versión cursada del programa","id":"tipo3","hidden":"true"}),min_length=1, max_length=120, label="VERSIÓN CURSADA DEL PROGRAMA :",required=False) 
-    vigencia_inicio = forms.DateField(label='Fecha desde', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker',"id":"vigencia_inicio","hidden":"true"}), required=False)
-    vigencia_final = forms.DateField(label='Fecha hasta', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker',"id":"vigencia_final","hidden":"true"}), required=False)
+class FormularioUsuarioMaestrante(forms.ModelForm):
+    
+   
+    version = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Versión del programa","id":"tipo1"}),min_length=1, max_length=120, label="VERSIÓN DEL PROGRAMA :",required=False) 
+   
     gestion = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Gestión"}),required=True,min_value=1, max_value=999999999999, label="GESTIÓN :")    
-    ru = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Registro unico universitario"}),required=True,min_value=1, max_value=999999999999, label="R.U. :")
-    programa_regular = forms.BooleanField(widget=forms.CheckboxInput(attrs={'id': 'op1',"hidden":"true"}),required=False) 
-    reincorporacion = forms.BooleanField(widget=forms.CheckboxInput(attrs={'id': 'op2',"hidden":"true"}),required=False) 
-    vigencia_matricula = forms.BooleanField(widget=forms.CheckboxInput(attrs={'id': 'op3',"hidden":"true"}),required=False) 
  
     class Meta:
         model=Maestrante
-        fields=('nombre_usuario','paterno','materno','ci_usuario','departamento','cel_usuario','cel_usuario2','correo','correo_inst','tipo_usuario','ru','sede','programa','version','nueva_version','version_cursada','vigencia_inicio','vigencia_final','gestion','programa_regular','reincorporacion','vigencia_matricula')
+        fields=('programa','version','gestion','tipo_maestrante')
         widgets={
-            'programa': forms.Select(attrs={'class':'form-control','placeholder':'Seleccione departamento','required':'required',}),
-            'sede': forms.Select(attrs={'class':'form-control','required':'required'}),
-            'departamento': forms.Select(attrs={'class':'form-control','required':'required'}),
-            'correo': forms.EmailInput(attrs={'class':'form-control no-uppercase','placeholder':'Correo personal','required':'required'}),
-            'correo_inst': forms.EmailInput(attrs={'class':'form-control no-uppercase','placeholder':'Correo electronico institucional','required':'required'}),
+            'programa': forms.Select(attrs={'class':'form-control','placeholder':'Seleccione programa','required':'required',}),
+
+           'tipo_maestrante': forms.Select(attrs={'class':'form-control','placeholder':'Seleccione programa','required':'required',}),
+        } 
+        labels = {
+            'programa': ('PROGRAMA :'),    
+
+        }
+        placeholder = {
+            'programa': ('Seleccione programa'),
+
+        }
+
+class FormularioUsuarioMaestranteDictamen(forms.ModelForm):
+   
+
+    class Meta:
+        model=Maestrante
+        fields=('procedencia_tema','procedencia_tesis')
+   
+       
+ 
+
+class RegistroMaestranteForm(forms.ModelForm):
+    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de cedula de identidad"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
+    ru = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"R.U."}),required=False,min_value=1, max_value=10000000000, label="R.U. :")    
+    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre"}),min_length=3, max_length=120, label="NOMBRE :")
+    cel_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular"}),required=True,min_value=1, max_value=100000000000000, label="Nº CELULAR :")    
+    paterno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido paterno"}),min_length=3, max_length=120, label="APELLIDO PATERNO :")
+    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),required=False,min_length=3, max_length=120, label="APELLIDO MATERNO :")    
+    correo_inst = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico institucional"}), label="CORREO INSTITUCIONAL", required=True)
+    
+
+    tipo_maestrante = forms.ChoiceField(
+        choices=[('', 'Seleccione un tipo de maestrante'), ('1', 'Programa regular'), ('2', 'Programa Antiguo')],
+        required=True,
+        label="TIPO DE MAESTRANTE",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    class Meta:
+        model = Usuario
+        fields = ['ci_usuario', 'nombre_usuario','paterno','materno', 'correo_inst','ru','cel_usuario']
+    
+    tipo_usuario = forms.IntegerField(initial=1, widget=forms.HiddenInput())  # Por defecto debe ser 1
+
+    programa = forms.ModelChoiceField(
+        queryset=Programa.objects.all(), 
+        required=True, 
+        label="SELECCIONE PROGRAMA",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        empty_label="Seleccione programa"
+    )
+   
+    version = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Versión del programa"}),min_length=1, max_length=120, label="VERSIÓN DEL PROGRAMA :",required=True) 
+    gestion = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Gestión"}),required=True,min_value=1, max_value=999999999999, label="GESTIÓN :")    
+    def clean_nombre_usuario(self):
+        nombre_usuario = self.cleaned_data['nombre_usuario']
+        if nombre_usuario:
+            return nombre_usuario.upper()
+        return nombre_usuario 
+   
+    def clean_version(self):
+        version = self.cleaned_data['version']
+        if version:
+            return version.upper()
+        return version 
+    
+class RegistroNuevoMaestranteForm(forms.ModelForm):
+    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de cedula de identidad"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
+    ru = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"R.U."}),required=False,min_value=1, max_value=10000000000, label="R.U. :")    
+    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre"}),min_length=3, max_length=120, label="NOMBRE :")
+    correo_inst = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico institucional"}), label="CORREO INSTITUCIONAL", required=True)
+    cel_usuario= forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular"}),required=False,min_value=999999, max_value=100000000000000, label="Nº CELULAR :")
+    paterno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido paterno"}),min_length=3, max_length=120, label="APELLIDO PATERNO :")
+    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),required=False,min_length=3, max_length=120, label="APELLIDO MATERNO :")    
+
+    tipo_maestrante = forms.ChoiceField(
+        choices=[('', 'Seleccione un tipo de maestrante'), ('1', 'Programa regular'), ('2', 'Programa antiguo')],
+        required=True,
+        label="TIPO DE MAESTRANTE",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    class Meta:
+        model = Usuario
+        fields = ['nombre_usuario', 'paterno', 'materno', 'ci_usuario', 'ru', 'correo_inst','cel_usuario', 'tipo_maestrante', 'programa', 'version', 'gestion', 'tipo_usuario']
+    
+    tipo_usuario = forms.IntegerField(initial=1, widget=forms.HiddenInput())  # Por defecto debe ser 1
+
+    programa = forms.ModelChoiceField(
+        queryset=Programa.objects.all(), 
+        required=True, 
+        label="SELECCIONE UN PROGRAMA",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        empty_label="Seleccione un programa"
+    )
+   
+    version = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Versión del programa"}),min_length=1, max_length=120, label="VERSIÓN DEL PROGRAMA :",required=True) 
+    gestion = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Gestión"}),required=True,min_value=1, max_value=999999999999, label="GESTIÓN :")    
+
+
+    def clean_nombre_usuario(self):
+        nombre_usuario = self.cleaned_data['nombre_usuario']
+        if nombre_usuario:
+            return nombre_usuario.upper()
+        return nombre_usuario 
+    def clean_paterno(self):
+        paterno = self.cleaned_data['paterno']
+        if paterno:
+            return paterno.upper()
+        return paterno     
+    def clean_materno(self):
+        materno = self.cleaned_data['materno']
+        if materno:
+            return materno.upper()
+        return materno     
+    def clean_version(self):
+        version = self.cleaned_data['version']
+        if version:
+            return version.upper()
+        return version 
+
+class RegistroDocenteForm(forms.ModelForm):
+    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de cedula de identidad"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
+    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre"}),min_length=3, max_length=120, label="NOMBRE :")
+    correo_inst = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico institucional"}), label="CORREO INSTITUCIONAL", required=True)
+    cel_usuario= forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular"}),required=False,min_value=999999, max_value=100000000000000, label="Nº CELULAR :")
+    paterno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido paterno"}),min_length=3, max_length=120, label="APELLIDO PATERNO :")
+    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),required=False,min_length=3, max_length=120, label="APELLIDO MATERNO :")    
+
+    class Meta:
+        model = Usuario
+        fields = ['ci_usuario', 'nombre_usuario', 'paterno', 'materno', 'correo_inst','cel_usuario']
+    
+    tipo_usuario = forms.IntegerField(initial=2, widget=forms.HiddenInput()) 
+    especialidad_docente = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Especialidad del docente"}),min_length=1, max_length=120, label="ESPECIALIDAD DEL DOCENTE :",required=True) 
+    docente_interno = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-check-input"}), label="DOCENTE INTERNO", required=False)
+    docente_externo = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-check-input"}), label="DOCENTE EXTERNO", required=False)
+    def clean_nombre_usuario(self):
+        nombre_usuario = self.cleaned_data['nombre_usuario']
+        if nombre_usuario:
+            return nombre_usuario.upper()
+        return nombre_usuario 
+   
+    def clean_especialidad_docente(self):
+        especialidad_docente = self.cleaned_data['especialidad_docente']
+        if especialidad_docente:
+            return especialidad_docente.upper()
+        return especialidad_docente 
+class RegistroNuevoDocenteForm(forms.ModelForm):
+    ci_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de cedula de identidad"}),required=True,min_value=1, max_value=100000000000000, label="C.I. :")    
+    nombre_usuario = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Nombre"}),min_length=3, max_length=120, label="NOMBRE :")
+    paterno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido paterno"}),min_length=3, max_length=120, label="APELLIDO PATERNO :")
+    materno = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Apellido materno"}),required=False,min_length=3, max_length=120, label="APELLIDO MATERNO :")    
+    correo_inst = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control no-uppercase", "placeholder": "Correo electronico institucional"}), label="CORREO INSTITUCIONAL", required=True)
+    cel_usuario= forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular"}),required=False,min_value=999999, max_value=100000000000000, label="Nº CELULAR :")
+
+    class Meta:
+        model = Usuario
+        fields = ['ci_usuario', 'nombre_usuario', 'paterno', 'materno', 'correo_inst','cel_usuario']
+    
+    tipo_usuario = forms.IntegerField(initial=2, widget=forms.HiddenInput()) 
+    especialidad_docente = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Versión del programa"}),min_length=1, max_length=120, label="ESPECIALIDAD DEL DOCENTE :",required=True) 
+    docente_interno = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-check-input"}), label="DOCENTE INTERNO", required=False)
+    docente_externo = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-check-input"}), label="DOCENTE EXTERNO", required=False)
+    def clean_nombre_usuario(self):
+        nombre_usuario = self.cleaned_data['nombre_usuario']
+        if nombre_usuario:
+            return nombre_usuario.upper()
+        return nombre_usuario 
+    def clean_paterno(self):
+        paterno = self.cleaned_data['paterno']
+        if paterno:
+            return paterno.upper()
+        return paterno     
+    def clean_materno(self):
+        materno = self.cleaned_data['materno']
+        if materno:
+            return materno.upper()
+        return materno  
+    def clean_especialidad_docente(self):
+        especialidad_docente = self.cleaned_data['especialidad_docente']
+        if especialidad_docente:
+            return especialidad_docente.upper()
+        return especialidad_docente 
+class FormularioUsuarioMaestranteComplemento(forms.ModelForm):
+    cel_usuario= forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular de referencia"}),required=False,min_value=999999, max_value=100000000000000, label="NÚMERO DE CELULAR:") 
+    cel_usuario2= forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Número de celular de referencia"}),required=False,min_value=999999, max_value=100000000000000, label="Nº CEL REFERENCIA :") 
+
+    class Meta:
+        model=Usuario
+        fields=('cel_usuario','cel_usuario2','correo')
+        widgets={
+        
+            'correo': forms.EmailInput(attrs={'class':'form-control no-uppercase','placeholder':'Correo personal'}),
             
 
         } 
         labels = {
-            'programa': ('PROGRAMA :'),
-            'sede': ('SEDE :'),
-            'programa_regular': ('PROGRAMA REGULAR EN CURSO :'),
-            'reincorporacion': ('REINCORPORACIÓN A NUEVA VERSIÓN DE PROGRAMA :'),
-            'vigencia_matricula': ('REINCORPORACIÓN CON VIGENCIA DE MATRICULA :'),
-            'departamento': ('DEPARTAMENTO :'),
+     
             'correo': ('CORREO PERSONAL :'),
-            'correo_inst': ('CORREO INSTITUCIONAL  :'),
+           
         }
-        placeholder = {
-            'programa': ('Seleccione programa')
-        }
- 
+      
 
+
+class FormularioUsuarioDocente(forms.ModelForm):
   
-
-
-class FormularioUsuarioDocente(FormularioAdministradores):
-    tipo_usuario = forms.IntegerField(widget=forms.NumberInput(attrs={"type":"hidden","value":"2"}),required=True)
     especialidad_docente = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Especialidad del docente"}),min_length=1, max_length=120, label="ESPECIALIDAD DEL DOCENTE :") 
     docente_interno = forms.BooleanField(  widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}),required=False)
     docente_externo = forms.BooleanField(  widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}),required=False)
     class Meta:
         model=Docente
-        fields=('nombre_usuario','paterno','materno','ci_usuario','departamento','cel_usuario','cel_usuario2','correo','correo_inst','tipo_usuario','especialidad_docente','docente_interno','docente_externo')
-        widgets={
-            'departamento': forms.Select(attrs={'class':'form-control','required':'required'}),
-            'tipo_usuario': forms.Select(attrs={'class':'form-control'}),
-            'correo': forms.EmailInput(attrs={'class':'form-control no-uppercase','placeholder':'Correo personal','required':'required'}),
-            'correo_inst': forms.EmailInput(attrs={'class':'form-control no-uppercase','placeholder':'Correo electronico institucional','required':'required'}),
-            
-        }       
+        fields=('especialidad_docente','docente_interno','docente_externo')
+      
         labels = {
-            'departamento': ('DEPARTAMENTO :'),
-            'correo': ('CORREO PERSONAL :'),
-            'correo_inst': ('CORREO INSTITUCIONAL  :'),
-            'ci_usuario': ('CEDULA DE IDENTIDAD  :'),
+
             'docente_interno': ('DOCENTE INTERNO  :'),
             'docente_interno': ('DOCENTE EXTERNO  :'),
 
@@ -233,12 +541,44 @@ class FormularioUsuarioDocente(FormularioAdministradores):
 
 
 class FormularioDocenteProvisional(forms.ModelForm):
-    provisional=forms.ModelChoiceField(widget=forms.Select(attrs={"class":"form-control"}),queryset= DocenteProvisional.objects.filter(docente_activo=True), label="DOCENTE PROVISIONAL :")
     avance_tesis = forms.IntegerField(widget=forms.NumberInput(attrs={"type":"hidden"}))
-  
     class Meta:
-        model=Maestrante
-        fields=("provisional","avance_tesis")
+        model = Maestrante
+        fields = ('provisional',"avance_tesis")
+        
+        widgets={
+            'provisional': forms.Select(attrs={'class':'form-control','required':'required'}),
+            
+        }     
+        labels = {
+            'provisional': ('DOCENTE PROVISIONAL:'),
+            
+            
+        }  
+
+class FormularioMatricula(forms.ModelForm):
+    vigencia_matricula_regular_total = forms.DateField(label='ACTUALIZAR VIGENCIA DEL PROGRAMA - PROGRAMA REGULAR', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    vigencia_matricula_antiguo_total = forms.DateField(label='ACTUALIZAR VIGENCIA DEL PROGRAMA - PROGRAMA ANTIGUO', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    vigencia_matricula_antiguo = forms.DateField(label='ACTUALIZAR VIGENCIA DE MATRICULA DEL PROGRAMA - PROGRAMA ANTIGUO', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+
+
+
+    version = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Versión del programa","id":"tipo1"}),min_length=1, max_length=120, label="VERSIÓN DEL PROGRAMA :",required=False) 
+   
+    gestion = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control","placeholder":"Gestión"}),required=True,min_value=1, max_value=999999999999, label="GESTIÓN :")    
+ 
+    
+    class Meta:
+        model = Maestrante
+        fields = ('version',"gestion","vigencia_matricula_antiguo","vigencia_matricula_antiguo_total","vigencia_matricula_regular_total")
+        
+          
+        labels = {
+            'version': ('VERSIÓN DEL PROGRAMA:'),
+            'gestion': ('GESTIÓN:')
+            
+            
+        }  
 
 class FormularioActividad2(forms.ModelForm):
     
@@ -267,89 +607,44 @@ class FormularioReporteGeneral2(forms.ModelForm):
         model=ReporteGeneral
         fields=('reporte2','aceptar_revisor2')
 
-class FormularioReporteGeneralTribunalInterno(forms.ModelForm):
-    reporte = forms.CharField(widget=forms.Textarea(attrs={"class":"form-control","rows":"8"}),min_length=3, max_length=1000,required=True)
-    aceptar_revisor = forms.BooleanField( required = True, widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}))
-    class Meta:
-        model=ReporteGeneralTribunalInterno
-        fields=('reporte','aceptar_revisor')
+
 
 class FormularioMaestranteGuia(forms.ModelForm):
-    provisional=forms.ModelChoiceField(widget=forms.Select(attrs={"class":"form-control"}),queryset= DocenteProvisional.objects.filter(docente_activo=True), label="DOCENTE PROVISIONAL :",required=False)
-    guia=forms.ModelChoiceField(widget=forms.Select(attrs={"class":"form-control"}),queryset= Docente.objects.filter(docente_activo=True), label="DOCENTE GUíA :",required=False)
-    revisor=forms.ModelChoiceField(widget=forms.Select(attrs={"class":"form-control"}),queryset= Docente_Revisor.objects.filter(docente_activo=True), label="DOCENTE REVISOR :",required=False)
+   
     class Meta:
         model=Maestrante
         fields=("provisional","guia","revisor")
-    
+        widgets={
+            'provisional': forms.Select(attrs={'class':'form-control'}),
+            'guia': forms.Select(attrs={'class':'form-control'}),
+            'revisor': forms.Select(attrs={'class':'form-control'}),
+            
+        }     
+        labels = {
+            'provisional': ('DOCENTE PROVISIONAL:'),
+            'revisor': ('DOCENTE REVISOR:'),
+            'guia': ('DOCENTE GUÍA:'),
+            
+            
+        }      
        
 
 class FormularioTemaTesis(forms.ModelForm):
  
-    tema_tesis = forms.CharField(label='Tema de  Tesis',widget=forms.TextInput(attrs={"class":"form-control","type":"search"}),min_length=10, max_length=240)
-    tema_tesis_perfil = forms.CharField(label='Tema de perfil Tesis',widget=forms.TextInput(attrs={"class":"form-control","type":"search"}),min_length=10, max_length=240)
+    tema_perfil_postulado = forms.CharField(label='Tema del perfil postulado',widget=forms.TextInput(attrs={"class":"form-control","type":"search"}),required=False,min_length=1, max_length=240)
+    tema_tesis_perfil = forms.CharField(label='Tema del perfil de Tesis',widget=forms.TextInput(attrs={"class":"form-control","type":"search"}),required=False,min_length=1, max_length=240)
+    tema_borrador_tesis = forms.CharField(label='Tema del borrador Tesis',widget=forms.TextInput(attrs={"class":"form-control","type":"search"}),required=False,min_length=1, max_length=240)
+    tema_tesis = forms.CharField(label='Tema de Tesis',widget=forms.TextInput(attrs={"class":"form-control","type":"search"}),required=False,min_length=1, max_length=240)
+    titulo_de_tesis = forms.CharField(label='Título de la Tesis',widget=forms.TextInput(attrs={"class":"form-control","type":"search"}),required=False,min_length=1, max_length=240)
 
     
     class Meta:
         model=Maestrante
-        fields=("tema_tesis_perfil","tema_tesis")
+        fields=("tema_perfil_postulado","tema_tesis_perfil","tema_borrador_tesis","tema_tesis","titulo_de_tesis")
 
 
 
 
-class FormularioPerfilTesis(forms.ModelForm):
-    
-
-    class Meta:
-        model=Maestrante
-       
-        fields=("perfil_tesis",)
-        widgets = {
-            'perfil_tesis': forms.FileInput(
-                attrs={'id':'tesis','name':'tesis','accept':'application/pdf'}
-            )
-            
-                
-        }        
-class FormularioPerfilTesisMejorado(forms.ModelForm):
-    
-
-    class Meta:
-        model=Maestrante
-       
-        fields=("perfil_tesis_mejorado",)
-
-class FormularioBorradorTesis(forms.ModelForm):
-    
-
-    class Meta:
-        model=Maestrante
-       
-        fields=("borrador_tesis",)
-
-class FormularioTesisMejorado (forms.ModelForm):
-    
-
-    class Meta:
-        model=Maestrante
-       
-        fields=("tesis_mejorado",)
-
-class FormularioTesisMejoradoAprobacion (forms.ModelForm):
-    
-
-    class Meta:
-        model=Maestrante
-       
-        fields=("tesis_mejorado_aprobacion",)
-
-class FormularioTesisOptimizado (forms.ModelForm):
-    
-
-    class Meta:
-        model=Maestrante
-       
-        fields=("tesis_optimizado",)
 
 
 class FormularioTribunalPerfil(forms.ModelForm):
@@ -384,75 +679,102 @@ class FormularioTribunalTesis(forms.ModelForm):
         }       
         labels = {
             'tribunal_tesis_1': ('Tribunal interno 1 designado (Presidente de Tribunal)'),
-            'tribunal_tesis_2': ('Tribunal interno 2 designado (Docente de Area - Revisor)'),
+            'tribunal_tesis_2': ('Tribunal interno 2 designado (Docente de Área - Revisor)'),
             
         }       
    
 class FormularioFechaSustentacion(forms.ModelForm):
-    fecha_3 = forms.DateField(label='Fecha del acto de sustentación', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
-    hora_sustentacion = forms.TimeField(label='Hora del acto de sustentación', widget=forms.TextInput(attrs={'type': 'time','class': 'form-control  '}), required=False)
+    fecha_3 = forms.DateField(label='Fecha del acto de sustentación', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=True)
+    hora_sustentacion = forms.TimeField(label='Hora del acto de sustentación', widget=forms.TextInput(attrs={'type': 'time','class': 'form-control  '}), required=True)
     class Meta:
         model = Cronograma
         fields = ('fecha_3','hora_sustentacion')
      
 class FormularioFechaSustentacionTesis(forms.ModelForm):
-    fecha_sustentacion = forms.DateField(label='Fecha del acto de sustentación', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
-    hora_sustentacion = forms.TimeField(label='Hora del acto de sustentación', widget=forms.TextInput(attrs={'type': 'time','class': 'form-control  '}), required=False)
+    fecha_sustentacion = forms.DateField(label='Fecha del acto de sustentación', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=True)
+    hora_sustentacion = forms.TimeField(label='Hora del acto de sustentación', widget=forms.TextInput(attrs={'type': 'time','class': 'form-control  '}), required=True)
     class Meta:
         model = Cronograma2
         fields = ('fecha_sustentacion','hora_sustentacion')   
 
 class FormularioCronograma(forms.ModelForm):
     #fecha_1 = forms.DateField(label='Fecha de entrega de formulario de habilitación', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=True)
-    fecha_1 = forms.DateField(label='Fecha de entrega de formulario de habilitación', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
-    fecha_2 = forms.DateField(label='Fecha de entrega de perfil de Tesis', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
-    fecha_3 = forms.DateField(label='Fecha de sustentación de tema de Tesis', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
-    hora_sustentacion = forms.TimeField(label='Hora de sustentación de tema de Tesis', widget=forms.TextInput(attrs={'type': 'time','class': 'form-control  datetimepicker'}), required=False)
-    fecha_4 = forms.DateField(label='Desarrollo de la investigación', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_1 = forms.DateField(label='Fecha límite de presentación del formulario de habilitación', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_2 = forms.DateField(label='Fecha límite de presentación del perfil de Tesis', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_3 = forms.DateField(label='Fecha de sustentación del tema de Tesis', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    hora_sustentacion = forms.TimeField(label='Hora de sustentación del tema de Tesis', widget=forms.TextInput(attrs={'type': 'time','class': 'form-control  datetimepicker'}), required=False)
+    fecha_4 = forms.DateField(label='Fecha límite de presentación del Perfil de Tesis Mejorado', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
 
     class Meta:
         model = Cronograma
         fields = ('fecha_1','fecha_2','fecha_3','hora_sustentacion','fecha_4')
 class FormularioCronograma2(forms.ModelForm):
-    
+
     fecha_avance1 = forms.DateField(label='Primer avance', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
     fecha_avance2 = forms.DateField(label='Segundo avance', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
     fecha_borrador = forms.DateField(label='Presentación de borrador', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
     fecha_borrador_prorroga = forms.DateField(label='Presentación de borrador prorroga', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
 
+    fecha_recepcion_borrador = forms.DateField(label='Recepción del Borrador', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_formulario_revisor = forms.DateField(label='Formulario del docente Revisor', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_formulario_guia = forms.DateField(label='Formulario del docente Gúia', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_tesis_habilitada = forms.DateField(label='Tesis habilitada', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_reporte_general = forms.DateField(label='Reporte General', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_reporte_general2 = forms.DateField(label='Segundo Reporte General', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_sustentacion = forms.DateField(label='Sustentación de Tesis', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    hora_sustentacion = forms.TimeField(label='Hora de sustentación de Tesis', widget=forms.TextInput(attrs={'type': 'time','class': 'form-control  datetimepicker'}), required=False)
+    
+    fecha_tesis_mejorada = forms.DateField(label='Tesis mejorada', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+    fecha_reporte_general_tribunal_interno = forms.DateField(label='Reporte General Tribunal Intermo', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+        
+
     class Meta:
         model = Cronograma
-        fields = ('fecha_avance1','fecha_avance2','fecha_borrador','fecha_borrador_prorroga')
+        fields = ('fecha_avance1','fecha_avance2','fecha_borrador','fecha_borrador_prorroga','fecha_recepcion_borrador','fecha_formulario_revisor','fecha_formulario_guia','fecha_tesis_habilitada','fecha_reporte_general','fecha_reporte_general2','fecha_sustentacion','hora_sustentacion','fecha_tesis_mejorada','fecha_reporte_general_tribunal_interno')
 
 class FormularioEvidencia(forms.ModelForm):
-    nro_requisito = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=-1)
-    actividad = forms.CharField(label='Actividad',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=5, max_length=600)
-    requisito = forms.CharField(label='Requisito',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),min_length=5, max_length=600)
-    tiempo = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False, max_value=1000)
-  
+    nro_requisito = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),disabled=True,required=False,min_value=-1, label="Código de actividad")
+    actividad = forms.CharField(label='Actividad',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),required=True,min_length=1, max_length=600)
+    requisito = forms.CharField(label='Requisito',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),required=True,min_length=1, max_length=600)
+    tiempo = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False, max_value=1000, label="Días (ingresar el número de días)")
+    
     class Meta:
         model = Requisitos
-        fields = ('nro_requisito','actividad','requisito','tiempo','rol1','rol2','rol3')
+        fields = ('nro_requisito','actividad','requisito','tiempo')
 
 class FormularioBancoNotificacion(forms.ModelForm):
-    numero_notificacion = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=-1)
-   
-    titulo = forms.CharField(label='Titulo de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}), max_length=300)
-    contenido = forms.CharField(label='Contenido de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}), max_length=300)
-    descripcion = forms.CharField(label='Descripcion de la notificación',widget=forms.TextInput(attrs={"class":"form-control no-uppercase","type":"search"}),required=False, max_length=300)
+    numero_notificacion = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),disabled=True,required=False,min_value=-1)
+    enviar = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-control"}), label="Activar o desactivar ésta notificación a los usuarios", required=False)
+    titulo = forms.CharField(
+        label='Título de la notificación', 
+        widget=forms.Textarea(attrs={"class": "form-control no-uppercase", "rows": 2}), 
+        max_length=300
+    )
+    contenido = forms.CharField(
+        label='Contenido de la notificación', 
+        widget=forms.Textarea(attrs={"class": "form-control no-uppercase", "rows": 4}), 
+        max_length=300
+    )
+    descripcion = forms.CharField(
+        label='Descripcion de la notificación', 
+        widget=forms.Textarea(attrs={"class": "form-control no-uppercase", "rows": 4}), 
+        required=False, 
+        max_length=300
+    )   
+  
     class Meta:
         model = BancoNotificacion
-        fields = ('numero_notificacion','titulo','contenido','descripcion')
+        fields = ('numero_notificacion','titulo','contenido','descripcion','enviar')
 
 
 class FormularioAvance(forms.ModelForm):
-    cap1 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
-    cap2 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
-    cap3 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+    cap1 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
+    cap2 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
+    cap3 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
 
-    cap1_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
-    cap2_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
-    cap3_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap1_cualitativo = forms.CharField(label='Observaciones relevantes por capítulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap2_cualitativo = forms.CharField(label='Observaciones relevantes por capítulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap3_cualitativo = forms.CharField(label='Observaciones relevantes por capítulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
 
     aceptar_avance = forms.BooleanField( required = True, widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}))
     aprobacion = forms.ChoiceField(
@@ -465,22 +787,22 @@ class FormularioAvance(forms.ModelForm):
 
 
 class FormularioAvance2(forms.ModelForm):
-    cap4 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
-    cap5 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
-    cap6 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
-    cap7 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control",'value':'0'}),required=False,min_value=0, max_value=100,initial=0)
+    cap4 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
+    cap5 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
+    cap6 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
+    cap7 = forms.IntegerField(widget=forms.NumberInput(attrs={"class":"form-control"}),required=False,min_value=1, max_value=100)
 
-    cap4_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
-    cap5_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
-    cap6_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
-    cap7_cualitativo = forms.CharField(label='Observaciones relevantes por capitulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap4_cualitativo = forms.CharField(label='Observaciones relevantes por capítulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap5_cualitativo = forms.CharField(label='Observaciones relevantes por capítulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap6_cualitativo = forms.CharField(label='Observaciones relevantes por capítulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
+    cap7_cualitativo = forms.CharField(label='Observaciones relevantes por capítulo',widget=forms.Textarea(attrs={"class":"form-control no-uppercase","type":"search",'rows': '4', 'cols': '20'}), max_length=800,required=False)
 
 
     
     aceptar_avance = forms.BooleanField( required = True, widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}))
     aprobacion = forms.ChoiceField(
         widget=forms.RadioSelect,
-        choices=[('si', 'Doy mi aprobación para programar segundo avance (solo en caso de contar con un primer avance satisfactorio)'), ('no', 'No doy aprobación para programar segundo avance (falta consolidar el primer avance)')],required=True
+        choices=[('si', 'Doy mi aprobación del segundo avance (solo en caso de contar con un segundo avance satisfactorio)'), ('no', 'No doy aprobación del segundo avance (falta consolidar el segundo avance)')],required=True
     )
     class Meta:
         model = Avance_2
@@ -501,22 +823,54 @@ class FormularioDocenteGuia(forms.ModelForm):
                 
                 
             }  
+
+class FormularioArchivoEvidencia(forms.ModelForm):
+        archivo_documento = forms.FileField(required=True)
+
+        class Meta:
+            model = CentroActividades
+            fields = ('archivo_documento',)
+  
 class FormularioDocenteRevisor(forms.ModelForm):
-        avance_tesis = forms.IntegerField(widget=forms.NumberInput(attrs={"type":"hidden"}))
-        fecha_nombramiento = forms.DateField(label='Fecha de notificación del nombramiento y entrega de borrador:', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=False)
+      
         class Meta:
             model = Maestrante
-            fields = ('revisor','avance_tesis','nombramiento_revisor','fecha_nombramiento')
+            fields = ('revisor',)
             widgets={
                 'revisor': forms.Select(attrs={'class':'form-control','required':'required'}),
-                'nombramiento_revisor': forms.FileInput( attrs={'class':'form-control','accept':'application/pdf'}   )
-                
+              
             }     
             labels = {
                 'revisor': ('DOCENTE REVISOR:'),
                 
                 
             }  
+
+class FormularioDocenteRevisorCompartido(forms.ModelForm):
+        avance_tesis = forms.IntegerField(widget=forms.NumberInput(attrs={"type":"hidden"}))
+        fecha_nombramiento = forms.DateField(label='Fecha de notificación del nombramiento y entrega de borrador:', widget=forms.TextInput(attrs={'type': 'date','class': 'form-control  datetimepicker'}), required=True)
+        nombramiento_revisor = forms.FileField(required=True, widget=forms.FileInput(attrs={'class': 'form-control', 'accept': 'application/pdf'}))
+
+        class Meta:
+            model = Maestrante
+            fields = ('avance_tesis','nombramiento_revisor','fecha_nombramiento')
+
+class FormularioHistorialArchivosPerfil(forms.ModelForm):
+    
+        class Meta:
+            model =SustentacionPerfilHistorial
+            fields = ('acta','hoja_evaluacion','carta_externa','carta_externa_designacion','documento_respaldo')
+
+class FormularioHistorialArchivosTesis(forms.ModelForm):
+    
+        class Meta:
+            model =SustentacionTesisHistorial
+            fields = ('acta','hoja_evaluacion','designacion')
+
+
+ 
+
+
 #        def __init__(self, *args, **kwargs):
 #            super().__init__(*args, **kwargs)
 #            self.fields['fecha_sustentacion'].widget.format = '%d/%m/%Y %H:%M'

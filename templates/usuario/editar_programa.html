@@ -3,7 +3,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <div class="card border-primary" style="width: 100%;">
-                <form  action="{% url 'usuario:editar_programa' object.id_programa %}" method="POST">
+                <form  id="informe" action="{% url 'usuario:editar_programa' object.id_programa %}" method="POST">
                     <div class="card-body ">
                         <div class="container">
                             <div class="row">
@@ -13,7 +13,7 @@
                                 </div>
                                 <div class="col">
                                     <h5 class="card-title text-center">
-                                        EDITAR INFORMACIÓN DEL PROGRAMA DE MAESTRIA 
+                                        EDITAR INFORMACIÓN DEL PROGRAMA DE MAESTRÍA 
                                     </h5>
                                 </div>
                             </div>
@@ -34,3 +34,7 @@
         </div>
     </div>
 </div>
+{% block extrajs %}
+<script src="{% static 'lib/js/formulario.js' %}"></script>
+
+{% endblock extrajs %}

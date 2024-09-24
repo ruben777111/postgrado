@@ -32,25 +32,45 @@
     <table id="data" class="table table-striped">
       <thead>
         <tr>
+          <th class="header" scope="col">CI</th>
           <th class="header" scope="col">R.U.</th>
           <th class="header" scope="col">MAESTRANTE</th>
           <th class="header" scope="col">PROGRAMA</th>
+          <th class="header" scope="col">VERSIÓN DEL PROGRAMA</th>
           <th class="header" scope="col">DOCENTE GUÍA</th>
-          <th class="header" scope="col">FECHA LIMITE DE PRESENTACIÓN DE AVANCE</th>
-          <th class="header" scope="col">PRESENTACIÓN DE BORRADOR</th>
-          <th class="header" scope="col">DETALLE</th>
-          <th class="header" scope="col">VER AVANCE</th>
+          <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN</th>
+          <th class="header" scope="col">FECHA PRESENTADA</th>
+          <th class="header" scope="col">DETALLE DEL AVANCE</th>
+          <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DEL BORRADOR</th>
+          
+          <th class="header" scope="col">PROGRAMAR FECHA PARA PRORROGA</th>
+          <th class="header" scope="col">FECHA LÍMITE DE PRESENTACIÓN DE BORRADOR PRORROGA</th>        
           <th class="header" scope="col">#</th>
         </tr>
       </thead>
       <tbody id="tableBody_users">
         {% for evi in maestrantesevi %}
         <tr>
-          <td> {{ evi.ru }} </td>
-          <td>{{ evi.maestrante }}</td>
+          <td>                            
+            {% if evi.usuario.ci_usuario %}
+            {{ evi.usuario.ci_usuario}}
+            {% else %}
+            No asignado
+            {% endif %} 
+        </td>
+          <td>                           
+            {% if evi.usuario.ru %}
+            {{ evi.usuario.ru}}
+            {% else %}
+            No asignado
+            {% endif %}  
+        </td>
+
+          <td>{{ evi.usuario }}</td>
           <td>{{ evi.programa }}</td>
+          <td>{{ evi.version }}</td>
           <td>{{ evi.guia }}</td>
-          <td>{{ evi.cronograma2.fecha_avance1 }}
+          <td>
 
             {% if evi.cronograma2.fecha_avance1 < today  %}
             <span style="color: red;">{{ evi.cronograma2.fecha_avance1 }} - expiró fecha de entrega</span>
@@ -58,66 +78,135 @@
             {{ evi.cronograma2.fecha_avance1 }}
           {% endif %}
           </td>
-          <td>
+          <td> 
             
-            {% if evi.cronograma2.fecha_borrador_prorroga %}
-              
-            <div class="container" style="color: blue;"> {{ evi.cronograma2.fecha_borrador_prorroga }} - Prorroga</div>
-                           
-            {% elif today > evi.cronograma2.fecha_borrador %}
-            <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador }} - Presentación de Borrador de tesis caducada 
-            </div>  
-
-           
+            {% if evi.avance.fecha_registro %}
+            {{ evi.avance.fecha_registro }} 
             {% else %}
-            {{ evi.cronograma2.fecha_borrador }} 
-            
+            Sin fecha
             {% endif %}
+              
+            
           </td>
-
           <td>
             
             {% if evi.avance.aprobacion == "si" %}
               Avance aprobada
               {% elif evi.avance.aprobacion == 'no' %}
-              Avance no aprobada
+              <p class="text-danger">  Avance no aprobada</p>
+            
+              {% else %}
+              Formulario de avance no emitido
             {% endif %}
               
            </td>
           <td>
-
-
-            {% if evi.avance.aceptar_avance %}
-            <button onclick="abrir_modal_ver('{% url 'usuario:actividad_7'  evi.id_maestrante %}')"
-              class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
-              title=" Registrar requisito / evidencia"><i class=" fas fa-user-check"></i></button>
-
-  
+            
+            {% if today > evi.cronograma2.fecha_borrador %}
+            <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador }} - Presentación de Borrador
+              de tesis caducada
+            </div>
             {% else %}
-            Avance no emitida
+            {{ evi.cronograma2.fecha_borrador }}
             {% endif %}
+          </td>
 
 
+           <td>
+            {% if today > evi.cronograma2.fecha_borrador and evi.cronograma2.fecha_borrador_prorroga == None %}
+            <button onclick="abrir_modal_edicion('{% url 'usuario:registrar_prorroga_borrador' evi.id_maestrante %}')"
+            class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar datos"><i
+              class="fas fa-calendar-check"></i></button>
+            {% elif evi.cronograma2.fecha_borrador_prorroga %}
+            Prorroga habilitada
+            {% endif %}
           </td>
           <td>
-            {% if evi.avance.aceptar_avance %}
-            {% if evi.avance.aprobacion == "si" %}
-            <a href="#" onclick="registraravanceaprobado({{ evi.id_maestrante }})" class="btn btn-primary"><i
-              class="fas fa-check" data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Esta acción habilitará al usuario para el desarrollo de Tesis"></i></a>
+            {% if today > evi.cronograma2.fecha_borrador and not evi.cronograma2.fecha_borrador_prorroga %}
+            Se requiere asignar fecha para presentación de borrador prorroga
+            {% endif %}
+            {% if evi.cronograma2.fecha_borrador_prorroga %}
+
+            {% if today > evi.cronograma2.fecha_borrador_prorroga %}
+            <div class="container" style="color: red;">{{ evi.cronograma2.fecha_borrador_prorroga }} - Presentación de Borrador prorroga
+              de tesis caducada
+            </div>
 
 
-            {% elif evi.avance.aprobacion == 'no' %}
-            <a href="#" onclick="registraravance({{ evi.id_maestrante }})" class="btn btn-danger"><i
-              class="fas fa-times" data-bs-toggle="tooltip" data-bs-placement="top"
-              title="Esta acción habilitará al usuario para el desarrollo de Tesis"></i></a>
+            {% else %}
+            <div class="container" style="color:blue;">{{ evi.cronograma2.fecha_borrador_prorroga }} prorroga</div>
 
-          {% endif %}
+            {% endif %}
+
+            {% endif %}
+            
+          </td>        
+          <td>
 
 
+
+
+              {% if evi.tipo_maestrante == "2" %}
+              {% if evi.bloqueo_maestrante  %}
+              Programa de maestrante bloqueado
+              {% else %}          
+              {% if evi.vigencia_matricula_antiguo <   today %}
+              Vigencia de matrícula caducada
     
-                
+              {% elif evi.vigencia_matricula_antiguo_total <   today %}
+              <p class="text-danger">Vigencia de programa caducada</p>
+              {% else %}
+              
+              {% if today <= evi.cronograma2.fecha_borrador or evi.cronograma2.fecha_borrador_prorroga %}
+              {% if evi.avance.aceptar_avance %}
+              {% if evi.avance.aprobacion == "si" %}
+              <a href="#" onclick="registraravanceaprobado({{ evi.id_maestrante }})" class="btn btn-primary"><i
+                class="fas fa-check" ></i></a>
+              {% elif evi.avance.aprobacion == 'no' %}
+              <a href="#" onclick="registraravance({{ evi.id_maestrante }})" class="btn btn-danger"><i
+                class="fas fa-times" ></i></a>
+            {% endif %}
+  
+                {% endif %}
+                {% else %}
+                Se requiere habilitar prorroga
+                {% endif %}
+  
+
               {% endif %}
+              {% endif %}
+              {% endif %}
+              {% if evi.tipo_maestrante == "1" %}
+    
+              
+              {% if evi.bloqueo_maestrante  %}
+              Programa de maestrante bloqueado
+              {% else %}
+              {% if evi.vigencia_matricula_regular_total <   today %}
+              <p class="text-danger">Vigencia de programa caducada</p>
+              {% else %}
+            
+              {% if today <= evi.cronograma2.fecha_borrador or evi.cronograma2.fecha_borrador_prorroga %}
+              {% if evi.avance.aceptar_avance %}
+              {% if evi.avance.aprobacion == "si" %}
+              <a href="#" onclick="registraravanceaprobado({{ evi.id_maestrante }})" class="btn btn-primary"><i
+                class="fas fa-check" ></i></a>
+              {% elif evi.avance.aprobacion == 'no' %}
+              <a href="#" onclick="registraravance({{ evi.id_maestrante }})" class="btn btn-danger"><i
+                class="fas fa-times" ></i></a>
+            {% endif %}
+  
+                {% endif %}
+                {% else %}
+                Se requiere habilitar prorroga
+                {% endif %}
+  
+
+              {% endif %}           
+              {% endif %} 
+              {% endif %}
+    
+              
           </td>
         </tr>
         {% endfor %}
@@ -129,7 +218,7 @@
   {% endif %}
 {% block extrajs %}
 
-
+<script src="{% static 'lib/js/data.js' %}"></script>
 <script src="{% static 'lib/js/main.js' %}"></script>
 
 
