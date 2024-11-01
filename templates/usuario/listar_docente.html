@@ -12,7 +12,7 @@
                     <tr>
                         {% if user.tipo_usuario == 3 or user.tipo_usuario == 5%}
                         <th class="header" scope="col">CI</th>
-                        <th class="header" scope="col">TIPO DE DOCENTE</th>
+                        
                         {% endif %}
                         <th class="header" scope="col">NOMBRE</th>
                         
@@ -47,21 +47,7 @@
 
                         {% if user.tipo_usuario == 3 or user.tipo_usuario == 5%}
                         <td>{{ usuario.user.ci_usuario }}</td>
-                        <td>
-                            
-                            {% if usuario.docente_interno %}
-                                Docente interno
-                            {% endif %}
-
-                            {% if usuario.docente_externo %}
-                            Docente externo
-                            {% endif %}
-                            
-               
-
-
-
-                        </td>
+                    
 
 
                         {% endif %}

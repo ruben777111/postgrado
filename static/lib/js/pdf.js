@@ -3,7 +3,7 @@ $('input[type="file"]').on('change', function(){
     if ($( this ).val() != '') {
       if(ext == "pdf"){
   
-        if($(this)[0].files[0].size > 3000000){
+        if($(this)[0].files[0].size > 4000000){
 
           $(this).val('');
           alert("Se solicita un archivo no mayor a 4 MB. Por favor se sugiere verificar.");

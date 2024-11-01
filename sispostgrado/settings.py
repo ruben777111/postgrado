@@ -110,7 +110,7 @@ CHANNEL_LAYERS = {
         #'NAME': BASE_DIR / 'db.sqlite3',  
 #DATABASES = {
 #    'default': {
-
+#
 #        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #        'NAME': 'dbpostgrado',
 #        'USER':'postgres',
@@ -179,15 +179,23 @@ LOGIN_REDIRECT_URL = ('/')
 LOGOUT_REDIRECT_URL = ('/')
 #SESSION_COOKIE_AGE = 20
 
+
+
+
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.office365.com"
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "pedroperespereira2023@hotmail.com"
-EMAIL_HOST_PASSWORD = "vsuuheumxolrwwki"
+EMAIL_HOST_USER = "sistemaseguimientotesismaestria@outlook.com"
+EMAIL_HOST_PASSWORD = "dcwoxjvpxlurmqck"
 SERVER_EMAIL = EMAIL_HOST_USER
+
+
+
 #correo para el envio de correos electronicos
-DEFAULT_FROM_EMAIL = 'pedroperespereira2023@hotmail.com'
+DEFAULT_FROM_EMAIL = 'sistemaseguimientotesismaestria@outlook.com'
 
 #PASSWORD_RESET_TIMEOUT = 100
 #SESSION_COOKIE_AGE = 190 

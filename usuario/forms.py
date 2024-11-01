@@ -129,7 +129,7 @@ class FormularioUsuario(forms.ModelForm):
 
     class Meta:
         model=Usuario
-        fields=('ci_usuario','nombre_usuario','paterno','materno','ru','cel_usuario','cel_usuario2','correo_inst','correo')
+        fields=('ci_usuario','nombre_usuario','paterno','materno','ru','cel_usuario','cel_usuario2','correo_inst','correo','rol_maestrante','rol_docente','rol_tecnico_investigacion','rol_postgrado')
         widgets={
             
             'tipo_usuario': forms.Select(attrs={'class':'form-control'}),
@@ -446,8 +446,8 @@ class RegistroDocenteForm(forms.ModelForm):
     
     tipo_usuario = forms.IntegerField(initial=2, widget=forms.HiddenInput()) 
     especialidad_docente = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Especialidad del docente"}),min_length=1, max_length=120, label="ESPECIALIDAD DEL DOCENTE :",required=True) 
-    docente_interno = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-check-input"}), label="DOCENTE INTERNO", required=False)
-    docente_externo = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-check-input"}), label="DOCENTE EXTERNO", required=False)
+    docente_interno = forms.BooleanField(widget=forms.CheckboxInput(attrs={"type":"hidden"}), label="DOCENTE INTERNO", required=False)
+    docente_externo = forms.BooleanField(widget=forms.CheckboxInput(attrs={"type":"hidden"}), label="DOCENTE EXTERNO", required=False)
     def clean_nombre_usuario(self):
         nombre_usuario = self.cleaned_data['nombre_usuario']
         if nombre_usuario:
@@ -472,9 +472,9 @@ class RegistroNuevoDocenteForm(forms.ModelForm):
         fields = ['ci_usuario', 'nombre_usuario', 'paterno', 'materno', 'correo_inst','cel_usuario']
     
     tipo_usuario = forms.IntegerField(initial=2, widget=forms.HiddenInput()) 
-    especialidad_docente = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Versión del programa"}),min_length=1, max_length=120, label="ESPECIALIDAD DEL DOCENTE :",required=True) 
-    docente_interno = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-check-input"}), label="DOCENTE INTERNO", required=False)
-    docente_externo = forms.BooleanField(widget=forms.CheckboxInput(attrs={"class": "form-check-input"}), label="DOCENTE EXTERNO", required=False)
+    especialidad_docente = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Especialidad del docente"}),min_length=1, max_length=120, label="ESPECIALIDAD DEL DOCENTE :",required=True) 
+    docente_interno = forms.BooleanField(widget=forms.CheckboxInput(attrs={"type":"hidden"}), label="DOCENTE INTERNO", required=False)
+    docente_externo = forms.BooleanField(widget=forms.CheckboxInput(attrs={"type":"hidden"}), label="DOCENTE EXTERNO", required=False)
     def clean_nombre_usuario(self):
         nombre_usuario = self.cleaned_data['nombre_usuario']
         if nombre_usuario:
@@ -519,11 +519,11 @@ class FormularioUsuarioMaestranteComplemento(forms.ModelForm):
 class FormularioUsuarioDocente(forms.ModelForm):
   
     especialidad_docente = forms.CharField(widget=forms.TextInput(attrs={"class":"form-control","placeholder":"Especialidad del docente"}),min_length=1, max_length=120, label="ESPECIALIDAD DEL DOCENTE :") 
-    docente_interno = forms.BooleanField(  widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}),required=False)
-    docente_externo = forms.BooleanField(  widget=forms.widgets.CheckboxInput( attrs={'class': 'checkbox-inline'}),required=False)
+    docente_interno = forms.BooleanField(  widget=forms.widgets.CheckboxInput( attrs={"type":"hidden"}),required=False)
+    docente_externo = forms.BooleanField(  widget=forms.widgets.CheckboxInput( attrs={"type":"hidden"}),required=False)
     class Meta:
         model=Docente
-        fields=('especialidad_docente','docente_interno','docente_externo')
+        fields=('especialidad_docente',)
       
         labels = {
 

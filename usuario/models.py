@@ -91,6 +91,12 @@ class Usuario(AbstractBaseUser):
     rol_docente = models.BooleanField(default = False)
     rol_tecnico_investigacion = models.BooleanField(default = False)
     rol_postgrado = models.BooleanField(default = False)
+
+    #registrado_rol_maestrante = models.BooleanField(default = False)
+    #registrado_rol_docente = models.BooleanField(default = False)
+    #registrado_rol_tecnico_investigacion = models.BooleanField(default = False)
+    #registrado_rol_postgrado = models.BooleanField(default = False)
+
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'username'  # Utiliza 'username' o el campo que desees como identificador de inicio de sesión

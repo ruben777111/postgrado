@@ -440,7 +440,7 @@
                                 </a>
                                 <a class="nav-link" href="{% url 'usuario:cronograma2'  %}">
                                     <div class="sb-nav-link-icon"> <i class="fab fa-centercode"></i></div>
-                                    Cronograma de maestrantes en curso
+                                    Cronograma de Tesis en proceso
                                 </a>
 
                             </nav>
@@ -642,8 +642,8 @@
                         Para acceder a su cuenta, debe cambiar su contraseña, gracias.
                     </div>
                     <div class="modal-footer">
-                        <a href="{% url 'logout' %}"><button type="button" class="btn btn-secondary">Cerrar
-                                sesión</button></a>
+                        
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
                         <a href="{% url 'usuario:password' %}"><button type="button" class="btn btn-primary">Cambiar
                                 contraseña</button></a>
 

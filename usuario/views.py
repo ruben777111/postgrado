@@ -37,7 +37,7 @@ import string
 from .forms import CustomPasswordResetForm
 
 from django.conf import settings
-from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.views import PasswordResetView,PasswordResetConfirmView
 
 from django.template.loader import get_template
 from xhtml2pdf import pisa
@@ -48,7 +48,9 @@ import time
 import requests
 from django.http import JsonResponse
 
+def logout_view(request):
 
+    return redirect("index.html")
 
 def obtener_informacion(request, pk):
     # URL de donde obtener la información
@@ -201,68 +203,88 @@ def vista_postgrado(request, username):
     return redirect('/')
 
 class CustomPasswordResetView(PasswordResetView):
-    
     template_name = 'autenticacion/password-reset.html'
     form_class = CustomPasswordResetForm        
     success_url = reverse_lazy('usuario:password_reset_done') 
 
     def post(self, request, *args, **kwargs):
-        username = self.request.POST.get('username')
-        email = self.request.POST.get('correo_inst')
-        
-        if username and email:
-            user = self.get_form().get_users(email, username).first()
+        form = self.get_form()  # Obtiene el formulario
+
+        # Verifica si el formulario es válido
+        if form.is_valid():
+            username = self.request.POST.get('username')
+            email = self.request.POST.get('correo_inst')
             
-            if user is not None:
-                self.user = user
-                form = self.get_form() 
-                
-                if form.is_valid():  
-                    usuario = Usuario.objects.get(ci_usuario=self.user.ci_usuario)
-                    print(usuario.cambio_password) 
-                    if not usuario.cambio_password:
-                        usuario.cambio_password = True
-                        usuario.save()
-                        print(usuario.cambio_password) 
-                   
+            # Verifica si el username y el email están presentes
+            if username and email:
+                try:
+                    # Obtiene el usuario usando el email y el username
+                    user = form.get_users(email, username).first()
+                except Usuario.DoesNotExist:
+                    user = None
+
+                if user is not None:
+                    # Intenta obtener el modelo `Usuario` relacionado
+                    try:
+                        usuario = Usuario.objects.get(ci_usuario=user.ci_usuario)
+                    except Usuario.DoesNotExist:
+                        usuario = None
+
+
+                    # Procesa la solicitud si el formulario es válido
                     return self.form_valid(form)
                 else:
-                   
-                    self.extra_context = {'CamposVacios': True}
-            else:
-                self.extra_context = {'Nousuario': True}  # Agregamos token_expired al contexto
-                return super().form_invalid(self.get_form())
-        return self.form_invalid(self.get_form())
+                    self.extra_context = {'Nousuario': True}  # Usuario no encontrado
+                    return self.form_invalid(form)
+
+        # Si el formulario no es válido o faltan datos
+        self.extra_context = {'CamposVacios': True}
+        return self.form_invalid(form)
 
     def send_mail(self, subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name='autenticacion/password_reset_done.html'):
         email = self.request.POST.get('correo_inst')
         username = self.request.POST.get('username')
-        context['user'] = user
- 
-        # Valida que al menos se proporcione un email o un nombre de usuario
-        if not email and not username:
-            return
 
         user = None
 
+        # Busca el usuario por email
         if email:
-        
             users_by_email = CustomPasswordResetForm().get_users(email)
 
             if users_by_email.count() > 0:
                 user = users_by_email[0]
 
+        # Busca el usuario por username si no fue encontrado por email
         if username and not user:
-            user_by_username = get_user_model()._default_manager.filter(
+            users_by_username = get_user_model()._default_manager.filter(
                 username=username,
                 is_active=True
             )
 
-            if user_by_username.count() > 0:
-                user = user_by_username[0]
+            if users_by_username.count() > 0:
+                user = users_by_username[0]
 
         if user is not None and user.is_active:
+            # Agregar el usuario al contexto si es encontrado
+            context['user'] = user
             super().send_mail(subject_template_name, email_template_name, context, from_email, to_email, html_email_template_name)
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'autenticacion/password_reset_confirm.html'
+    success_url = reverse_lazy('usuario:password_reset_complete')
+
+    def form_valid(self, form):
+        # Primero, completa el proceso de restablecimiento de contraseña
+        response = super().form_valid(form)
+
+        # Luego, actualiza el estado del cambio de contraseña
+        user = form.user  # Obtiene el usuario que ha cambiado su contraseña
+        usuario = get_object_or_404(Usuario, ci_usuario=user.ci_usuario)  # Tu modelo Usuario relacionado
+        usuario.cambio_password = True  # Cambia el estado de cambio_password
+        print("cambio de contraseña")
+        usuario.save()  # Guarda el cambio en la base de datos
+        return response
+
 def enviar_correo_electronico(asunto, mensaje, destinatarios):       
     from_email = settings.DEFAULT_FROM_EMAIL      
     send_mail(asunto, mensaje, from_email, destinatarios, fail_silently=False)
@@ -297,8 +319,21 @@ def reset_user_password_view(request, user_id):
 #********************************* Formato de correos ********************************************
 #********************************* Formato de correo de activación de cuenta al momento de registro de usuario
 def correo_activacion(ci_usuario,contrasena,correo):
-    asunto_activacion = 'Activación de cuenta'
-    mensaje_activacion = f'Se activó la cuenta del SISTEMA DE SEGUIMIENTO DE TESIS TE MAESTRÍA (SSTM) del INSTITUTO DE INVESTIGACIÓN Y POSTGRADO “PADRE JUAN PABLO ZABALA TORREZ”. Su nombre de usuario y contraseña para el inicio de sesión son las siguientes: \n\nNombre de usuario: {ci_usuario}\n\nContraseña: {contrasena}'
+    asunto_activacion = 'Activación de su cuenta en el Sistema de Seguimiento de Tesis de Maestría (SSTM)'    
+    enlace_sistema = "sstm.usalesiana.edu.bo"  # Enlace al sistema
+    mensaje_activacion = (
+        f"Nos complace informarle que su cuenta en el Sistema de Seguimiento de Tesis de Maestría (SSTM) del "
+        f"Instituto de Investigación y Postgrado 'Padre Juan Pablo Zabala Torrez' ha sido activada exitosamente.\n\n"
+        f"A continuación, encontrará su nombre de usuario y contraseña para acceder al sistema:\n\n"
+        f"Nombre de usuario:  {ci_usuario}\n\n"
+        f"Contraseña:  {contrasena}\n\n"
+        f"Le recomendamos cambiar su contraseña al iniciar sesión por primera vez para garantizar la seguridad de su cuenta. "
+        f"Puede acceder al sistema a través del siguiente enlace: {enlace_sistema}.\n\n"
+        f"Saludos cordiales.\n"
+        f"Instituto de Investigación y Postgrado 'Padre Juan Pablo Zabala Torrez'\n"
+        f"Universidad Salesiana de Bolivia"
+    )
+
     enviar_correo_electronico(asunto_activacion, mensaje_activacion, correo)
 
 
@@ -1147,6 +1182,7 @@ class RegistrarDocente(CreateView):
                     
                     usuario = Usuario.objects.get(ci_usuario=ci_usuario)
                     usuario.rol_docente = True
+                    #usuario.registrado_rol_docente = True
                     usuario.save()
                     docente_data = {
                     'especialidad_docente': form.cleaned_data.get('especialidad_docente'),
@@ -1168,6 +1204,7 @@ class RegistrarDocente(CreateView):
                 usuario.set_password(contrasena_generada)
                 usuario.tipo_usuario = 2  
                 usuario.rol_docente = True 
+                #usuario.registrado_rol_docente = True
                 usuario.save()
 
             # Asignar el valor de ci_usuario al formulario
@@ -1363,6 +1400,7 @@ class RegistrarNuevoMaestrante(CreateView):
             if usuario_existente:
                 usuario = Usuario.objects.get(ci_usuario=ci_usuario)
                 usuario.rol_maestrante = True
+                #usuario.registrado_rol_maestrante = True
                 usuario.save()
                 maestrante_data = {
                 'programa': form.cleaned_data.get('programa'),
@@ -1382,6 +1420,7 @@ class RegistrarNuevoMaestrante(CreateView):
                 usuario.set_password(contrasena_generada)
                 usuario.tipo_usuario = 1  
                 usuario.rol_maestrante = True 
+                #usuario.registrado_rol_maestrante = True
                 usuario.save()
 
             # Asignar el valor de ci_usuario al formulario
@@ -1431,10 +1470,15 @@ class RegistrarNuevoAdministradores(CreateView):
                 tipo_usuario = form.cleaned_data.get('tipo_usuario')
                 if tipo_usuario == "1":
                     usuario.rol_tecnico_investigacion = True
+                    #usuario.registrado_rol_tecnico_investigacion = True
                     usuario.tipo_usuario = 3  
                 if tipo_usuario == "2":
                     usuario.rol_postgrado = True
-                    usuario.tipo_usuario = 5                    
+                    #usuario.registrado_rol_postgrado = True
+                    usuario.tipo_usuario = 5   
+
+
+
 
                 usuario.usuario_administrador = True
                 usuario.is_staff = False
@@ -2973,13 +3017,13 @@ def GuardarInformeRevisor(request):
         
         notificar = BancoNotificacion.objects.get(numero_notificacion=14)
         if notificar.enviar:
-            Post.objects.create(user=maestrante.guia.user,title=notificar.titulo,text=notificar.contenido+" : "+str(final_date.strftime("%d-%m-%Y"))+". "+str(maestrante),cod_notificacion=str(notificar.numero_notificacion),rol="[ Docente guía ]")
+            Post.objects.create(user=maestrante.guia.user,title=notificar.titulo,text=notificar.contenido+" : "+str(final_date.strftime("%d-%m-%Y")),maestrante= str(maestrante),programa = str(maestrante.programa)+" - "+str(maestrante.version), cod_notificacion=str(notificar.numero_notificacion),rol="[ Docente guía ]")            
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(f'chat_{maestrante.guia.user.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
             guia=get_object_or_404(Docente,id_docente=maestrante.guia.id_docente)
             guia.notificacion=True
             guia.save()
-            Post.objects.create(user=maestrante.usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(final_date.strftime("%d-%m-%Y"))+". "+str(maestrante),cod_notificacion=str(notificar.numero_notificacion),rol="[ Maestrante ]")   
+            Post.objects.create(user=maestrante.usuario,title=notificar.titulo,text=notificar.contenido+" : "+str(final_date.strftime("%d-%m-%Y")),maestrante= str(maestrante),programa = str(maestrante.programa)+" - "+str(maestrante.version),cod_notificacion=str(notificar.numero_notificacion),rol="[ Maestrante ]")               
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(f'chat_{maestrante.usuario.username}',{'type': 'chat_message','message': 'Notificar','username': 'System'})
             maestrante.notificacion=True

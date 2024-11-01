@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from django.views.generic.base import TemplateView
-
+from django.contrib.auth import views as auth_views
 from . import views,requisitos
 from django.contrib.auth import views as auth_views
 from .decorators import usuario_administrador_required
@@ -9,13 +9,13 @@ urlpatterns=[
     path('obtener_usuario/<int:usuario_id>/', views.obtener_usuario, name='obtener_usuario'),
     path('obtener_usuario_docente/<int:usuario_id>/', views.obtener_usuario_docente, name='obtener_usuario_docente'),
     path('obtener_usuario_administrador/<int:usuario_id>/', views.obtener_usuario_administrador, name='obtener_usuario_administrador'),
-
+    path('logout/', views.logout_view, name='logout'),
 
 
     path('password/',views.CustomPasswordResetView.as_view(template_name="autenticacion/password-reset.html"), name='password'),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name="autenticacion/password_reset_hecho.html"), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name="autenticacion/password_reset_complete.html"), name='password_reset_complete'),
     path('reset_password_and_user/<int:user_id>/', views.reset_user_password_view, name='reset_password_and_user'),
     
 
